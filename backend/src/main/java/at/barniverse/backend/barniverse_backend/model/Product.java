@@ -1,7 +1,8 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -11,13 +12,14 @@ public class Product {
     private int id;
 
     private String name;
-
     private String description;
 
-//    @OneToMany(mappedBy="product")
-//    private Set<ProductImage> productImages;
+    @OneToMany(targetEntity = ProductImage.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_productImage_productId"))
+    private List<ProductImage> images;
 
     // getter and setter
+
 
     public int getId() {
         return id;
@@ -39,11 +41,11 @@ public class Product {
         this.description = description;
     }
 
-//    public Set<ProductImage> getProductImages() {
-//        return productImages;
-//    }
-//
-//    public void setProductImages(Set<ProductImage> productImages) {
-//        this.productImages = productImages;
-//    }
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
 }

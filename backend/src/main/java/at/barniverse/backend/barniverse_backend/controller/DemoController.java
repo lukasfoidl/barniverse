@@ -1,10 +1,8 @@
 package at.barniverse.backend.barniverse_backend.controller;
 
 import at.barniverse.backend.barniverse_backend.enums.UStatus;
-import at.barniverse.backend.barniverse_backend.model.Product;
-import at.barniverse.backend.barniverse_backend.model.User;
-import at.barniverse.backend.barniverse_backend.repository.UserRepository;
-import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
+import at.barniverse.backend.barniverse_backend.model.*;
+import at.barniverse.backend.barniverse_backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class DemoController {
 
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
+    @Autowired
+    private AuctionRepository auctionRepository;
+    @Autowired
+    private OfferRepository offerRepository;
 
     @PostMapping(path="/add")
     public @ResponseBody String addNewUser(
@@ -39,8 +45,28 @@ public class DemoController {
         return "Saved";
     }
 
-    @GetMapping(path="/all")
+    @GetMapping(path="/users")
+    public @ResponseBody Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping(path="/products")
     public @ResponseBody Iterable<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    @GetMapping(path="/images")
+    public @ResponseBody Iterable<ProductImage> getAllImages() {
+        return productImageRepository.findAll();
+    }
+
+    @GetMapping(path="/auctions")
+    public @ResponseBody Iterable<Auction> getAllAuctions() {
+        return auctionRepository.findAll();
+    }
+
+    @GetMapping(path="/offers")
+    public @ResponseBody Iterable<Offer> getAllOffers() {
+        return offerRepository.findAll();
     }
 }

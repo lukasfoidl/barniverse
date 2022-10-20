@@ -2,10 +2,8 @@ package at.barniverse.backend.barniverse_backend.model;
 
 import at.barniverse.backend.barniverse_backend.enums.UStatus;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -15,22 +13,24 @@ public class User {
     private int id;
 
     private String firstname;
-
     private String lastname;
-
     private String username;
-
     private String email;
-
     private String password;
-
     private String picture;
-
     private boolean isAdmin;
-
     private UStatus status;
 
+    @OneToMany(targetEntity = Auction.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_userId"))
+    private List<Auction> auctions;
+
+    @OneToMany(targetEntity = Offer.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_userId"))
+    private List<Offer> offers;
+
     // getter and setter
+
 
     public int getId() {
         return id;
@@ -98,5 +98,21 @@ public class User {
 
     public void setStatus(UStatus status) {
         this.status = status;
+    }
+
+    public List<Auction> getAuctions() {
+        return auctions;
+    }
+
+    public void setAuctions(List<Auction> auctions) {
+        this.auctions = auctions;
+    }
+
+    public List<Offer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
     }
 }

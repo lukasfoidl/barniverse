@@ -1,6 +1,7 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class ProductImage {
@@ -11,18 +12,11 @@ public class ProductImage {
 
     private String path;
 
-    @ManyToOne
-    @JoinColumn(name="product_Id")
-    private Product product;
-
     // getter and setter
+
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPath() {
@@ -31,13 +25,5 @@ public class ProductImage {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 }
