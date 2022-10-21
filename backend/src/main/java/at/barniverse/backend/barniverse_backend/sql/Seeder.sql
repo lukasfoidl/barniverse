@@ -29,47 +29,45 @@ INSERT INTO product (id, name, description)
 VALUES (4, 'Goesser Bier', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
 
 # seed product_image table
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (1, 'sdfjlahsudfhakljsdfasd/Gin', '1');
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (2, 'f4whfowi4hfwiu4hwererf/Gin', '1');
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (3, 'jcvjr8e4jfa4jfo84jfawz/Gin', '1');
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (4, 'dfafjoeifaouefawdujfse/GruenerVeltliner', '2');
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (5, 'trorjefoeirjfsjfwerwe7/BerlinerLuft', '3');
-INSERT INTO product_image (id, path, product_id)
+INSERT INTO product_image (id, file, product_id)
 VALUES (6, 'fnauiserhfi8w4riawhefb/BerlinerLuft', '3');
-INSERT INTO product_image (id, path, product_id)
-VALUES (7, 'fdauhrualseiufhssdftrz/GoesserBier', '4');
 
 # seed auction table
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, user_id, winner_offer_id)
-VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-04-01', '2022-04-04', false, 3, null);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, user_id, winner_offer_id)
-VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2022-12-01', '2022-12-10', false, 3, null);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, user_id, winner_offer_id)
-VALUES (3, 'LockedAuction', 'lockedAuction testing', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', true, 3, null);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, user_id, winner_offer_id)
-VALUES (4, 'Won Auction', 'wonAuction testing', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', false, 3, 4);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
+VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-04-01', '2022-04-04', false, 1, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
+VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2022-12-01', '2022-12-10', false, 4, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
+VALUES (3, 'Locked Auction', 'locked Auction test', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', true, 3, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
+VALUES (4, 'Closed Auction', 'closed Auction test', 100.0, 150.0, 1000, 1500, '2023-02-01', '2023-02-10', '2022-10-01', '2022-10-10', false, 4, 6); #winner offer id = 8
 
 # seed offer table
 INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
-VALUES (1, 12.4, 53, '2023-05-10',0, 4, 1); #Gin Offer inside price range
+VALUES (1, 12.4, 53.0, '2023-05-10', 0, 4, 1); #Gin Offer good
 INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
-VALUES (2, 18.0, 50.0, '2023-05-10', 0, 5, 1); #Gin Offer outside price range
+VALUES (2, 10.5, 59.0, '2023-05-10', 0, 5, 1); #Gin Offer better
 INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
-VALUES (3, 100.0, 180, '2022-12-05', 0, 5, 2); #Bier Offer inside quantity range
+VALUES (3, 18.0, 50.0, '2023-05-10', 0, 5, 1); #Gin Offer outside price range
 INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
-VALUES (4, 100.0, 350, '2022-12-05', 0, 5, 2); #Bier Offer outside quantity range
-
-# set foreign keys
-ALTER TABLE product_image ADD CONSTRAINT FK_productImage_productId FOREIGN KEY (product_id) REFERENCES product(id);
-
-ALTER TABLE auction ADD CONSTRAINT FK_auction_userId FOREIGN KEY (user_id) REFERENCES user(id);
-ALTER TABLE auction ADD CONSTRAINT FK_auction_productId FOREIGN KEY (product_id) REFERENCES product(id);
-ALTER TABLE auction ADD CONSTRAINT FK_auction_winnerOffer FOREIGN KEY (winner_offer_id) REFERENCES offer(id);
-
-ALTER TABLE offer ADD CONSTRAINT FK_offer_userId FOREIGN KEY (user_id) REFERENCES user(id);
-ALTER TABLE offer ADD CONSTRAINT FK_offer_auctionId FOREIGN KEY (auction_id) REFERENCES auction(id);
+VALUES (4, 12.4, 75.0, '2023-05-10', 0, 5, 1); #Gin Offer outside quantity range
+INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
+VALUES (5, 12.4, 53.0, '2023-08-20', 0, 5, 1); #Gin Offer outside delivery range
+INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
+VALUES (6, 100.0, 180, '2023-01-05', 0, 5, 2); #Bier Offer good
+INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
+VALUES (7, 175.0, 7000, '2022-02-07', 0, 4, 3); #Locked offer good
+INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
+VALUES (8, 110.0, 1350.0, '2022-02-07', 1, 4, 4); #closed offer good (won)
+INSERT INTO offer (id, price, quantity, delivery_date, status, user_id, auction_id)
+VALUES (9, 140.0, 1100.0, '2022-02-07', 2, 5, 4); #closed offer bad (rejected)

@@ -27,10 +27,6 @@ public class Auction {
     @JoinColumn(name = "product_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_productId"))
     private Product product;
 
-    @OneToOne(targetEntity = Offer.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "winnerOffer_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_winnerOffer"))
-    private Offer winnerOffer;
-
     @OneToMany(targetEntity = Offer.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "auction_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_auctionId"))
     private List<Offer> offers;
@@ -136,14 +132,6 @@ public class Auction {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public Offer getWinnerOffer() {
-        return winnerOffer;
-    }
-
-    public void setWinnerOffer(Offer winnerOffer) {
-        this.winnerOffer = winnerOffer;
     }
 
     public List<Offer> getOffers() {

@@ -1,7 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class ProductImage {
@@ -10,7 +9,7 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private String path;
+    private String file;
 
     // getter and setter
 
@@ -19,11 +18,11 @@ public class ProductImage {
         return id;
     }
 
-    public String getPath() {
-        return path;
+    public String getFile() {
+        return file;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setFile(String file) {
+        this.file = file;
     }
 }
