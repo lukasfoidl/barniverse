@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// product model
 @Entity
 public class Product {
 
@@ -19,7 +20,6 @@ public class Product {
     private List<ProductImage> images;
 
     // getter and setter
-
 
     public int getId() {
         return id;

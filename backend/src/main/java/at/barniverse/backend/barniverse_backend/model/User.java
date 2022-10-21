@@ -5,6 +5,7 @@ import at.barniverse.backend.barniverse_backend.enums.UStatus;
 import javax.persistence.*;
 import java.util.List;
 
+// user model
 @Entity
 public class User {
 
@@ -30,7 +31,6 @@ public class User {
     private List<Offer> offers;
 
     // getter and setter
-
 
     public int getId() {
         return id;

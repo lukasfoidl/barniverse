@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+// auction model
 @Entity
 public class Auction {
 
@@ -32,7 +33,6 @@ public class Auction {
     private List<Offer> offers;
 
     // getter and setter
-
 
     public int getId() {
         return id;

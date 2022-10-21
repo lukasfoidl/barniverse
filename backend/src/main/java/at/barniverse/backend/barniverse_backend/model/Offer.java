@@ -5,6 +5,7 @@ import at.barniverse.backend.barniverse_backend.enums.OStatus;
 import javax.persistence.*;
 import java.util.Date;
 
+// offer model
 @Entity
 public class Offer {
 
