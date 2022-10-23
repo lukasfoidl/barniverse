@@ -1,6 +1,9 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +13,13 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
     private int id;
 
+    @NotBlank(message = "Name is mandatory!")
     private String name;
+
+    @Size(max = 500, message = "Description must be shorter than 500 characters!")
     private String description;
 
     @OneToMany(targetEntity = ProductImage.class, cascade = CascadeType.ALL, orphanRemoval = true)

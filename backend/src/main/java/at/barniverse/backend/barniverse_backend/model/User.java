@@ -3,6 +3,10 @@ package at.barniverse.backend.barniverse_backend.model;
 import at.barniverse.backend.barniverse_backend.enums.UStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 // user model
@@ -11,15 +15,33 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
     private int id;
 
+    @NotBlank(message = "Firstname is mandatory!")
     private String firstname;
+
+    @NotBlank(message = "Lastname is mandatory!")
     private String lastname;
+
+    @NotBlank(message = "Username is mandatory!")
+    @Size(min = 5, message = "Username has to be at least 5 characters long!")
     private String username;
+
+    @NotNull(message = "Email is mandatory!")
+    @Email(message = "Please provide a valid email address!")
     private String email;
+
+    @NotNull(message = "Password is mandatory!")
+    @Size(min = 8, message = "Password has to be at least 8 characters long!")
     private String password;
+
     private String picture;
+
+    @NotNull(message = "Definition if user is admin or not is mandatory!")
     private boolean isAdmin;
+
+    @NotNull(message = "Status of user is mandatory!")
     private UStatus status;
 
     @OneToMany(targetEntity = Auction.class, cascade = CascadeType.ALL)

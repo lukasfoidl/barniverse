@@ -1,27 +1,69 @@
 package at.barniverse.backend.barniverse_backend.model;
 
+import at.barniverse.backend.barniverse_backend.validation.AfterSpecificDate;
+import at.barniverse.backend.barniverse_backend.validation.LowerThanOther;
+import at.barniverse.backend.barniverse_backend.validation.AfterToday;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
 // auction model
 @Entity
+@LowerThanOther(lowerField = "minPrice", higherField = "maxPrice", message = "Max price must be higher than min price!")
+@LowerThanOther(lowerField = "minQuantity", higherField = "maxQuantity", message = "Max quantity must be higher than min quantity!")
+@AfterSpecificDate(startDate = "startDeliveryDate", endDate = "endDeliveryDate", message = "End delivery date needs to be after start delivery date!")
+@AfterSpecificDate(startDate = "startDate", endDate = "endDate", message = "End date needs to be after start date!")
 public class Auction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
     private int id;
 
+    @NotBlank(message = "Title is mandatory!")
     private String title;
+
+    @Size(max = 500, message = "Description must be shorter than 500 characters!")
     private String description;
+
+    @NotNull(message = "Minimal price is mandatory!")
+    @DecimalMin(value = "0.0", message = "Minimal price must be greater than 0.0!")
     private double minPrice;
+
+    @NotNull(message = "Maximal price is mandatory!")
+    @DecimalMin(value = "0.0", message = "Minimal price must be greater than 0.0!")
     private double maxPrice;
+
+    @NotNull(message = "Minimal quantity is mandatory!")
+    @DecimalMin(value = "0.0", message = "Minimal quantity must be greater than 0.0!")
     private double minQuantity;
+
+    @NotNull(message = "Maximal quantity is mandatory!")
+    @DecimalMin(value = "0.0", message = "Maximal quantity must be greater than 0.0!")
     private double maxQuantity;
+
+    @NotNull(message = "Start delivery date is mandatory!")
+    @AfterToday(message = "Start delivery date needs to be in the future!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date startDeliveryDate;
+
+    @NotNull(message = "End delivery date is mandatory!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date endDeliveryDate;
+
+    @NotNull(message = "Start date is mandatory!")
+    @AfterToday(message = "Start date needs to be in the future!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date startDate;
+
+    @NotNull(message = "End date is mandatory!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date endDate;
+
+    @NotNull(message = "Definition if auction is locked or not is mandatory!")
     private boolean locked;
 
     @OneToOne(targetEntity = Product.class, cascade = CascadeType.ALL)
