@@ -1,18 +1,19 @@
 package at.barniverse.backend.barniverse_backend.model;
 
+import at.barniverse.backend.barniverse_backend.dto.IDto;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 // product model
 @Entity
-public class Product {
+public class Product implements IEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
 
@@ -26,10 +27,16 @@ public class Product {
     @JoinColumn(name = "product_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_productImage_productId"))
     private List<ProductImage> images;
 
-    // getter and setter
+//----getter and setter----
 
+    @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

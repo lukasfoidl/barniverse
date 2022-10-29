@@ -11,10 +11,10 @@ import java.util.Date;
 
 // offer model
 @Entity
-public class Offer {
+public class Offer implements IEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull()
     private int id;
 
@@ -34,10 +34,26 @@ public class Offer {
     @NotNull(message = "Status of order is mandatory!")
     private OStatus status;
 
-    // getter and setter
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_userId"))
+    @NotNull
+    private User user;
 
+    @ManyToOne(targetEntity = Auction.class)
+    @JoinColumn(name = "auction_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_auctionId"))
+    @NotNull
+    private Auction auction;
+
+//----getter and setter----
+
+    @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getPrice() {
@@ -70,5 +86,21 @@ public class Offer {
 
     public void setStatus(OStatus status) {
         this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Auction getAuction() {
+        return auction;
+    }
+
+    public void setAuction(Auction auction) {
+        this.auction = auction;
     }
 }

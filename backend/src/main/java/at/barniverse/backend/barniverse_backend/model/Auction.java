@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
-import java.util.List;
 
 // auction model
 @Entity
@@ -16,10 +15,10 @@ import java.util.List;
 @LowerThanOther(lowerField = "minQuantity", higherField = "maxQuantity", message = "Max quantity must be higher than min quantity!")
 @AfterSpecificDate(startDate = "startDeliveryDate", endDate = "endDeliveryDate", message = "End delivery date needs to be after start delivery date!")
 @AfterSpecificDate(startDate = "startDate", endDate = "endDate", message = "End date needs to be after start date!")
-public class Auction {
+public class Auction implements IEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
 
@@ -66,18 +65,26 @@ public class Auction {
     @NotNull(message = "Definition if auction is locked or not is mandatory!")
     private boolean locked;
 
-    @OneToOne(targetEntity = Product.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_userId"))
+    @NotNull
+    private User user;
+
+    @ManyToOne(targetEntity = Product.class)
     @JoinColumn(name = "product_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_productId"))
+    @NotNull
     private Product product;
 
-    @OneToMany(targetEntity = Offer.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "auction_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_auctionId"))
-    private List<Offer> offers;
+//----getter and setter----
 
-    // getter and setter
-
+    @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -168,19 +175,19 @@ public class Auction {
         this.locked = locked;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public List<Offer> getOffers() {
-        return offers;
-    }
-
-    public void setOffers(List<Offer> offers) {
-        this.offers = offers;
     }
 }

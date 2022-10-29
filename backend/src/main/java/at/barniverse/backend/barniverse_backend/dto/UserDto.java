@@ -1,60 +1,27 @@
-package at.barniverse.backend.barniverse_backend.model;
+package at.barniverse.backend.barniverse_backend.dto;
 
-import at.barniverse.backend.barniverse_backend.dto.IDto;
 import at.barniverse.backend.barniverse_backend.enums.UStatus;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+// user dto
+public class UserDto implements IDto {
 
-// user model
-@Entity
-public class User implements IEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private int id;
-
-    @NotBlank(message = "Firstname is mandatory!")
     private String firstname;
-
-    @NotBlank(message = "Lastname is mandatory!")
     private String lastname;
-
-    @NotBlank(message = "Username is mandatory!")
-    @Size(min = 5, message = "Username has to be at least 5 characters long!")
     private String username;
-
-    @NotBlank(message = "Email is mandatory!")
-    @Email(message = "Please provide a valid email address!")
     private String email;
-
-    @NotBlank(message = "Password is mandatory!")
-    @Size(min = 8, message = "Password has to be at least 8 characters long!")
     private String password;
-
     private String picture;
-
-    @NotNull(message = "Definition if user is admin or not is mandatory!")
     private boolean isAdmin;
-
-    @NotNull(message = "Status of user is mandatory!")
     private UStatus status;
 
 //----getter and setter----
 
     @Override
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     @Override
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
 
     public String getFirstname() {
         return firstname;
