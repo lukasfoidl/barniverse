@@ -17,9 +17,12 @@ public class UserService extends BaseService {
     @Autowired
     private UserTransformer userTransformer;
 
+    @Autowired
+    private UserValidationService userValidationService;
+
     // create new user
     public ResponseEntity<Object> addUser(UserDto userDto) {
-        return addEntity(userRepository, userTransformer, userDto);
+        return addEntity(userRepository, userTransformer, userValidationService, userDto);
     }
 
     // get all users
@@ -34,7 +37,7 @@ public class UserService extends BaseService {
 
     // update specific user
     public ResponseEntity<Object> updateUser(UserDto userDto) {
-        return updateEntity(userRepository, userTransformer, userDto);
+        return updateEntity(userRepository, userTransformer, userValidationService, userDto);
     }
 
     // delete specific user

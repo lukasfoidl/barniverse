@@ -5,6 +5,10 @@ import at.barniverse.backend.barniverse_backend.model.ProductImage;
 import org.springframework.stereotype.Component;
 
 // product image transformer for convertions between entity <-> dto
+// !! DIFFERENCE TO OTHER TRANSFORMER !!
+// repairEntity clears the id and does not set the id from database (because of List characteristic)
+// convertToEntity does not clear the id but takes the id from dto
+// (additional id check in ProductValidationService to ensure relation between image and product)
 @Component
 public class ProductImageTransformer implements ITransformer<ProductImage, ProductImageDto> {
 
@@ -25,6 +29,13 @@ public class ProductImageTransformer implements ITransformer<ProductImage, Produ
         productImage.setId(productImageDto.getId());
         productImage.setFile(productImageDto.getFile());
 
+        return productImage;
+    }
+
+    // repair entity in case of create (POST)
+    @Override
+    public ProductImage repairEntity(ProductImage productImage, ProductImage dbProductImage) {
+        productImage.setId(0); // set id to 0 to create new entity
         return productImage;
     }
 }

@@ -4,6 +4,7 @@ import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.dto.ProductImageDto;
 import at.barniverse.backend.barniverse_backend.model.Product;
 import at.barniverse.backend.barniverse_backend.model.ProductImage;
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +34,19 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
     public Product convertToEntity(ProductDto productDto) {
         Product product = new Product();
 
-        product.setId(productDto.getId());
+        // id gets set from database
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setImages(convertImagesToEntity(productDto.getImages()));
 
         return product;
+    }
+
+    // repair entity in case of update (PUT)
+    @Override
+    public Product repairEntity(Product product, Product dbProduct) {
+       product.setId(dbProduct.getId()); // set id to update existing entity
+       return product;
     }
 
     // extension method which converts sub entities to dtos

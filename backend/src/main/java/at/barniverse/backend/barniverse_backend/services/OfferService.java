@@ -17,9 +17,12 @@ public class OfferService extends BaseService {
     @Autowired
     private OfferTransformer offerTransformer;
 
+    @Autowired
+    private OfferValidationService offerValidationService;
+
     // create offer
     public ResponseEntity<Object> addOffer(OfferDto offerDto) {
-        return addEntity(offerRepository, offerTransformer, offerDto);
+        return addEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
     // read offer
@@ -34,7 +37,7 @@ public class OfferService extends BaseService {
 
     // update offer
     public ResponseEntity<Object> updateOffer(OfferDto offerDto) {
-        return updateEntity(offerRepository, offerTransformer, offerDto);
+        return updateEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
     // delete offer

@@ -43,7 +43,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
     public Auction convertToEntity(AuctionDto auctionDto) {
         Auction auction = new Auction();
 
-        auction.setId(auctionDto.getId());
+        // id gets set from database
         auction.setTitle(auctionDto.getTitle());
         auction.setDescription(auctionDto.getDescription());
         auction.setMinPrice(auctionDto.getMinPrice());
@@ -66,6 +66,15 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         product.setId(auctionDto.getProduct().getId());
         auction.setProduct(product);
 
+        return auction;
+    }
+
+    // repair entity in case of update (PUT)
+    @Override
+    public Auction repairEntity(Auction auction, Auction dbAuction) {
+        auction.setId(dbAuction.getId()); // set id to update existing entity
+        auction.setUser(dbAuction.getUser()); // user can not be changed after creation of an auction
+        auction.setProduct(dbAuction.getProduct()); // product can not be changed after creation of an auction
         return auction;
     }
 }

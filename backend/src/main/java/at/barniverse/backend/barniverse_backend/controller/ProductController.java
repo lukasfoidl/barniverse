@@ -3,7 +3,6 @@ package at.barniverse.backend.barniverse_backend.controller;
 import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +36,7 @@ public class ProductController {
     //TODO: Safety alert! Products can be updated only with Id.
     @PutMapping(path="/products")
     public ResponseEntity<Object> updateProduct(@RequestBody ProductDto productDto) {
-//        return productService.updateProduct(productDto);
-        return new ResponseEntity<>(null, HttpStatus.NOT_IMPLEMENTED);
+        return productService.updateProduct(productDto);
     }
 
     // delete specific product

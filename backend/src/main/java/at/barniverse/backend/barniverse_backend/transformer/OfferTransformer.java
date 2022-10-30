@@ -36,7 +36,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
     public Offer convertToEntity(OfferDto offerDto) {
         Offer offer = new Offer();
 
-        offer.setId(offerDto.getId());
+        // id gets set from database
         offer.setPrice(offerDto.getPrice());
         offer.setQuantity(offerDto.getQuantity());
         offer.setDeliveryDate(offerDto.getDeliveryDate());
@@ -52,6 +52,15 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         auction.setId(offerDto.getAuction().getId());
         offer.setAuction(auction);
 
+        return offer;
+    }
+
+    // repair entity in case of update (PUT)
+    @Override
+    public Offer repairEntity(Offer offer, Offer dbOffer) {
+        offer.setId(dbOffer.getId()); // set id to update existing entity
+        offer.setUser(dbOffer.getUser()); // user can not be changed after creation of an offer
+        offer.setAuction(dbOffer.getAuction()); // auction can not be changed after creation of an offer
         return offer;
     }
 }

@@ -17,9 +17,12 @@ public class AuctionService extends BaseService {
     @Autowired
     private AuctionTransformer auctionTransformer;
 
+    @Autowired
+    private AuctionValidationService auctionValidationService;
+
     // create auction
     public ResponseEntity<Object> addAuction(AuctionDto auctionDto) {
-        return addEntity(auctionRepository, auctionTransformer, auctionDto);
+        return addEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto);
     }
 
     // read auctions
@@ -34,7 +37,7 @@ public class AuctionService extends BaseService {
 
     // update auction
     public ResponseEntity<Object> updateAuction(AuctionDto auctionDto) {
-        return updateEntity(auctionRepository, auctionTransformer, auctionDto);
+        return updateEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto);
     }
 
     // delete auction

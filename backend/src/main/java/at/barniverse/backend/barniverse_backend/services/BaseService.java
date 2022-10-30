@@ -2,9 +2,7 @@ package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.IDto;
 import at.barniverse.backend.barniverse_backend.model.IEntity;
-import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.transformer.ITransformer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
+import static at.barniverse.backend.barniverse_backend.configuration.Context.INVALID_ID;
+
 // base class for services with base functionality
 @Service
-public class BaseService {
-
-    @Autowired
-    private ValidationService validationService;
-
-    // basic messages
-    protected final String DATABASE_ERROR = "The transaction has been refused!";
-    protected final String INVALID_ID = DATABASE_ERROR + " Invalid Id!";
+abstract public class BaseService {
 
     // create entity
-    protected <T, U> ResponseEntity<Object> addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, U dto) {
-        T entity= transformer.convertToEntity(dto);
-        return validateAndSafeEntity(repository, entity);
+    protected <T, U> ResponseEntity<Object> addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) {
+        T entity = transformer.convertToEntity(dto);
+        return validateAndSafeEntity(repository, validationService, entity);
     }
 
     // read entities
@@ -62,7 +56,7 @@ public class BaseService {
     }
 
     // update entity
-    public <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, IDto dto) {
+    public <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, IDto dto) {
         Optional<IEntity> dbEntity;
         try {
             dbEntity = (Optional<IEntity>) repository.findById(dto.getId());
@@ -73,10 +67,8 @@ public class BaseService {
             return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
         }
         T updatedEntity = transformer.convertToEntity((U) dto);
-        if (updatedEntity.getClass() == User.class) { // password should and can not be updated with standard user put request
-            ((User) updatedEntity).setPassword(((User)dbEntity.get()).getPassword());
-        }
-        return validateAndSafeEntity(repository, updatedEntity);
+        updatedEntity = transformer.repairEntity(updatedEntity, (T) dbEntity.get());
+        return validateAndSafeEntity(repository, validationService, updatedEntity);
     }
 
     // delete entity
@@ -94,15 +86,26 @@ public class BaseService {
     }
 
     // extension method which validates a single entity and saves it if valid
-    private <T> ResponseEntity<Object> validateAndSafeEntity(CrudRepository<T, Integer> repository, T entity) {
+    private <T> ResponseEntity<Object> validateAndSafeEntity(CrudRepository<T, Integer> repository, ValidationService<T> validationService, T entity) {
         ResponseEntity<Object> response = validationService.validateEntity(entity);
         return saveIfValid(repository, response, entity);
     }
 
-    // extension method which validates a parent entity and all sub entities and saves the parent entity if valid
-    protected <T> ResponseEntity<Object> validateAndSafeEntities(CrudRepository<T, Integer> repository, List<IEntity> allEntities, T parentEntity) {
-        ResponseEntity<Object> response = validationService.validateEntities(allEntities);
-        return saveIfValid(repository, response, parentEntity);
+    // validates a parent entity and all subentities and saves the parent entity if valid (subentities should get saved automatically with parent)
+    protected <T, V> ResponseEntity<Object> validateWithSubentitiesAndSaveEntity(
+            CrudRepository<T, Integer> parentRepository,
+            ValidationService<T> parentValidationService,
+            T parentEntity,
+            ValidationService<V> childValidationService,
+            List<V> childrenEntities) {
+        List<String> errors = new ArrayList<>(parentValidationService.validateEntityGetErrors(parentEntity));
+        childrenEntities.forEach(childEntity -> {
+            errors.addAll(childValidationService.validateEntityGetErrors(childEntity));
+        });
+        if (!errors.isEmpty()) {
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        return saveIfValid(parentRepository, new ResponseEntity<>(null, HttpStatus.OK), parentEntity);
     }
 
     // extension method which saves a entity if valid

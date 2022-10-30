@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserTransformer implements ITransformer<User, UserDto> {
 
+    @Override
     public UserDto convertToDto(User user) {
         UserDto userDto = new UserDto();
 
@@ -24,10 +25,11 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         return userDto;
     }
 
+    @Override
     public User convertToEntity(UserDto userDto) {
         User user = new User();
 
-        user.setId(userDto.getId());
+        // id gets set from database
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
         user.setUsername(userDto.getUsername());
@@ -37,6 +39,14 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         user.setAdmin(userDto.isAdmin());
         user.setStatus(userDto.getStatus());
 
+        return user;
+    }
+
+    // repair entity in case of update (PUT)
+    @Override
+    public User repairEntity(User user, User dbUser) {
+        user.setId(dbUser.getId()); // set id to update existing entity
+        user.setPassword(dbUser.getPassword()); // password can not be updated with standard user update (PUT)
         return user;
     }
 }
