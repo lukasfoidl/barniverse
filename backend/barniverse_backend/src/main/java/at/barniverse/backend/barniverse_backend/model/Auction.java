@@ -9,7 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
 
-// auction model
+/**
+ * entity for an auction,
+ * property definitions as well as getter and setter functions
+ */
 @Entity
 @LowerThanOther(lowerField = "minPrice", higherField = "maxPrice", message = "Max price must be higher than min price!")
 @LowerThanOther(lowerField = "minQuantity", higherField = "maxQuantity", message = "Max quantity must be higher than min quantity!")

@@ -4,7 +4,10 @@ import at.barniverse.backend.barniverse_backend.enums.OStatus;
 
 import java.util.Date;
 
-// offer dto
+/**
+ * dto for offer entity,
+ * property definitions as well as getter and setter functions
+ */
 public class OfferDto implements IDto {
 
     private int id;

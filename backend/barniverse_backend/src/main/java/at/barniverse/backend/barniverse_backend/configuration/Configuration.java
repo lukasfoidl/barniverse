@@ -5,7 +5,9 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.Validator;
 
-// configuration for manual validation (without @Valid)
+/**
+ * Configuration class for manual validation of annotations without using @Valid in controller
+ */
 @org.springframework.context.annotation.Configuration
 public class Configuration {
 

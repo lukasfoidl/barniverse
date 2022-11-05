@@ -7,7 +7,9 @@ import at.barniverse.backend.barniverse_backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-// auction transformer for convertions between entity <-> dto
+/**
+ * transforms auction entities and dtos
+ */
 @Component
 public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
 
@@ -17,6 +19,13 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
     @Autowired
     private ProductTransformer productTransformer;
 
+    /**
+     * transforms auction entity to auction dto, <br>
+     * user property of entity will be transformed to a user dto by UserTransformer, <br>
+     * product property of entity will be transformed to a product dto by ProductTransformer
+     * @param auction entity, which should be transformed
+     * @return auction dto
+     */
     @Override
     public AuctionDto convertToDto(Auction auction) {
         AuctionDto auctionDto = new AuctionDto();
@@ -39,6 +48,16 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         return auctionDto;
     }
 
+    /**
+     * transforms auction dto to auction entity, <br>
+     * id property does NOT get transformed from dto to entity, because id gets set from the database automatically, <br>
+     * user property of dto will NOT be transformed to a user entity,
+     * just the id gets set because cascading is not enabled and only id is necessary for the foreign key, <br>
+     * product property of dto will NOT be transformed to a product entity,
+     * just the id gets set because cascading is not enabled and only id is necessary for the foreign key
+     * @param auctionDto dto which should be transformed
+     * @return auction entity
+     */
     @Override
     public Auction convertToEntity(AuctionDto auctionDto) {
         Auction auction = new Auction();
@@ -69,7 +88,15 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         return auction;
     }
 
-    // repair entity in case of update (PUT)
+    /**
+     * repairs auction entity after transformation in case of update (PUT), <br>
+     * id gets set to update entity, <br>
+     * user property gets set to user property from database, because the user cannot be changed after the creation of an auction entity, <br>
+     * product property gets set to product property from database, because the product cannot be changed after the creation of an auction entity
+     * @param auction entity which needs to be repaired
+     * @param dbAuction entity with the missing data
+     * @return repaired entity
+     */
     @Override
     public Auction repairEntity(Auction auction, Auction dbAuction) {
         auction.setId(dbAuction.getId()); // set id to update existing entity

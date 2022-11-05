@@ -9,7 +9,10 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-// offer model
+/**
+ * entity for an offer,
+ * property definitions as well as getter and setter functions
+ */
 @Entity
 public class Offer implements IEntity {
 

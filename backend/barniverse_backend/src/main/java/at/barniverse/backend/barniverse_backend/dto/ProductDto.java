@@ -2,7 +2,10 @@ package at.barniverse.backend.barniverse_backend.dto;
 
 import java.util.List;
 
-// product dto
+/**
+ * dto for offer entity,
+ * property definitions as well as getter and setter functions
+ */
 public class ProductDto implements IDto {
 
     private int id;

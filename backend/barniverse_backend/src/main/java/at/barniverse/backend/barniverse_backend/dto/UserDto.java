@@ -2,7 +2,10 @@ package at.barniverse.backend.barniverse_backend.dto;
 
 import at.barniverse.backend.barniverse_backend.enums.UStatus;
 
-// user dto
+/**
+ * dto for user entity,
+ * property definitions as well as getter and setter functions
+ */
 public class UserDto implements IDto {
 
     private int id;

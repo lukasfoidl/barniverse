@@ -4,7 +4,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-// product image model
+/**
+ * entity for a product image,
+ * property definitions as well as getter and setter functions
+ */
 @Entity
 public class ProductImage implements IEntity {
 

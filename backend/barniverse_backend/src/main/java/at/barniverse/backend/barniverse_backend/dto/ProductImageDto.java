@@ -1,7 +1,10 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
 
-// product image dto
+/**
+ * dto for product image entity,
+ * property definitions as well as getter and setter functions
+ */
 public class ProductImageDto implements IDto {
 
     private int id;

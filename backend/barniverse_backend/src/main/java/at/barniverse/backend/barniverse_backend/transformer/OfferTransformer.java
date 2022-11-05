@@ -7,7 +7,9 @@ import at.barniverse.backend.barniverse_backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-// offer transformer for convertions between entity <-> dto
+/**
+ * transforms offer entities and dtos
+ */
 @Component
 public class OfferTransformer implements ITransformer<Offer, OfferDto> {
 
@@ -17,6 +19,13 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
     @Autowired
     private AuctionTransformer auctionTransformer;
 
+    /**
+     * transforms offer entity to offer dto, <br>
+     * user property of entity will be transformed to a user dto by UserTransformer, <br>
+     * auction property of entity will be transformed to an auction dto by AuctionTransformer
+     * @param offer entity, which should be transformed
+     * @return offer dto
+     */
     @Override
     public OfferDto convertToDto(Offer offer) {
         OfferDto offerDto = new OfferDto();
@@ -32,6 +41,16 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         return offerDto;
     }
 
+    /**
+     * transforms offer dto to offer entity, <br>
+     * id property does NOT get transformed from dto to entity, because id gets set from the database automatically, <br>
+     * user property of dto will NOT be transformed to a user entity,
+     * just the id gets set because cascading is not enabled and only id is necessary for the foreign key, <br>
+     * auction property of dto will NOT be transformed to an auction entity,
+     * just the id gets set because cascading is not enabled and only id is necessary for the foreign key
+     * @param offerDto dto which should be transformed
+     * @return offer entity
+     */
     @Override
     public Offer convertToEntity(OfferDto offerDto) {
         Offer offer = new Offer();
@@ -55,7 +74,15 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         return offer;
     }
 
-    // repair entity in case of update (PUT)
+    /**
+     * repairs offer entity after transformation in case of update (PUT), <br>
+     * id gets set to update entity, <br>
+     * user property gets set to user property from database, because the user cannot be changed after the creation of an offer entity, <br>
+     * auction property gets set to auction property from database, because the auction cannot be changed after the creation of an offer entity
+     * @param offer entity which needs to be repaired
+     * @param dbOffer entity with the missing data
+     * @return repaired entity
+     */
     @Override
     public Offer repairEntity(Offer offer, Offer dbOffer) {
         offer.setId(dbOffer.getId()); // set id to update existing entity

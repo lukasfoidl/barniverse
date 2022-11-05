@@ -2,7 +2,10 @@ package at.barniverse.backend.barniverse_backend.dto;
 
 import java.util.Date;
 
-// auction dto
+/**
+ * dto for auction entity,
+ * property definitions as well as getter and setter functions
+ */
 public class AuctionDto implements IDto {
 
     private int id;

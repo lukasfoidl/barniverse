@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-// product model
+/**
+ * entity for a product,
+ * property definitions as well as getter and setter functions
+ */
 @Entity
 public class Product implements IEntity {
 

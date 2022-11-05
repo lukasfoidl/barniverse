@@ -9,7 +9,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-// user model
+/**
+ * entity for an user,
+ * property definitions as well as getter and setter functions
+ */
 @Entity
 public class User implements IEntity {
 
