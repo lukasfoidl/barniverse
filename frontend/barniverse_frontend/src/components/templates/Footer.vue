@@ -40,15 +40,15 @@
                         </h6>
                         <p>
                             <a class="nav-link" href="https://www.google.at/maps/place/F+Building,+H%C3%B6chst%C3%A4dtpl.+6,+1200+Wien/@48.2390559,16.3759752,17z/data=!3m1!4b1!4m6!3m5!1s0x476d064f691978b1:0xe6bce6d69ea2874d!8m2!3d48.2390534!4d16.3775228!16s%2Fg%2F11bw40m9p0?hl=de">
-                                <i class="bi bi-house mr-3"></i> Vienna, Höchstädtplatz 6, 1200, AT
+                                <i class="bi bi-house mr-3"></i> <Address />
                             </a>
                         </p>
                         <p>
                             <a class="nav-link" href="mailto:office@barniverse.com">
-                                <i class="bi bi-envelope mr-3"></i> office@barniverse.com
+                                <i class="bi bi-envelope mr-3"></i> <Email />
                             </a>
                         </p>
-                        <p><i class="bi bi-telephone mr-3"></i> +43 1 1234 567</p>
+                        <p><i class="bi bi-telephone mr-3"></i> <Phone /></p>
                     </div>
 
                     <!-- Grid column -->
@@ -99,11 +99,17 @@
 <script>
 import $ from "jquery"
 import BarniverseJustificationText from "../atoms/BarniverseJustificationText.vue";
+import Email from "../atoms/Email.vue";
+import Address from "../atoms/Address.vue";
+import Phone from "../atoms/Phone.vue";
 
 export default {
     name: "Footer",
     components: {
-        BarniverseJustificationText
+        BarniverseJustificationText,
+        Email,
+        Phone,
+        Address
 },
     mounted() {
         // set navbar tabs to not active if footer links get clicked

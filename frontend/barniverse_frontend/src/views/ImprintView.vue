@@ -33,16 +33,16 @@
     </div>
     <!-- Firmensitz -->
     <div>
-        <center>Firmensitz: Höchstädtplat 6 | 1200 Wien | Austria</center>
+        <center>Firmensitz: <Address /></center>
     </div>
     <p/>
     <!-- Telefon -->
     <div>
-        <center>Tel.: +43 1 1234 567</center>
+        <center>Tel.: <Phone /></center>
     </div>
     <!-- Email -->
     <div>
-        <center>E-Mail:&nbsp;<a href=mailto:office@barniverse.com>office@barniverse.com</a></center>
+        <center>E-Mail:&nbsp;<a href=mailto:office@barniverse.com><Email /></a></center>
     </div>
     <p/>
     <!-- Mitgliedschaften bei WK Organisationen -->
@@ -68,11 +68,14 @@
 </template>
 
 <script>
+import Address from '@/components/atoms/Address.vue';
 import BarniverseJustificationText from '@/components/atoms/BarniverseJustificationText.vue';
+import Email from '@/components/atoms/Email.vue';
+import Phone from '@/components/atoms/Phone.vue';
 
 export default {
     name: "ImprintView",
-    components: { BarniverseJustificationText }
+    components: { BarniverseJustificationText, Phone, Email, Address }
 }
 </script>
 
