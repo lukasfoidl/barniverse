@@ -12,9 +12,7 @@
                             Barniverse
                         </h6>
                         <p>
-                            This is a fictitious company for a web engineering project at the UAS Technikum Wien.
-                            All provided data is fictitious and for demonstration purposes only!
-                            No transactions of any kind can be carried out on this website!  
+                            <BarniverseJustificationText />
                         </p>
                     </div>
 
@@ -100,9 +98,13 @@
 
 <script>
 import $ from "jquery"
+import BarniverseJustificationText from "../atoms/BarniverseJustificationText.vue";
 
 export default {
     name: "Footer",
+    components: {
+        BarniverseJustificationText
+},
     mounted() {
         // set navbar tabs to not active if footer links get clicked
         $(document).on("click", ".footerLink", function() {

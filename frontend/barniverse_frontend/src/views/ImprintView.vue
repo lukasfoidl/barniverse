@@ -1,8 +1,7 @@
 <template>
     <!-- Einleitung -->
     <div>
-        <center>This is a fictitious company for a web engineering project at the UAS Technikum Wien.</center>
-        <center>All provided data is fictitious and for demonstration purposes only! No transactions of any kind can be carried out on this website!</center>
+        <center><BarniverseJustificationText /></center>
         <p/>
         <center>Due to the company's headquarters in Austria, the imprint is in German.</center>
     </div>
@@ -69,8 +68,11 @@
 </template>
 
 <script>
+import BarniverseJustificationText from '@/components/atoms/BarniverseJustificationText.vue';
+
 export default {
-    name: "ImprintView"
+    name: "ImprintView",
+    components: { BarniverseJustificationText }
 }
 </script>
 
