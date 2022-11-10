@@ -1,0 +1,78 @@
+<template>
+    <!-- Einleitung -->
+    <div>
+        <center>This is a fictitious company for a web engineering project at the UAS Technikum Wien.</center>
+        <center>All provided data is fictitious and for demonstration purposes only! No transactions of any kind can be carried out on this website!</center>
+        <p/>
+        <center>Due to the company's headquarters in Austria, the imprint is in German.</center>
+    </div>
+    <p/>
+    <!-- Firmenwortlaut -->
+    <div>
+        <center>Barniverse GmbH</center>
+    </div>
+    <!-- Rechtsform -->
+    <div>
+        <center>Gesellschaft mit beschränkter Haftung</center>
+    </div>
+    <!-- Unternehmensgegenstand -->
+    <div>
+        <center>Durchführung von Auktionen</center>
+    </div>
+    <p/>
+    <!-- UID-Nummer -->
+    <div>
+        <center>UID-Nr.: ATU12345678</center>
+    </div>
+    <!-- Firmenbuchnummer -->
+    <div>
+        <center>FB-Nr.: 123456 a</center>
+    </div>
+    <!-- Firmenbuchgericht -->
+    <div>
+        <center>FB-Gericht.: Handelsgericht Wien</center>
+    </div>
+    <!-- Firmensitz -->
+    <div>
+        <center>Firmensitz: Höchstädtplat 6 | 1200 Wien | Austria</center>
+    </div>
+    <p/>
+    <!-- Telefon -->
+    <div>
+        <center>Tel.: +43 1 1234 567</center>
+    </div>
+    <!-- Email -->
+    <div>
+        <center>E-Mail:&nbsp;<a href=mailto:office@barniverse.com>office@barniverse.com</a></center>
+    </div>
+    <p/>
+    <!-- Mitgliedschaften bei WK Organisationen -->
+    <div>
+        <center>WKÖ, WK Wien</center>
+    </div>
+    <!-- anwendbare Rechtsvorschriften und Zugang dazu -->
+    <div>
+        <center>Rechtsvorschriften:&nbsp;<a href="https://www.ris.bka.gv.at">www.ris.bka.gv.at</a></center>
+    </div>
+    <!-- Aufsichtsbehörde -->
+    <div>
+        <center>Magistrat der Stadt Wien</center>
+    </div>
+    <p/>
+    <!-- Berufsbezeichnung -->
+    <!-- Verleihungsstaat -->
+    <!-- Angaben zur Online Streitbeilegung -->
+    <div>
+        <center>Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten:&nbsp;<a href="https://ec.europa.eu/odr">www.ec.europa.eu/odr</a>. Sie können allfällige Beschwerden auch an die oben angegebene E-Mail-Adresse richten.</center>
+    </div>
+
+</template>
+
+<script>
+export default {
+    name: "ImprintView"
+}
+</script>
+
+<style>
+</style>

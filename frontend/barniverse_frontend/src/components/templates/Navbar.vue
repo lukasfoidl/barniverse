@@ -19,7 +19,7 @@
             <ul class="navbar-nav nav nav-tabs">
                 <li class="nav-item">
                     <!-- dashboard -->
-                    <router-link id="home" class="nav-link navItemStyle active" to="/">
+                    <router-link id="home" class="nav-link navItemStyle" to="/">
                         Home
                     </router-link>
                 </li>

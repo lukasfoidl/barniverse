@@ -6,6 +6,8 @@ import MyAuctionsView from "../views/MyAuctionsView"
 import MyOffersView from "../views/MyOffersView"
 import RegisterView from "../views/RegisterView"
 import LoginView from "../views/LoginView"
+import HelpView from "../views/HelpView"
+import ImprintView from "../views/ImprintView"
 import PageNotFoundView from "../views/PageNotFoundView"
 
 const routes = [
@@ -43,6 +45,16 @@ const routes = [
         name: "login",
         path: "/login",
         component: LoginView
+    },
+    {
+        name: "help",
+        path: "/help",
+        component: HelpView
+    },
+    {
+        name: "imprint",
+        path: "/imprint",
+        component: ImprintView
     },
     {
         path: '/:catchAll(.*)*',

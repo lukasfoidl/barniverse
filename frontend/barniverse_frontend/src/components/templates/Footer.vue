@@ -24,12 +24,12 @@
                             Links
                         </h6>
                         <p>
-                            <router-link id="help" class="nav-link textColor" to="/help">
+                            <router-link id="help" class="nav-link textColor footerLink" to="/help">
                                 Help
                             </router-link>
                         </p>
                         <p>
-                            <router-link id="imprint" class="nav-link textColor" to="/imprint">
+                            <router-link id="imprint" class="nav-link textColor footerLink" to="/imprint">
                                 Imprint
                             </router-link>
                         </p>
@@ -50,7 +50,7 @@
                                 <i class="bi bi-envelope mr-3"></i> office@barniverse.com
                             </a>
                         </p>
-                        <p><i class="bi bi-telephone mr-3"></i> +43 01 1234 567</p>
+                        <p><i class="bi bi-telephone mr-3"></i> +43 1 1234 567</p>
                     </div>
 
                     <!-- Grid column -->
@@ -99,14 +99,23 @@
 </template>
 
 <script>
+import $ from "jquery"
+
 export default {
-    name: "Footer"
+    name: "Footer",
+    mounted() {
+        // set navbar tabs to not active if footer links get clicked
+        $(document).on("click", ".footerLink", function() {
+            $(".active").removeClass("active");
+        });
+    }
 }
 </script>
 
 <style>
 .footer {
     background-color: #ebdbc7;
+    margin-top: 10px;
 }
 
 .textColor {

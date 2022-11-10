@@ -2,9 +2,13 @@
 
     <Navbar />
 
-    <router-view />
+    <div class="mainContent">
+        <router-view />
+    </div>
 
-    <Footer />
+    <div class="footer">
+        <Footer />
+    </div>
 
 </template>
 
@@ -22,4 +26,13 @@ export default {
 </script>
 
 <style>
+.mainContent {
+    margin-left: 10px;
+    margin-right: 10px;
+    flex: 1 1 100%;
+}
+
+.footer {
+    flex: 0 0 auto;
+}
 </style>
