@@ -4,7 +4,8 @@ import ProductView from "../views/ProductView"
 import AuctionView from "../views/AuctionView"
 import MyAuctionsView from "../views/MyAuctionsView"
 import MyOffersView from "../views/MyOffersView"
-import UserView from "../views/UserView"
+import RegisterView from "../views/RegisterView"
+import LoginView from "../views/LoginView"
 import PageNotFoundView from "../views/PageNotFoundView"
 
 const routes = [
@@ -34,9 +35,14 @@ const routes = [
         component: MyOffersView
     },
     {
-        name: "user",
-        path: "/user",
-        component: UserView
+        name: "register",
+        path: "/register",
+        component: RegisterView
+    },
+    {
+        name: "login",
+        path: "/login",
+        component: LoginView
     },
     {
         path: '/:catchAll(.*)*',

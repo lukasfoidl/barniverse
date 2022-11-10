@@ -48,19 +48,31 @@
                     </router-link>
                 </li>
             </ul>
-            <ul id="usernameList" class="navbar-nav nav nav-tabs flex-fill">
-                <li id="usernameListItem" class="nav-item ms-auto">
-                    <!-- my username -->
+            <ul id="userContent" class="navbar-nav nav nav-tabs flex-fill">
+                <!-- my username -->
+                <!-- <li id="userContentItem" class="nav-item ms-auto">
                     <router-link id="user" class="nav-link navItemStyle" to="/user">
                         Maximilian Obelsberg
                     </router-link>
-                </li>
-                <li class="nav-item navIcon">
-                    <!-- login/logout -->
-                    <router-link id="logout" class="nav-link navItemStyle" to="/logout">
-                        <i class="bi bi-box-arrow-in-right"></i>
+                </li> -->
+                <!-- register new user -->
+                <li id="userContentItem" class="nav-item ms-auto">
+                    <router-link id="register" class="nav-link navItemStyle" to="/register">
+                        Register
                     </router-link>
                 </li>
+                <!-- login -->
+                <li class="nav-item navIcon">
+                    <router-link id="login" class="nav-link navItemStyle" to="/login">
+                        <i class="bi bi-box-arrow-in-right" alt="Login"></i>
+                    </router-link>
+                </li>
+                <!-- logout -->
+                <!-- <li class="nav-item navIcon">
+                    <router-link id="logout" class="nav-link navItemStyle" to="/logout">
+                        <i class="bi bi-box-arrow-right" alt="Logout"></i>
+                    </router-link>
+                </li> -->
             </ul>
         </div>
     </nav>
@@ -76,12 +88,12 @@ export default {
         $(window).on('resize', function() {
             if ($(window).width() < 992) {
                 $("#navContent").removeClass("d-flex");
-                $("#usernameList").removeClass("flex-fill");
-                $("#usernameListItem").removeClass("ms-auto");
+                $("#userContent").removeClass("flex-fill");
+                $("#userContentItem").removeClass("ms-auto");
             } else {
                 $("#navContent").addClass("d-flex");
-                $("#usernameList").addClass("flex-fill");
-                $("#usernameListItem").addClass("ms-auto");
+                $("#userContent").addClass("flex-fill");
+                $("#userContentItem").addClass("ms-auto");
             }
         });
 
