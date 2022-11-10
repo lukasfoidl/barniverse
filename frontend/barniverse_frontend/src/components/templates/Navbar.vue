@@ -100,7 +100,11 @@ export default {
         // set correct nav-tab as active on selection
         $(document).on("click", ".navItemStyle", function (event) {
             $(".active").removeClass("active");
-            $(event.target).addClass("active");
+            if (event.target.tagName.toLowerCase() != "a") {
+                $(event.target.parentElement).addClass("active"); // necessary for icons
+            } else {
+                $(event.target).addClass("active");
+            }
         });
 
         // set home-tab on active if image or brandname get selected
