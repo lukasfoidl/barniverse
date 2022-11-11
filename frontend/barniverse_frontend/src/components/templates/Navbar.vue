@@ -86,7 +86,11 @@ export default {
     mounted() {
         // set correct style for changing between mobile and desktop mode
         $(window).on('resize', function() {
-            if ($(window).width() < 992) {
+            var minScreenWidth = 992;
+            if ($(document).height() > $(window).height()) { // check if scrollbar is visible
+                minScreenWidth -= 17;
+            }
+            if ($(window).width() < minScreenWidth) {
                 $("#navContent").removeClass("d-flex");
                 $("#userContent").removeClass("flex-fill");
                 $("#userContentItem").removeClass("ms-auto");
@@ -167,7 +171,7 @@ export default {
     .nav-tabs {
         --bs-nav-tabs-border-color: rgba(0, 0, 0, 0) !important;
     }
-    .navItemStyle.active {
+    .navItemStyle.navItemStyleActive {
         background-color: #ebdbc7 !important;
         border-color: rgba(0, 0, 0, 0) !important;
     }
