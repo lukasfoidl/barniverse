@@ -27,8 +27,8 @@ export default {
 
 <style>
 .mainContent {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
     flex: 1 1 100%;
 }
 

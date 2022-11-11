@@ -99,18 +99,18 @@ export default {
 
         // set correct nav-tab as active on selection
         $(document).on("click", ".navItemStyle", function (event) {
-            $(".active").removeClass("active");
+            $(".navItemStyleActive").removeClass("navItemStyleActive");
             if (event.target.tagName.toLowerCase() != "a") {
-                $(event.target.parentElement).addClass("active"); // necessary for icons
+                $(event.target.parentElement).addClass("navItemStyleActive"); // necessary for icons
             } else {
-                $(event.target).addClass("active");
+                $(event.target).addClass("navItemStyleActive");
             }
         });
 
         // set home-tab on active if image or brandname get selected
         $(document).on("click", ".navbarBrand", function() {
-            $(".active").removeClass("active");
-            $("#home").addClass("active");
+            $(".navItemStyleActive").removeClass("navItemStyleActive");
+            $("#home").addClass("navItemStyleActive");
         });
     }
 }
@@ -123,6 +123,11 @@ export default {
 
 .navItemStyle {
     color: #4b3535 !important;
+}
+
+.navItemStyleActive {
+    border-color: #dee2e6 #dee2e6 #fff !important;
+    background-color: white !important;
 }
 
 .collapseButton {
