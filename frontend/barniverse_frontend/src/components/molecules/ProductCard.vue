@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div :id="id" class="carousel slide card-image-area" data-ride="carousel">
-            <ol class="carousel-indicators">
+            <ol v-if="product.images.length > 1" class="carousel-indicators">
                 <CarouselIndicator 
                     v-for="(image, counter) in product.images"
                     :key="image.id"
@@ -26,11 +26,11 @@
                     v-bind:class="{ active: (true) }"
                 />
             </div>
-            <a v-if="product.images.length != 0" class="carousel-control-prev" :href="hid" role="button" data-bs-slide="prev">
+            <a v-if="product.images.length > 1" class="carousel-control-prev" :href="hid" role="button" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <!-- <span class="sr-only">Previous</span> -->
             </a>
-            <a v-if="product.images.length != 0" class="carousel-control-next" :href="hid" role="button" data-bs-slide="next">
+            <a v-if="product.images.length > 1" class="carousel-control-next" :href="hid" role="button" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <!-- <span class="sr-only">Next</span> -->
             </a>
