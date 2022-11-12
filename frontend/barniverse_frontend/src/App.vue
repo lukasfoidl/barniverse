@@ -10,18 +10,21 @@
         <Footer />
     </div>
 
+    <Modal title="Error" content="Errortext" />
 </template>
 
 <script>
 import Navbar from "./components/templates/Navbar.vue"
 import Footer from "./components/templates/Footer.vue"
+import Modal from "./components/molecules/Modal.vue";
 
 export default {
     name: 'App',
     components: {
-        Navbar,
-        Footer
-    }
+    Navbar,
+    Footer,
+    Modal
+}
 }
 </script>
 
