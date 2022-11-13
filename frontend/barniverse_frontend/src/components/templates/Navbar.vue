@@ -79,42 +79,40 @@
 </template>
 
 <script>
-import $ from "jquery"
-
 export default {
     name: "Navbar",
     mounted() {
         // set correct style for changing between mobile and desktop mode
-        $(window).on('resize', function() {
+        window.$(window).on('resize', function() {
             var minScreenWidth = 992;
-            if ($(document).height() > $(window).height()) { // check if scrollbar is visible
+            if (window.$(document).height() > window.$(window).height()) { // check if scrollbar is visible
                 minScreenWidth -= 17;
             }
-            if ($(window).width() < minScreenWidth) {
-                $("#navContent").removeClass("d-flex");
-                $("#userContent").removeClass("flex-fill");
-                $("#userContentItem").removeClass("ms-auto");
+            if (window.$(window).width() < minScreenWidth) {
+                window.$("#navContent").removeClass("d-flex");
+                window.$("#userContent").removeClass("flex-fill");
+                window.$("#userContentItem").removeClass("ms-auto");
             } else {
-                $("#navContent").addClass("d-flex");
-                $("#userContent").addClass("flex-fill");
-                $("#userContentItem").addClass("ms-auto");
+                window.$("#navContent").addClass("d-flex");
+                window.$("#userContent").addClass("flex-fill");
+                window.$("#userContentItem").addClass("ms-auto");
             }
         });
 
         // set correct nav-tab as active on selection
-        $(document).on("click", ".navItemStyle", function (event) {
-            $(".navItemStyleActive").removeClass("navItemStyleActive");
+        window.$(document).on("click", ".navItemStyle", function (event) {
+            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
             if (event.target.tagName.toLowerCase() != "a") {
-                $(event.target.parentElement).addClass("navItemStyleActive"); // necessary for icons
+                window.$(event.target.parentElement).addClass("navItemStyleActive"); // necessary for icons
             } else {
-                $(event.target).addClass("navItemStyleActive");
+                window.$(event.target).addClass("navItemStyleActive");
             }
         });
 
         // set home-tab on active if image or brandname get selected
-        $(document).on("click", ".navbarBrand", function() {
-            $(".navItemStyleActive").removeClass("navItemStyleActive");
-            $("#home").addClass("navItemStyleActive");
+        window.$(document).on("click", ".navbarBrand", function() {
+            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
+            window.$("#home").addClass("navItemStyleActive");
         });
     }
 }

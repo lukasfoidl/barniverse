@@ -4,15 +4,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">{{ this.title }}</h5>
+                    <h5 class="modal-title" id="errorModalTitle"></h5>
                     <button type="button" class="close cancel" data-bs-dismiss="modal" aria-label="Close">
                         <i class="bi bi-x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        {{ this.content }}
-                    </div>
+                    <div id="errorModalContent"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -24,9 +22,9 @@
 
 <script>
 export default {
-    name: "Modal",
-    props: ["title", "content"]
+    name: "Modal"
 }
+// new window.bootstrap.Modal(window.$("#errorModal"), {}).show(); --> show Modal through javascript because >> window.$('#errorModal').modal('show') << is not working
 </script>
 
 <style>

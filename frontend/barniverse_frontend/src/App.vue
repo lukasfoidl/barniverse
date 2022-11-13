@@ -10,7 +10,7 @@
         <Footer />
     </div>
 
-    <Modal title="Error" content="Errortext" />
+    <Modal />
 </template>
 
 <script>

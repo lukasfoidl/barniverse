@@ -97,7 +97,6 @@
 </template>
 
 <script>
-import $ from "jquery"
 import BarniverseJustificationText from "../atoms/BarniverseJustificationText.vue";
 import Email from "../atoms/Email.vue";
 import Address from "../atoms/Address.vue";
@@ -113,8 +112,8 @@ export default {
 },
     mounted() {
         // set navbar tabs to not active if footer links get clicked
-        $(document).on("click", ".footerLink", function() {
-            $(".active").removeClass("active");
+        window.$(document).on("click", ".footerLink", function() {
+            window.$(".active").removeClass("active");
         });
     }
 }
