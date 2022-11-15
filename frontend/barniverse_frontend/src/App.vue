@@ -30,8 +30,7 @@ export default {
 
 <style>
 .mainContent {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 20px;
     flex: 1 1 100%;
 }
 

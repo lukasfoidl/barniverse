@@ -6,13 +6,13 @@
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
 
             <div class="form-outline mb-4">
-                <input type="email" id="email" class="form-control form-control-lg" v-model="form.values.email" @blur="validate('email')"/>
                 <label class="form-label" for="form2Example18">Email </label>
+                <input type="email" id="email" class="form-control form-control-lg" v-model="form.values.email" @blur="validate('email')"/>
             </div>
 
             <div class="form-outline mb-4">
-                <input type="password" id="password" class="form-control form-control-lg" v-model="form.values.password" @blur="validate('password')"/>
                 <label class="form-label" for="form2Example28">Password</label>
+                <input type="password" id="password" class="form-control form-control-lg" v-model="form.values.password" @blur="validate('password')"/>
             </div>
             <div>
                 <p v-if="!!form.errors.email" class="text-danger">
@@ -107,7 +107,6 @@ const loginFormSchema = object().shape({
 
 <style>
 #formLogin{
-    width: 23rem;
     padding: 1cm;
     background-color: #ebdbc7;
     border-radius: 25px;
