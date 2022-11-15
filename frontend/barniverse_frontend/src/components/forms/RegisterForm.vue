@@ -129,7 +129,9 @@
         </div>
         <div class="mt-4">
 
-            <a href="">already have an account?</a>
+            <router-link id="login" class="link" to="/login">
+                        already have an account?
+                    </router-link>
         </div>
 
     </div>

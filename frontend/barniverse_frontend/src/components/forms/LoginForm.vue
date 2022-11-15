@@ -24,11 +24,11 @@
                                         
             </div>
             <div class="pt-1 mb-4">
-                    <button class="btn btn-info btn-lg btn-block" type="button" v-on:click.prevent="login">Login</button>
+                    <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
             </div>
 
-            <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
-            <p>Don't have an account? <a href="#!" class="link-info">Register here</a></p>
+            
+            <p>Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link> </p>
 
         </form>
 
