@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-// service with auction related functionality
+/**
+ * service with auction related functionality
+ */
 @Service
 public class AuctionService extends BaseService {
 
@@ -20,27 +22,46 @@ public class AuctionService extends BaseService {
     @Autowired
     private AuctionValidationService auctionValidationService;
 
-    // create auction
+    /**
+     * add an auction to the database
+     * @param auctionDto dto which should be saved
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> addAuction(AuctionDto auctionDto) {
         return addEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto);
     }
 
-    // read auctions
+    /**
+     * get all saved auctions from the database
+     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     */
     public ResponseEntity<Object> getAuctions() {
         return getEntities(auctionRepository, auctionTransformer);
     }
 
-    // read specific auction
+    /**
+     * get specific auction from the database
+     * @param id id of the specific auction
+     * @return response with corresponding status code and loaded auction dto or error message in case of failure
+     */
     public ResponseEntity<Object> getAuction(int id) {
         return getEntity(auctionRepository, auctionTransformer, id);
     }
 
-    // update auction
+    /**
+     * update specific auction in the database
+     * @param auctionDto dto which should be updated (with id)
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> updateAuction(AuctionDto auctionDto) {
         return updateEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto);
     }
 
-    // delete auction
+    /**
+     * delete specific auction from the database
+     * @param id id of the specific auction
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> deleteAuction(int id) {
         return deleteEntity(auctionRepository, id);
     }

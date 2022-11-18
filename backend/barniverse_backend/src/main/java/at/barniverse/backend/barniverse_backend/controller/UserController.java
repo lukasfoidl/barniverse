@@ -59,7 +59,7 @@ public class UserController {
     //TODO: Safety alert! Users can be deleted only with Id.
     /**
      * delete specific user from the database
-     * @param id id of the specific auction
+     * @param id id of the specific user
      * @return response with corresponding status code and error message in case of failure
      */
     @DeleteMapping(path="/users/{id}")

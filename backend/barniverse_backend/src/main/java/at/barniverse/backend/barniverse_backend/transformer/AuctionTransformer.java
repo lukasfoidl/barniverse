@@ -23,7 +23,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
      * transforms auction entity to auction dto, <br>
      * user property of entity will be transformed to a user dto by UserTransformer, <br>
      * product property of entity will be transformed to a product dto by ProductTransformer
-     * @param auction entity, which should be transformed
+     * @param auction entity which should be transformed
      * @return auction dto
      */
     @Override

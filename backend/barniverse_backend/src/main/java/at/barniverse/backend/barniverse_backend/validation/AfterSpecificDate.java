@@ -4,7 +4,9 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-// annotation if one date is after another date in the calendar
+/**
+ * annotation if one date is after another date in the calendar
+ */
 @Constraint(validatedBy = AfterSpecificDateValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

@@ -60,7 +60,7 @@ public class ProductController {
     //TODO: Safety alert! Products can be deleted only with Id.
     /**
      * delete specific product from the database
-     * @param id id of the specific auction
+     * @param id id of the specific product
      * @return response with corresponding status code and error message in case of failure
      */
     @DeleteMapping(path="/products/{id}")

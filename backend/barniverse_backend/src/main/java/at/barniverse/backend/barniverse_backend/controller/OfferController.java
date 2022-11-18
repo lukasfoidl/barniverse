@@ -37,7 +37,7 @@ public class OfferController {
 
     /**
      * get specific offer from the database
-     * @param id id of the specific auction
+     * @param id id of the specific offer
      * @return response with corresponding status code and loaded offer dto or error message in case of failure
      */
     @GetMapping(path="/offers/{id}")

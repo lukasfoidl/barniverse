@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-// service with offer related functionality
+/**
+ * service with offer related functionality
+ */
 @Service
 public class OfferService extends BaseService {
 
@@ -20,27 +22,46 @@ public class OfferService extends BaseService {
     @Autowired
     private OfferValidationService offerValidationService;
 
-    // create offer
+    /**
+     * add an offer to the database
+     * @param offerDto dto which should be saved
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> addOffer(OfferDto offerDto) {
         return addEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
-    // read offer
+    /**
+     *get all saved offers from the database
+     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     */
     public ResponseEntity<Object> getOffers() {
         return getEntities(offerRepository, offerTransformer);
     }
 
-    // read specific offer
+    /**
+     * get specific offer from the database
+     * @param id id of the specific offer
+     * @return response with corresponding status code and loaded offer dto or error message in case of failure
+     */
     public ResponseEntity<Object> getOffer(int id) {
         return getEntity(offerRepository, offerTransformer, id);
     }
 
-    // update offer
+    /**
+     * update specific offer in the database
+     * @param offerDto dto which should be updated (with id)
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> updateOffer(OfferDto offerDto) {
         return updateEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
-    // delete offer
+    /**
+     * delete specific offer from the database
+     * @param id id of the specific offer
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> deleteOffer(int id) {
         return deleteEntity(offerRepository, id);
     }

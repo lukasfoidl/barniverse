@@ -6,18 +6,30 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Date;
 
-// validates if one date is after another date in the calendar
+/**
+ * validator for AfterSpecificDate annotation
+ */
 public class AfterSpecificDateValidator implements ConstraintValidator<AfterSpecificDate, Object> {
 
     private String startDate;
     private String endDate;
 
+    /**
+     * initializes properties
+     * @param constraintAnnotation AfterSpecificDate annotation
+     */
     @Override
     public void initialize(AfterSpecificDate constraintAnnotation) {
         this.startDate = constraintAnnotation.startDate();
         this.endDate = constraintAnnotation.endDate();
     }
 
+    /**
+     * check if annotation is valid or not
+     * @param value object to read properties and get data
+     * @param context ConstraintValidatorContext
+     * @return true if first date is after second date in the calendar, otherwise false
+     */
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
 

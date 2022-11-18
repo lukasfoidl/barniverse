@@ -11,7 +11,9 @@ import java.util.List;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
-// validation service which validates entity specific extras (like foreign keys, subentities, etc.)
+/**
+ * validation service which validates auction specific extras
+ */
 @Service
 public class AuctionValidationService extends ValidationService<Auction> {
 
@@ -21,6 +23,11 @@ public class AuctionValidationService extends ValidationService<Auction> {
     @Autowired
     private ProductRepository productRepository;
 
+    /**
+     * validates auction specific extras
+     * @param auction entity which should be validated
+     * @return error messages, empty if validation was successful
+     */
     @Override
     public List<String> validateEntitySpecificExtras(Auction auction) {
         List<String> errors = new ArrayList<>();

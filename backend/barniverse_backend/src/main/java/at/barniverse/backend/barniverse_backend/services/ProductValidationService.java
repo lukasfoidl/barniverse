@@ -13,13 +13,20 @@ import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
-// validation service which validates entity specific extras (like foreign keys, subentities, etc.)
+/**
+ * validation service which validates product specific extras
+ */
 @Service
 public class ProductValidationService extends ValidationService<Product> {
 
     @Autowired
     private ProductRepository productRepository;
 
+    /**
+     * validates product specific extras
+     * @param product entity which should be validated
+     * @return error messages, empty if validation was successful
+     */
     @Override
     public List<String> validateEntitySpecificExtras(Product product) {
         List<String> errors = new ArrayList<>();
@@ -31,7 +38,7 @@ public class ProductValidationService extends ValidationService<Product> {
         } catch (Exception exception) {
             return List.of(VALIDATION_ERROR);
         }
-        // if product gets created dbProduct is empty
+        // if product gets created dbProduct is empty, no validation of entity specific extras required
         // if product gets updated dbProduct already checked in ProductService
         if (dbProduct.isEmpty()) { return Collections.emptyList(); }
 

@@ -18,7 +18,9 @@ import java.util.Optional;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.INVALID_ID;
 
-// service with product related functionality
+/**
+ * service with product related functionality
+ */
 @Service
 public class ProductService extends BaseService {
 
@@ -37,9 +39,13 @@ public class ProductService extends BaseService {
     @Autowired
     private ProductImageValidationService productImageValidationService;
 
-
-    // create new product (not with addEntity because of the subentities)
+    /**
+     * add a product to the database
+     * @param productDto dto which should be saved
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> addProduct(ProductDto productDto) {
+        // not with addEntity because of the subentities
         Product productEntity = productTransformer.convertToEntity(productDto);
 
         // repair images at create (POST) and not like standard at update (PUT)
@@ -56,18 +62,30 @@ public class ProductService extends BaseService {
         );
     }
 
-    // get all products
+    /**
+     * get all saved products from the database
+     * @return response with corresponding status code and loaded product dtos or error message in case of failure
+     */
     public ResponseEntity<Object> getProducts() {
         return getEntities(productRepository, productTransformer);
     }
 
-    // get specific product
+    /**
+     * get specific product from the database
+     * @param id id of the specific product
+     * @return response with corresponding status code and loaded product dto or error message in case of failure
+     */
     public ResponseEntity<Object> getProduct(int id) {
         return getEntity(productRepository, productTransformer, id);
     }
 
-    // update specific product (not with updateEntity because of the subentities)
+    /**
+     * update specific product in the database
+     * @param productDto dto which should be updated (with id)
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> updateProduct(ProductDto productDto) {
+        // not with updateEntity because of the subentities
         Optional<Product> dbEntity;
         try {
             dbEntity = productRepository.findById(productDto.getId());
@@ -84,7 +102,11 @@ public class ProductService extends BaseService {
         );
     }
 
-    // delete specific product
+    /**
+     * delete specific product from the database
+     * @param id id of the specific product
+     * @return response with corresponding status code and error message in case of failure
+     */
     public ResponseEntity<Object> deleteProduct(int id) {
         return deleteEntity(productRepository, id);
     }

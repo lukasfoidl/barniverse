@@ -4,7 +4,9 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-// annotation if a value is lower than another value
+/**
+ * annotation if a value is lower than another value
+ */
 @Constraint(validatedBy = LowerThanOtherValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

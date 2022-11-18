@@ -1,7 +1,7 @@
 package at.barniverse.backend.barniverse_backend.configuration;
 
 /**
- * Context with basic error messages to be used application wide
+ * context with basic error messages to be used application wide
  */
 public class Context {
 
@@ -11,7 +11,7 @@ public class Context {
     public static final String DATABASE_ERROR = "The transaction has been refused!";
 
     /**
-     * standardised error message for database errors becaused by invalid id inputs
+     * standardised error message for database errors caused by invalid id inputs
      */
     public static final String INVALID_ID = DATABASE_ERROR + " Invalid Id!";
 

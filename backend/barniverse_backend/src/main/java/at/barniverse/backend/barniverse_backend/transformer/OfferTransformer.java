@@ -23,7 +23,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
      * transforms offer entity to offer dto, <br>
      * user property of entity will be transformed to a user dto by UserTransformer, <br>
      * auction property of entity will be transformed to an auction dto by AuctionTransformer
-     * @param offer entity, which should be transformed
+     * @param offer entity which should be transformed
      * @return offer dto
      */
     @Override
