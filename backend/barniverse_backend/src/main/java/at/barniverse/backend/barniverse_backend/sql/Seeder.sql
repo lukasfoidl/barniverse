@@ -27,20 +27,24 @@ INSERT INTO product (id, name, description)
 VALUES (3, 'Berliner Luft', '1 Flasche (1 l) Berliner Luft Pfefferminzlikör aus der Metropole Deutschlands');
 INSERT INTO product (id, name, description)
 VALUES (4, 'Goesser Bier', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
+INSERT INTO product (id, name, description)
+VALUES (5, 'Obstler', 'Schnaps der brutal runterbrennt, 0,75l, 40%, VORSICHT: nicht in hohen Mengen zu sich nehmen');
 
 # seed product_image table
 INSERT INTO product_image (id, file, product_id)
-VALUES (1, 'sdfjlahsudfhakljsdfasd/Gin', '1');
+VALUES (1, 'Gin01.jpeg', '1');
 INSERT INTO product_image (id, file, product_id)
-VALUES (2, 'f4whfowi4hfwiu4hwererf/Gin', '1');
+VALUES (2, 'Gin02.jpg', '1');
 INSERT INTO product_image (id, file, product_id)
-VALUES (3, 'jcvjr8e4jfa4jfo84jfawz/Gin', '1');
+VALUES (3, 'Gin03.jpg', '1');
 INSERT INTO product_image (id, file, product_id)
-VALUES (4, 'dfafjoeifaouefawdujfse/GruenerVeltliner', '2');
+VALUES (4, 'Wein01.jpeg', '2');
 INSERT INTO product_image (id, file, product_id)
-VALUES (5, 'trorjefoeirjfsjfwerwe7/BerlinerLuft', '3');
+VALUES (5, 'BerlinerLuft01.jpg', '3');
 INSERT INTO product_image (id, file, product_id)
-VALUES (6, 'fnauiserhfi8w4riawhefb/BerlinerLuft', '3');
+VALUES (6, 'BerlinerLuft02.jpg', '3');
+INSERT INTO product_image (id, file, product_id)
+VALUES (7, 'Bier01.jpg', '4');
 
 # seed auction table
 INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)

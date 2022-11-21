@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
+
 /**
  * controller with basic CRUD routing for product related URLs,
  * also handles product images in product context (no extra controller for product images necessary)
  */
 @RestController
+@CrossOrigin(origins = CORS_ORIGINS)
 @RequestMapping(path = "/api")
 public class ProductController {
 

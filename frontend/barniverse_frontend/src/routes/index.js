@@ -60,7 +60,7 @@ const routes = [
         path: '/:catchAll(.*)*',
         name: "PageNotFoundView",
         component: PageNotFoundView
-      },
+    },
 ];
 
 const router = createRouter({

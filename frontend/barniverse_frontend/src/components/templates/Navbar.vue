@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbarStyle">
         <div class="navbar-brand">
             <router-link id="image" class="navbarBrand" to="/">
-                <img src="../../images/logo_transparent_zugeschnitten.png" width="60" height="60" class="d-inline-block align-bottom" alt="Logo from Barniverse">
+                <img src="logo_transparent_zugeschnitten.png" width="60" height="60" class="d-inline-block align-bottom" alt="Logo from Barniverse">
             </router-link>
         </div>
         <ul class="navbar-nav nav nav-tabs">
