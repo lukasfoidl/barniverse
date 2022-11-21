@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  barniverseDB:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: barniverse
+      MYSQL_DATABASE: barniverseDB
+    ports:
+      - "3306:3306"
+
+# (in this directory) docker-compose up
