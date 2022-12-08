@@ -5,42 +5,44 @@
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
                     <label class="form-label" for="firstName">First Name</label>
-                    <input type="text" class="form-control form-control-lg" v-model="form.values.fname" id="fname"
-                        @blur="validate('fname')" />
-
+                    <input type="text" class="form-control form-control-lg" v-model="form.values.fname" id="fname" @blur="validate('fname')" />
+                    <div class="" id= "feedback-fname">
+                         <p>{{ form.errors.fname }}&nbsp;</p>
+                    </div>
                 </div>
-
             </div>
-            <div class="col-md-6 mb-4">
 
+            <div class="col-md-6 mb-4">
                 <div class="form-outline">
                     <label class="form-label" for="lastName">Last Name</label>
                     <input type="text" class="form-control form-control-lg" v-model="form.values.lname" id="lname"
                         @blur="validate('lname')" />
-
+                        <div class="" id= "feedback-lname">
+                            <p>{{ form.errors.lname }}&nbsp;</p>
+                        </div>
                 </div>
-
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-4">
-
                 <div class="form-outline">
                     <label class="form-label" for="emailAddress">Email</label>
-                    <input type="email" id="emailAddress" class="form-control form-control-lg"
-                        v-model="form.values.emailR" aria-describedby="emailHelp" @blur="validate('emailR')" />
+                    <input type="email" id="emailR" class="form-control form-control-lg" v-model="form.values.emailR" aria-describedby="emailHelp" @blur="validate('emailR')" />
+                    <div class="" id= "feedback-emailR">
+                            <p>{{ form.errors.emailR }}&nbsp;</p>
+                        </div>
                 </div>
-
-
-
             </div>
+
             <div class="col-md-6 mb-4 ">
 
                 <div class="form-outline ">
                     <label class="form-label" for="Username">Username</label>
-                    <input class="form-control form-control-lg" type="text" v-model="form.values.username" id="username"
-                        @blur="validate('username')" />
+                    <input class="form-control form-control-lg" type="text" v-model="form.values.username" id="username" @blur="validate('username')" />
+                    <div class="" id= "feedback-username">
+                        <p>{{ form.errors.username }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,17 +51,21 @@
             <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
                     <label class="form-label" for="passwordRegister">Password</label>
-                    <input type="password" id="passwordRegister" class="form-control form-control-lg"
-                        v-model="form.values.passwordR" @blur="validate('passwordR')" />
+                    <input type="password" id="passwordR" class="form-control form-control-lg" v-model="form.values.passwordR" @blur="validate('passwordR')" />
+                    <div class="" id= "feedback-passwordR">
+                        <p>{{ form.errors.passwordR }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
+
             <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
                     <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-control form-control-lg"
-                        v-model="form.values.confirmPassword" @blur="validate('confirmPassword')" />
+                    <input type="password" id="confirmPassword" class="form-control form-control-lg" v-model="form.values.confirmPassword" @blur="validate('confirmPassword')" />
+                    <div class="" id= "feedback-confirmPassword">
+                            <p>{{ form.errors.confirmPassword }}&nbsp;</p>
+                        </div>
                 </div>
-
             </div>
         </div>
 
@@ -70,15 +76,13 @@
                     <input type="date" class="form-control form-control-lg" id="birthdayDate"
                         v-model="form.values.dateOfBirth" @blur="validate('dateOfBirth')" />
                 </div>
-
             </div>
-            <div class="col-md-6 mb-4 pb-2">
 
+            <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
                     <label class="form-label" for="phoneNumber">Phone Number</label>
                     <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
                 </div>
-
             </div>
         </div>
 
@@ -90,11 +94,10 @@
                     <input type="file" class="form-control form-control-lg" v-on:change="form.values.profilePicture"
                         placeholder="Photo" s capture @blur="validate('profilePicture')" />
                 </div>
-
             </div>
-
         </div>
-        <div>
+        
+        <!--<div>
             <p v-if="!!form.errors.fname" class="text-danger">
                 {{ form.errors.fname }}
             </p>
@@ -120,18 +123,17 @@
                 {{ form.errors.profilePicture }}
             </p>
 
-        </div>
+        </div>-->
 
 
         <div class="mt-4 pt-2">
             <input class="btn btn-primary btn-lg" type="submit" v-on:click.prevent="register" value="Register" />
-
         </div>
-        <div class="mt-4">
 
+        <div class="mt-4">
             <router-link id="login" class="link" to="/login">
-                        already have an account?
-                    </router-link>
+                already have an account?
+            </router-link>
         </div>
 
     </div>
@@ -201,10 +203,21 @@ export default {
             registerFormSchema
                 .validateAt(field, this.form.values)
                 .then(() => {
-                    this.form.errors[field] = ""
+                    this.form.errors[field] = "Looks Good."
+                    console.log(field);
+                    window.$("#" + field).removeClass("is-invalid");
+                    window.$("#" + field).addClass("is-valid");
+                    window.$("#feedback-" + field).removeClass("invalid-feedback");
+                    window.$("#feedback-" + field).addClass("valid-feedback");
+                    
                 })
                 .catch((error) => {
                     this.form.errors[field] = error.message
+                    console.log(field);
+                    window.$("#" + field).removeClass("is-valid");
+                    window.$("#" + field).addClass("is-invalid");
+                    window.$("#feedback-" + field).removeClass("valid-feedback");
+                    window.$("#feedback-" + field).addClass("invalid-feedback");
                 })
         }
     }
@@ -218,7 +231,7 @@ const registerFormSchema = object().shape({
     username: string().min(8, "Username must be at least 8 Characters!").required("Username is required!"),
     emailR: string().email("Email must be valid!").required("Email is required!"),
     passwordR: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
-    confirmPassword: string().min(8, "Confirm Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function (value) {
+    confirmPassword: string().min(8, "Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function (value) {
         return this.parent.passwordR === value
     }),
     dateOfBirth: date(),
@@ -238,5 +251,9 @@ const registerFormSchema = object().shape({
 
 #imageRegister {
     background-image: url("https://i.pinimg.com/564x/07/d1/68/07d168d9e293fc7d83f371a281e6e510.jpg");
+}
+p{
+    margin-bottom: 0px;
+    font-size: 12px;
 }
 </style>
