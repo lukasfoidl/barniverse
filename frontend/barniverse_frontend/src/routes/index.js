@@ -8,7 +8,27 @@ import RegisterView from "../views/RegisterView"
 import LoginView from "../views/LoginView"
 import HelpView from "../views/HelpView"
 import ImprintView from "../views/ImprintView"
+import UserView from "../views/UserView"
 import PageNotFoundView from "../views/PageNotFoundView"
+
+//WARNING: routes are not locked according the user role yet
+
+// import jwtDecoder from 'vue-jwt-decode'
+
+// var role = "";
+// const roles = {
+//     ROLE_USER: "ROLE_USER",
+//     ROLE_ADMIN: "ROLE_ADMIN"
+// }
+
+// window.event.on('reloadJWT', () => {
+//     reloadJWT();
+// });
+
+// function reloadJWT() {
+//     const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
+//     role =  jwt == null ? "" : jwt.role
+// }
 
 const routes = [
     {
@@ -24,17 +44,27 @@ const routes = [
     {
         name: "auctions",
         path: "/auctions",
-        component: AuctionView
+        component: AuctionView,
     },
     {
         name: "myAuctions",
         path: "/myAuctions",
-        component: MyAuctionsView
+        component: MyAuctionsView,
+        // beforeEnter: () => {
+        //     if (role != roles.ROLE_USER || role != roles.ROLE_ADMIN) {
+        //         return '/'
+        //     }
+        // },
     },
     {
         name: "myOffers",
         path: "/myOffers",
-        component: MyOffersView
+        component: MyOffersView,
+        // beforeEnter: () => {
+        //     if (role != roles.ROLE_USER || role != roles.ROLE_ADMIN) {
+        //         return '/'
+        //     }
+        // },
     },
     {
         name: "register",
@@ -55,6 +85,16 @@ const routes = [
         name: "imprint",
         path: "/imprint",
         component: ImprintView
+    },
+    {
+        name: "user",
+        path: "/user",
+        component: UserView,
+        // beforeEnter: () => {
+        //     if (role != roles.ROLE_ADMIN) {
+        //         return '/'
+        //     }
+        // },
     },
     {
         path: '/:catchAll(.*)*',

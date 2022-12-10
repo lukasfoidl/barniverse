@@ -1,5 +1,4 @@
 <template>
-
     <div id="ImageRegister">
         <div class="row">
             <div class="col-md-6 mb-4">
@@ -7,36 +6,27 @@
                     <label class="form-label" for="firstName">First Name</label>
                     <input type="text" class="form-control form-control-lg" v-model="form.values.fname" id="fname"
                         @blur="validate('fname')" />
-
                 </div>
 
             </div>
             <div class="col-md-6 mb-4">
-
                 <div class="form-outline">
                     <label class="form-label" for="lastName">Last Name</label>
                     <input type="text" class="form-control form-control-lg" v-model="form.values.lname" id="lname"
                         @blur="validate('lname')" />
-
                 </div>
-
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-4">
-
                 <div class="form-outline">
                     <label class="form-label" for="emailAddress">Email</label>
                     <input type="email" id="emailAddress" class="form-control form-control-lg"
                         v-model="form.values.emailR" aria-describedby="emailHelp" @blur="validate('emailR')" />
                 </div>
-
-
-
             </div>
             <div class="col-md-6 mb-4 ">
-
                 <div class="form-outline ">
                     <label class="form-label" for="Username">Username</label>
                     <input class="form-control form-control-lg" type="text" v-model="form.values.username" id="username"
@@ -59,7 +49,6 @@
                     <input type="password" id="confirmPassword" class="form-control form-control-lg"
                         v-model="form.values.confirmPassword" @blur="validate('confirmPassword')" />
                 </div>
-
             </div>
         </div>
 
@@ -73,15 +62,12 @@
 
             </div>
             <div class="col-md-6 mb-4 pb-2">
-
                 <div class="form-outline">
                     <label class="form-label" for="phoneNumber">Phone Number</label>
                     <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
                 </div>
-
             </div>
         </div>
-
 
         <div class="row">
             <div class="col-md-12 mb-4 pb-2">
@@ -90,10 +76,9 @@
                     <input type="file" class="form-control form-control-lg" v-on:change="form.values.profilePicture"
                         placeholder="Photo" s capture @blur="validate('profilePicture')" />
                 </div>
-
             </div>
-
         </div>
+
         <div>
             <p v-if="!!form.errors.fname" class="text-danger">
                 {{ form.errors.fname }}
@@ -119,31 +104,22 @@
             <p v-if="!!form.errors.profilePicture" class="text-danger">
                 {{ form.errors.profilePicture }}
             </p>
-
         </div>
-
 
         <div class="mt-4 pt-2">
             <input class="btn btn-primary btn-lg" type="submit" v-on:click.prevent="register" value="Register" />
-
         </div>
         <div class="mt-4">
-
             <router-link id="login" class="link" to="/login">
-                        already have an account?
-                    </router-link>
+                already have an account?
+            </router-link>
         </div>
-
     </div>
-
-
 </template>
 
 <script>
-
 import { date, object, string } from "yup"
 export default {
-
 
     name: "RegisterForm",
     data: () => ({
@@ -166,20 +142,10 @@ export default {
     methods: {
         //Register Button
         async register() {
-
-            console.log(this.form.values.fname)
-            console.log(this.form.values.lname)
-            console.log(this.form.values.username)
-            console.log(this.form.values.emailR)
-            console.log(this.form.values.passwordR)
-            console.log(this.form.values.confirmPassword)
-            console.log(this.form.values.dateOfBirth)
-            console.log(this.form.values.profilePicture)
-
             registerFormSchema
                 .validate(this.form.values, { abortEarly: true })
                 .then(() => {
-                    this.form.error = {
+                    this.form.errors = {
 
                         fname: "",
                         lname: "",
@@ -208,7 +174,6 @@ export default {
                 })
         }
     }
-
 }
 
 //validate here
@@ -223,17 +188,12 @@ const registerFormSchema = object().shape({
     }),
     dateOfBirth: date(),
     profilePicture: string()
-
-
 })
-
-
 </script>
 
 <style>
 #formRegister {
     width: 40em;
-
 }
 
 #imageRegister {

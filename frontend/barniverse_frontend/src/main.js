@@ -11,7 +11,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js"
 window.bootstrap = bootstrap
 
+import mitt from 'mitt';
+window.event = mitt();
+
 import router from "./routes";
+window.router = router
 
 const app = createApp(App)
 

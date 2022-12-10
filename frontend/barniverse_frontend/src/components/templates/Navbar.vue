@@ -35,16 +35,22 @@
                         Auctions
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
                     <!-- my auctions I created and the placed offers for this auction -->
                     <router-link id="myAuctions" class="nav-link navItemStyle" to="/myAuctions">
                         My Auctions
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
                     <!-- my offers I placed -->
                     <router-link id="myOffers" class="nav-link navItemStyle" to="/myOffers">
                         My Offers
+                    </router-link>
+                </li>
+                <li v-if="role == roles.ROLE_ADMIN" class="nav-item">
+                    <!-- my offers I placed -->
+                    <router-link id="user" class="nav-link navItemStyle" to="/user">
+                        User
                     </router-link>
                 </li>
             </ul>
@@ -68,19 +74,28 @@
                     </router-link>
                 </li>
                 <!-- logout -->
-                <!-- <li class="nav-item navIcon">
-                    <router-link id="logout" class="nav-link navItemStyle" to="/logout">
+                <li class="nav-item navIcon" @click="logout">
+                    <router-link id="logout" class="nav-link navItemStyle" to="/">
                         <i class="bi bi-box-arrow-right" alt="Logout"></i>
                     </router-link>
-                </li> -->
+                </li>
             </ul>
         </div>
     </nav>
 </template>
 
 <script>
+import jwtDecoder from 'vue-jwt-decode'
+
 export default {
     name: "Navbar",
+    data: () => ({
+        role: "",
+        roles: {
+            ROLE_USER: "ROLE_USER",
+            ROLE_ADMIN: "ROLE_ADMIN"
+        }
+    }),
     mounted() {
         // set correct style for changing between mobile and desktop mode
         window.$(window).on('resize', function() {
@@ -114,6 +129,20 @@ export default {
             window.$(".navItemStyleActive").removeClass("navItemStyleActive");
             window.$("#home").addClass("navItemStyleActive");
         });
+
+        window.event.on('reloadJWT', () => {
+            this.reloadJWT();
+        });
+    },
+    methods: {
+        reloadJWT() {
+            const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
+            this.role = jwt == null ? "" : jwt.role
+        },
+        logout() {
+            sessionStorage.removeItem("jwt-token");
+            this.reloadJWT();
+        }
     }
 }
 </script>
