@@ -192,7 +192,7 @@ export default {
             console.log(this.form.values.profilePicture)
 
             registerFormSchema
-                .validate(this.form.values, { abortEarly: true })
+                .validate(this.form.values, { abortEarly: false })
                 .then(() => {
                     
                     this.form.errors = {
@@ -207,22 +207,16 @@ export default {
                         profilePicture: ""
                     }
                 })
-                .catch((err) => {
-                    console.log(err.path)
+                .catch((errors) => {
                     
-                    
-                    this.form.errors[err.path] = err.message
-                    window.$("#" + err.path).removeClass("is-valid");
-                    window.$("#" + err.path).addClass("is-invalid");
-                    window.$("#feedback-" + err.path).removeClass("valid-feedback");
-                    window.$("#feedback-" + err.path).addClass("invalid-feedback");
-                    /*err.inner.forEach(() => {
-                        console.log("1" + err.errors.path)
-                        this.form.errors[err.path] = err.message
-                            
-                    })*/
-                    
-                    
+                    errors.inner.forEach(element => {
+                        console.log(element.path)
+                        this.form.errors[element.path] = element.message
+                        window.$("#" + element.path).removeClass("is-valid");
+                        window.$("#" + element.path).addClass("is-invalid");
+                        window.$("#feedback-" + element.path).removeClass("valid-feedback");
+                        window.$("#feedback-" + element.path).addClass("invalid-feedback");    
+                    })
                 })
         },
         validate(field) {
