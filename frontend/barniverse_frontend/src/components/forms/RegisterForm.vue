@@ -4,21 +4,23 @@
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
+                    <!-- Firstname-->
                     <label class="form-label" for="firstName">First Name</label>
                     <input type="text" class="form-control form-control-lg" v-model="form.values.fname" id="fname" @blur="validate('fname')" />
                     <div class="" id= "feedback-fname">
-                         <p>{{ form.errors.fname }}&nbsp;</p>
+                         <p class ="errorMessage">{{ form.errors.fname }}&nbsp;</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
+                    <!-- Lastname-->
                     <label class="form-label" for="lastName">Last Name</label>
                     <input type="text" class="form-control form-control-lg" v-model="form.values.lname" id="lname"
                         @blur="validate('lname')" />
                         <div class="" id= "feedback-lname">
-                            <p>{{ form.errors.lname }}&nbsp;</p>
+                            <p class ="errorMessage">{{ form.errors.lname }}&nbsp;</p>
                         </div>
                 </div>
             </div>
@@ -27,10 +29,11 @@
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
+                    <!-- Email-->
                     <label class="form-label" for="emailAddress">Email</label>
                     <input type="email" id="emailR" class="form-control form-control-lg" v-model="form.values.emailR" aria-describedby="emailHelp" @blur="validate('emailR')" />
                     <div class="" id= "feedback-emailR">
-                            <p>{{ form.errors.emailR }}&nbsp;</p>
+                            <p class ="errorMessage">{{ form.errors.emailR }}&nbsp;</p>
                         </div>
                 </div>
             </div>
@@ -38,10 +41,11 @@
             <div class="col-md-6 mb-4 ">
 
                 <div class="form-outline ">
+                    <!-- Username-->
                     <label class="form-label" for="Username">Username</label>
                     <input class="form-control form-control-lg" type="text" v-model="form.values.username" id="username" @blur="validate('username')" />
                     <div class="" id= "feedback-username">
-                        <p>{{ form.errors.username }}&nbsp;</p>
+                        <p class ="errorMessage">{{ form.errors.username }}&nbsp;</p>
                     </div>
                 </div>
             </div>
@@ -50,21 +54,23 @@
         <div class="row">
             <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
+                    <!-- Password-->
                     <label class="form-label" for="passwordRegister">Password</label>
-                    <input type="password" id="passwordR" class="form-control form-control-lg" v-model="form.values.passwordR" @blur="validate('passwordR')" />
+                    <input type="password" id="passwordR" class="form-control form-control-lg" v-model="form.values.passwordR" @blur="validate('passwordR')"  />
                     <div class="" id= "feedback-passwordR">
-                        <p>{{ form.errors.passwordR }}&nbsp;</p>
+                        <p class ="errorMessage">{{ form.errors.passwordR }}&nbsp;</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
+                    <!-- Confirm Password-->
                     <label class="form-label" for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" class="form-control form-control-lg" v-model="form.values.confirmPassword" @blur="validate('confirmPassword')" />
                     <div class="" id= "feedback-confirmPassword">
-                            <p>{{ form.errors.confirmPassword }}&nbsp;</p>
-                        </div>
+                        <p class ="errorMessage">{{ form.errors.confirmPassword }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,17 +79,22 @@
             <div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline ">
                     <label for="birthdayDate" class="form-label">Birthday</label>
-                    <input type="date" class="form-control form-control-lg" id="birthdayDate"
-                        v-model="form.values.dateOfBirth" @blur="validate('dateOfBirth')" />
+                    <input type="date" class="form-control form-control-lg" id="dateOfBirth" v-model="form.values.dateOfBirth" @blur="validate('dateOfBirth')"  />
+                    <div class="" id= "feedback-dateOfBirth">
+                        <p class ="errorMessage">{{ form.errors.dateOfBirth }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-md-6 mb-4 pb-2">
+        <!-- Phone Number not needed-->
+        <!--<div class="col-md-6 mb-4 pb-2">
                 <div class="form-outline">
                     <label class="form-label" for="phoneNumber">Phone Number</label>
                     <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
+                    <div class="" id= "feedback-confirmPassword">
+                        <p class ="errorMessage">{{ form.errors.phonenumber }}&nbsp;</p>
+                    </div>
                 </div>
-            </div>
+            </div>-->
         </div>
 
 
@@ -91,8 +102,10 @@
             <div class="col-md-12 mb-4 pb-2">
                 <div class="form-outline">
                     <label class="form-label" for="emailAddress">Profile Picture</label>
-                    <input type="file" class="form-control form-control-lg" v-on:change="form.values.profilePicture"
-                        placeholder="Photo" s capture @blur="validate('profilePicture')" />
+                    <input type="file" class="form-control form-control-lg" v-on:change="form.values.profilePicture" placeholder="Photo" capture @blur="validate('profilePicture')" />
+                    <div class="" id= "feedback-confirmPassword">
+                        <p class ="errorMessage">{{ form.errors.profilePicture }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -181,7 +194,8 @@ export default {
             registerFormSchema
                 .validate(this.form.values, { abortEarly: true })
                 .then(() => {
-                    this.form.error = {
+                    
+                    this.form.errors = {
 
                         fname: "",
                         lname: "",
@@ -193,10 +207,22 @@ export default {
                         profilePicture: ""
                     }
                 })
-                .catch((error) => {
-                    error.inner.forEach(() => {
-                        this.forms.errors[error.path] = error.message
-                    })
+                .catch((err) => {
+                    console.log(err.path)
+                    
+                    
+                    this.form.errors[err.path] = err.message
+                    window.$("#" + err.path).removeClass("is-valid");
+                    window.$("#" + err.path).addClass("is-invalid");
+                    window.$("#feedback-" + err.path).removeClass("valid-feedback");
+                    window.$("#feedback-" + err.path).addClass("invalid-feedback");
+                    /*err.inner.forEach(() => {
+                        console.log("1" + err.errors.path)
+                        this.form.errors[err.path] = err.message
+                            
+                    })*/
+                    
+                    
                 })
         },
         validate(field) {
@@ -209,6 +235,7 @@ export default {
                     window.$("#" + field).addClass("is-valid");
                     window.$("#feedback-" + field).removeClass("invalid-feedback");
                     window.$("#feedback-" + field).addClass("valid-feedback");
+                    
                     
                 })
                 .catch((error) => {
@@ -249,11 +276,10 @@ const registerFormSchema = object().shape({
 
 }
 
-#imageRegister {
-    background-image: url("https://i.pinimg.com/564x/07/d1/68/07d168d9e293fc7d83f371a281e6e510.jpg");
-}
-p{
-    margin-bottom: 0px;
-    font-size: 12px;
+
+
+.errorMessage{
+    font-size: 11px;
+    margin-bottom: 0%;
 }
 </style>
