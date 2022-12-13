@@ -139,7 +139,7 @@ export default {
         //Register Button
         async register() {
             registerFormSchema
-                .validate(this.values, { abortEarly: true })
+                .validate(this.values, { abortEarly: false })
                 .then(async () => {
                     try {
                         console.log("REGISTER")
@@ -150,7 +150,6 @@ export default {
                 })
                 .catch((errors) => {
                     errors.inner.forEach(element => {
-                        console.log(element.path)
                         this.errors[element.path] = element.message
                         window.$("#" + element.path).removeClass("is-valid");
                         window.$("#" + element.path).addClass("is-invalid");
@@ -194,7 +193,6 @@ export default {
                 .validateAt(field, this.values)
                 .then(() => {
                     this.errors[field] = "Looks Good."
-                    console.log(field);
                     window.$("#" + field).removeClass("is-invalid");
                     window.$("#" + field).addClass("is-valid");
                     window.$("#feedback-" + field).removeClass("invalid-feedback");
@@ -202,7 +200,6 @@ export default {
                 })
                 .catch((error) => {
                     this.errors[field] = error.message
-                    console.log(field);
                     window.$("#" + field).removeClass("is-valid");
                     window.$("#" + field).addClass("is-invalid");
                     window.$("#feedback-" + field).removeClass("valid-feedback");
