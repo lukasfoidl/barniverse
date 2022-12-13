@@ -62,10 +62,6 @@ export default {
             loginFormSchema
                 .validate(this.values, { abortEarly: true })
                 .then(async () => {
-                    this.errors = {
-                        email: "",
-                        password: "",
-                    }
                     try {
                         console.log("LOGIN")
                         await this.authenticate();

@@ -5,6 +5,7 @@ import at.barniverse.backend.barniverse_backend.dto.LoginCredentialsDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
 import at.barniverse.backend.barniverse_backend.enums.Role;
 import at.barniverse.backend.barniverse_backend.enums.RoleConverter;
+import at.barniverse.backend.barniverse_backend.enums.UStatus;
 import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import at.barniverse.backend.barniverse_backend.security.JWTUtil;
@@ -34,8 +35,10 @@ public class AuthService extends BaseService {
     @Autowired private UserTransformer userTransformer;
     @Autowired private UserValidationService userValidationService;
 
+    // TODO: after successful creation of user token is returned immediately, no further checks if user is real
     public ResponseEntity<Object> register(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userDto.setStatus(UStatus.active);
         ResponseEntity<Object> response = addEntity(userRepository, userTransformer, userValidationService, userDto);
         if (response.getStatusCode() == HttpStatus.OK) {
             String token = jwtUtil.generateToken(new AuthDto (userDto.getEmail(), userDto.getUsername(), Role.ROLE_USER.toString()));
