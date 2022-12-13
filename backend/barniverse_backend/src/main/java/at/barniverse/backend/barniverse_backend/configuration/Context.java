@@ -54,6 +54,8 @@ public class Context {
      */
     public static final String INVALID_LOGIN_CREDENTIALS = "Invalid login credentials!";
 
+    public static final String INVALID_STATE = "This account is no longer active. It has been blocked or deleted. Please contact the Barniverse service team for further information.";
+
     /**
      * application wide origins that are allowed for CORS requests
      */

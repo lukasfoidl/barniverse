@@ -39,6 +39,7 @@ export default {
             const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
             window.role = jwt == null ? "" : jwt.role
             window.username = jwt == null ? "" : jwt.username
+            window.uuid = jwt == null ? "" : jwt.uuid
         }
     }
 }

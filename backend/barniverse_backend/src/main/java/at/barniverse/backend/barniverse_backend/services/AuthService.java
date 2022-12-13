@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Optional;
 
-import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
-import static at.barniverse.backend.barniverse_backend.configuration.Context.INVALID_LOGIN_CREDENTIALS;
+import static at.barniverse.backend.barniverse_backend.configuration.Context.*;
 
 @Service
 public class AuthService extends BaseService {
@@ -41,7 +40,8 @@ public class AuthService extends BaseService {
         userDto.setStatus(UStatus.active);
         ResponseEntity<Object> response = addEntity(userRepository, userTransformer, userValidationService, userDto);
         if (response.getStatusCode() == HttpStatus.OK) {
-            String token = jwtUtil.generateToken(new AuthDto (userDto.getEmail(), userDto.getUsername(), Role.ROLE_USER.toString()));
+            User dbUser = (User) response.getBody();
+            String token = jwtUtil.generateToken(new AuthDto (userDto.getEmail(), userDto.getUsername(), Role.ROLE_USER.toString(), Integer.toString(dbUser.getId())));
             return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
         }
         return response;
@@ -56,7 +56,10 @@ public class AuthService extends BaseService {
             if (user == null) {
                 return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            String token = jwtUtil.generateToken(new AuthDto(user.getEmail(), user.getUsername(), RoleConverter.getRole(user.isAdmin()).toString()));
+            if (user.getStatus() != UStatus.active) {
+                return new ResponseEntity<>(INVALID_STATE, HttpStatus.FORBIDDEN);
+            }
+            String token = jwtUtil.generateToken(new AuthDto(user.getEmail(), user.getUsername(), RoleConverter.getRole(user.isAdmin()).toString(), Integer.toString(user.getId())));
             return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
         } catch (AuthenticationException authExc) {
             return new ResponseEntity<>(INVALID_LOGIN_CREDENTIALS, HttpStatus.UNAUTHORIZED);

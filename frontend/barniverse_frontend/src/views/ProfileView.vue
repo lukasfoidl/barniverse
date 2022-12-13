@@ -1,29 +1,28 @@
 <template>
     <div>
-
-        <UserCard v-for="user in allUser" :key="user.id" :user="user"> </UserCard>
+        <UserForm :key="user.id" :user="user"/>
     </div>
 </template>
 
 <script>
-import UserCard from "@/components/molecules/UserCard.vue"
+import UserForm from '@/components/forms/UserForm.vue';
 import http from "../http"
 
 export default {
-    name: "UserView",
-    components: { UserCard },
+    name: "ProfileView",
     data: () => ({
-        allUser: []
+        user: []
     }),
+    components:{ UserForm }, 
     methods: {
-        async requestUsers() {
+        async requestUser() {
             try {
-                const response = await http.get("users", {
+                const response = await http.get("users/" + window.uuid, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                this.allUser = response.data
+                this.user = response.data
             } catch(error) {
                 const data = {
                     title: "Error (" + error.response.status + ")",
@@ -34,11 +33,7 @@ export default {
         },
     },
     beforeMount() {
-        this.requestUsers();
+        this.requestUser();
     }
 }
-
 </script>
-<style>
-
-</style>

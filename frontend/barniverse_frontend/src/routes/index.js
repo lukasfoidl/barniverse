@@ -10,6 +10,7 @@ import HelpView from "../views/HelpView"
 import ImprintView from "../views/ImprintView"
 import UserView from "../views/UserView"
 import PageNotFoundView from "../views/PageNotFoundView"
+import ProfileView from "../views/ProfileView"
 
 const routes = [
     {
@@ -53,6 +54,16 @@ const routes = [
         component: UserView,
         beforeEnter: () => {
             if (window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "profile",
+        path: "/profile",
+        component: ProfileView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
                 return '/PageNotFound'
             }
         }

@@ -139,7 +139,7 @@ export default {
         //Register Button
         async register() {
             registerFormSchema
-                .validate(this.values, { abortEarly: true })
+                .validate(this.values, { abortEarly: false })
                 .then(async () => {
                     try {
                         console.log("REGISTER")

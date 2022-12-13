@@ -29,7 +29,7 @@ abstract public class BaseService {
      * @param dto dto which should be saved
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and added entity or error message in case of failure
      */
     protected <T, U> ResponseEntity<Object> addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) {
         T entity = transformer.convertToEntity(dto);
@@ -89,7 +89,7 @@ abstract public class BaseService {
      * @param dto dto which should be updated
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and updated entity or error message in case of failure
      */
     public <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, IDto dto) {
         Optional<IEntity> dbEntity;
@@ -132,7 +132,7 @@ abstract public class BaseService {
      * @param validationService type related validationService
      * @param entity entity which should be saved
      * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and saved entity or error message in case of failure
      */
     private <T> ResponseEntity<Object> validateAndSaveEntity(CrudRepository<T, Integer> repository, ValidationService<T> validationService, T entity) {
         ResponseEntity<Object> response = validationService.validateEntity(entity);
@@ -149,7 +149,7 @@ abstract public class BaseService {
      * @param childrenEntities children entities which should be validated
      * @param <T> parent entity type
      * @param <V> children entity type
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and saved parent entity or error message in case of failure
      */
     protected <T, V> ResponseEntity<Object> validateWithSubentitiesAndSaveEntity(
             CrudRepository<T, Integer> parentRepository,
@@ -173,12 +173,13 @@ abstract public class BaseService {
      * @param response response with corresponding status code and error message in case of failure of validation
      * @param entity entity which should be saved
      * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and saved entity or error message in case of failure
      */
     private <T> ResponseEntity<Object> saveIfValid(CrudRepository<T, Integer> repository, ResponseEntity<Object> response, T entity) {
         if (response.getStatusCode() == HttpStatus.OK) {
             try {
-                repository.save(entity);
+                T dbEntity = repository.save(entity);
+                return new ResponseEntity<>(dbEntity, HttpStatus.OK);
             } catch (Exception exception) {
                 return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
             }

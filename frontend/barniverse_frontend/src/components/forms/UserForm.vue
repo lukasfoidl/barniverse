@@ -4,14 +4,10 @@
         <div class="row">
             <div class="col-md-4 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <!--https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg-->
-                    <img class="rounded-circle mt-5 userImg" id= "img" :src="currentProfilePicture">
-                    <!--<span class="fullName" id = "firstnameShow">{{this.form.values.firstname}} &nbsp;{{this.form.values.lastname}}</span>
-                    <span class="font-weight-bold" id = "usernameShow">{{this.form.values.username}}</span>
-                    <span class="text-black-50" id = "emailShow">{{this.form.values.email}}</span>-->
+                    <img class="rounded-circle mt-5 userImg" id= "img" :src="values.picture">
                     <div class=" col-md-12 mt-3">
                         <input class ="mt-2 form-control form-control-sm"  id ="file" type="file" @change="onChangePicture">
-                        <button class="mt-4 btn btn-primary" @click="saveProfilePicture">save Pricture</button>
+                        <button class="mt-4 btn btn-primary" @click="saveProfilePicture">Upload Image</button>
                     </div>
                     <span> </span>
                 </div>
@@ -24,55 +20,55 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">First Name </label>
-                        <input type="text" class="form-control"  v-model="this.form.values.firstname"  id = "firstnameEdit" @blur="validate('firstname')"  >
+                        <input type="text" class="form-control"  v-model="this.values.firstname"  id = "firstnameEdit" @blur="validate('firstname')"  >
                         <div class="" id= "feedback-firstname">
-                            <p class ="errorMessage">{{ form.errors.firstname }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.firstname }}&nbsp;</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Last Name </label>
-                        <input type="text" class="form-control" v-model="this.form.values.lastname"  id = "lastnameEdit" @blur="validate('lastname')" >
+                        <input type="text" class="form-control" v-model="this.values.lastname"  id = "lastnameEdit" @blur="validate('lastname')" >
                         <div class="" id= "feedback-lastname">
-                            <p class ="errorMessage">{{ form.errors.lastname }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.lastname }}&nbsp;</p>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <label class="labels">Username</label>
-                        <input type="text" class="form-control" id = "usernameEdit"  v-model="this.form.values.username" @blur="validate('username')" >
+                        <input type="text" class="form-control" id = "usernameEdit"  v-model="this.values.username" @blur="validate('username')" >
                         <div class="" id= "feedback-username">
-                            <p class ="errorMessage">{{ form.errors.username }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.username }}&nbsp;</p>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <label class="labels">Email</label>
-                        <input type="text" class="form-control" id = "emailEdit"  v-model="this.form.values.email" @blur="validate('email')" >
+                        <input type="text" class="form-control" id = "emailEdit"  v-model="this.values.email" @blur="validate('email')" >
                         <div class="" id= "feedback-email">
-                            <p class ="errorMessage">{{ form.errors.email }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.email }}&nbsp;</p>
                         </div>
                     </div>
                     <!--
                     <div class="col-md-12">
                         <label class="labels">New Password</label>
-                        <input type="password" class="form-control" v-model="form.values.password" @blur="validate('password')">
+                        <input type="password" class="form-control" v-model="values.password" @blur="validate('password')">
                         <div class="" id= "feedback-password">
-                            <p class ="errorMessage">{{ form.errors.password }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.password }}&nbsp;</p>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <label class="labels">Confirm New Password</label>
-                        <input type="password" class="form-control" v-model="form.values.confirmPassword" @blur="validate('confirmPassword')">
+                        <input type="password" class="form-control" v-model="values.confirmPassword" @blur="validate('confirmPassword')">
                         <div class="" id= "feedback-password">
-                            <p class ="errorMessage">{{ form.errors.confirmPassword }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
                         </div>
                     </div>
                     -->
                 </div>
                 
                 
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button"  @click="validateAndUpdate">save Changes</button></div>
-                <div class="mt-5 text-center"><button class="btn btn-danger" type="button" @click="deactivateProfile" >delete Profile</button></div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button"  @click="validateAndUpdate">Save Changes</button></div>
+                <div class="mt-5 text-center"><button class="btn btn-danger" type="button" @click="deactivateProfile" >Delete Profile</button></div>
             </div>
         </div>
     </div>
@@ -81,199 +77,119 @@
 </template>
 
 <script>
-
-import axios from "axios"
-import {  object, string } from "yup"
 import http from "@/http"
+import {  object, string } from "yup"
+// import http from "@/http"
 
 
 export default {
     name: "UserForm",
+    props: ["user"],
     data: () => ({
-        currentProfilePicture: "" ,
-        currentUserData:{},
-        form:{
-            values:{},
-            errors:{}
-        }
+        values: {},
+        errors: {}
     }),
-    props:["user"],
+    mounted() {
+        this.values.firstname = this.user.firstname
+        this.values.lastname = this.user.lastname
+        this.values.username = this.user.username
+        this.values.email = this.user.email
+        this.values.picture = this.user.picture
+    },
     methods: {
         //validate function when the save changes button it pressed
-        async validateAndUpdate() {
-
-            console.log(this.form.values.firstname)
-            console.log(this.form.values.lastname)
-            console.log(this.form.values.username)
-            console.log(this.form.values.email)
-            console.log(this.form.values.password)
-            console.log(this.form.values.confirmPassword)
-            console.log(this.form.values.profilePicture)
-
-        editUserFormSchema
-            .validate(this.form.values, { abortEarly: false })
-            .then(() => {
-                this.form.errors = {
-
-                    firstname: "",
-                    lastname: "",
-                    username: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                    profilePicture: ""
-                }
-                this.updateUser();
-            })
-            .catch((errors) => {
+        validateAndUpdate() {
+            editUserFormSchema
+                .validate(this.values, { abortEarly: false })
+                .then(async () => {
+                    this.updateUser();
+                })
+                .catch((errors) => {
                     errors.inner.forEach(element => {
                         console.log(element.path)
-                        this.form.errors[element.path] = element.message
+                        this.errors[element.path] = element.message
                     })
-            })
+                })
         },
         //validate function for a field if the input has changed
         validate(field) {
             editUserFormSchema
-                .validateAt(field, this.form.values)
+                .validateAt(field, this.values)
                 .then(() => {
-                    this.form.errors[field] = ""
+                    this.errors[field] = ""
                     window.$("#" + field + "Edit").removeClass("is-invalid");
                     window.$("#feedback-" + field).removeClass("invalid-feedback");
                   
                 })
                 .catch((error) => {
-                    this.form.errors[field] = error.message
+                    this.errors[field] = error.message
                     window.$("#" + field + "Edit").addClass("is-invalid");
                     window.$("#feedback-" + field).addClass("invalid-feedback");
                 })
         },
-        // -
         async updateUser(){
             try {
-                const response = await axios ({
-                    method: "put", 
-                    url:"http://localhost:8081/api/users",
-                    data: {
-                        id: 4, //where do we get the uid ??
-                        firstname: this.form.values.firstname, 
-                        lastname: this.form.values.lastname,
-                        username: this.form.values.username, 
-                        //password: "password", --> how to update password ? 
-                        email: this.form.values.email, 
-                        picture: this.form.values.picture, 
-                        isAdmin: this.form.values.isAdmin, 
-                        status: this.form.values.status
+                const data = {
+                    id: this.user.id,
+                    firstname: this.values.firstname,
+                    lastname: this.values.lastname,
+                    username: this.values.username,
+                    email: this.values.email,
+                    picture: this.values.picture,
+                    status: this.user.status
+                }
+                const response = await http.put("users", data, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                console.log(response)
-                alert("User has been updated!")
-                this.$router.go()
-            } catch(error) {
-                console.error(error)
-            }
-        }, 
-        
-        saveProfilePicture(){
-            try{
-                //localStorage.clear(); function to clear local storage
-                const reader = new FileReader();
-                let rawImg;
-                reader.onload =  () =>{
-                    rawImg = reader.result;
-                    console.log(rawImg)
-                    localStorage.setItem(this.form.values.id, rawImg);
-                    this.form.values.newProfilePicture = rawImg;
-                    document.getElementById("img").src = localStorage.getItem(this.form.values.id)
+                const modalData = {
+                    title: "Info (" + response.status + ")",
+                    text: "User updated successfully!"
                 }
-                reader.readAsDataURL(this.form.values.profilePicture);
-                
-                
-                
-            }catch(e){
-                console.log(e);
+                window.event.emit("showModal", modalData);
+            } catch(error) {
+                const modalData = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                }
+                window.event.emit("showModal", modalData);
             }
-            
-            
         }, 
         onChangePicture(e){
-            console.log("selected file", e.target.files[0]);
-            this.form.values.profilePicture = e.target.files[0];
+            this.values.picture = e.target.files[0];
         },
         async deactivateProfile(){
-            console.log(this.currentUserData.firstname)
-            console.log(this.currentUserData.lastname)
-            console.log(this.currentUserData.email)
-            console.log(this.currentUserData.username)
-            console.log(this.currentUserData.isAdmin)
-            console.log(this.currentUserData.status)
             try {
-                const response = await axios ({
-                    method: "put", 
-                    url:"http://localhost:8081/api/users",
-                    data: {
-                        id: 4, //where do we get the uid ??
-                        firstname: this.currentUserData.firstname, 
-                        lastname: this.currentUserData.lastname,
-                        username: this.currentUserData.username, 
-                        //password: "password", --> how to update password ? 
-                        email: this.currentUserData.email, 
-                        picture: this.currentUserData.picture, 
-                        isAdmin: this.currentUserData.isAdmin, 
-                        status: 2 // 0-active 1-blocked 2-deleted
+                const response = await http.put("users/" + window.uuid, null, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                console.log(response)
-                alert("User has been deleted!")
-                this.$router.go()
+                sessionStorage.removeItem("jwt-token");
+                window.event.emit("reloadJWT");
+                window.router.push("/")
+                const modalData = {
+                    title: "Info (" + response.status + ")",
+                    text: "User deactivated successfully!"
+                }
+                window.event.emit("showModal", modalData);
             } catch(error) {
-                console.error(error)
+                const modalData = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                }
+                window.event.emit("showModal", modalData);
             }
-        }, 
-        async requestUser() {
-            try {
-                const response = await http.get("users/4")
-                this.form.values = response.data
-                this.currentUserData["id"] = response.data.id
-                this.currentUserData["firstname"] = response.data.firstname
-                this.currentUserData["lastname"] = response.data.lastname
-                this.currentUserData["username"] = response.data.username
-                this.currentUserData["email"] = response.data.email
-                this.currentUserData["picture"] = response.data.picture
-                this.currentUserData["isAdmin"] = response.data.admin
-                this.currentUserData["status"] = response.data.status
-                this.currentUserData["password"] = response.data.password
-                this.currentProfilePicture = localStorage.getItem(this.form.values.id)
-
-                console.log(response)
-                console.log(this.currentProfilePicture)
-                console.log(this.form.values)
-            } catch(error) {
-                console.error(error)
-            }
-
-        },
-        
- 
-    },
-    beforeMount(){
-        this.requestUser();
-    } 
-    
-    
-    
-    
+        },          
+    }
 }
 
 const editUserFormSchema = object().shape({
     firstname: string().required("First Name is required!"),
     lastname: string().required("Last Name is reuired!"),
-    username: string().min(8, "Username must be at least 8 Characters!").required("Username is required!"),
+    username: string().min(5, "Username must be between 5 and 20 Characters long!").max(20, "Username must be between 5 and 20 Characters long!").required("Username is required!"),
     email: string().email("Email must be valid!").required("Email is required!"),
-    /*password: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
-    confirmPassword: string().min(8, "Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function (value) {
-        return this.parent.password === value
-    }),*/
     profilePicture: string()
 
 

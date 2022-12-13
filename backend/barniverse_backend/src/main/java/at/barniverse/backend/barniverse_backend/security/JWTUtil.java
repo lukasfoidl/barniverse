@@ -28,6 +28,7 @@ public class JWTUtil {
                 .withClaim("email", authDto.getEmail())
                 .withClaim("username", authDto.getUsername())
                 .withClaim("role", authDto.getRole())
+                .withClaim("uuid", authDto.getUuid())
                 .withIssuedAt(new Date())
                 .withExpiresAt(calculateDateInXMinutes(15))
                 .withIssuer("Barniverse")
@@ -40,7 +41,7 @@ public class JWTUtil {
                 .withIssuer("Barniverse")
                 .build();
         DecodedJWT jwt = verifier.verify(token);
-        return new AuthDto(jwt.getClaim("email").asString(), jwt.getClaim("username").asString(), jwt.getClaim("role").asString());
+        return new AuthDto(jwt.getClaim("email").asString(), jwt.getClaim("username").asString(), jwt.getClaim("role").asString(), jwt.getClaim("uuid").asString());
     }
 
     private Date calculateDateInXMinutes(int minutes) {
