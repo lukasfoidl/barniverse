@@ -4,39 +4,30 @@
         <form id="formLogin">
 
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
-
+            <!--Email-->
             <div class="form-outline mb-4">
                 <label class="form-label" for="form2Example18">Email </label>
-                <input type="email" id="email" class="form-control form-control-lg" v-model="values.email"
-                    @blur="validate('email')" />
+                <input type="email" id="email" class="form-control form-control-lg" v-model="values.email" @blur="validate('email')" />
+                <div class="" id="feedback-email">
+                    <p class="errorMessage">{{ errors.email }}&nbsp;</p>
+                </div>
             </div>
-
+            <!--Password-->
             <div class="form-outline mb-4">
                 <label class="form-label" for="form2Example28">Password</label>
-                <input type="password" id="password" class="form-control form-control-lg" v-model="values.password"
-                    @blur="validate('password')" />
+                <input type="password" id="password" class="form-control form-control-lg" v-model="values.password" @blur="validate('password')" />
+                <div class="" id="feedback-password">
+                    <p class="errorMessage">{{ errors.password }}&nbsp;</p>
+                </div>
             </div>
-            <div>
-                <p v-if="!!errors.email" class="text-danger">
-                    {{ errors.email }}
-                </p>
-                <p v-if="!!errors.password" class="text-danger">
-                    {{ errors.password }}
-                </p>
-
-            </div>
+            
             <div class="pt-1 mb-4">
                 <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
             </div>
 
-
-            <p>Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link>
-            </p>
+            <p>Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link></p>
 
         </form>
-
-
-
 
     </div>
 </template>
@@ -60,7 +51,7 @@ export default {
     methods: {
         async login() {
             loginFormSchema
-                .validate(this.values, { abortEarly: true })
+                .validate(this.values, { abortEarly: false })
                 .then(async () => {
                     try {
                         console.log("LOGIN")
@@ -69,9 +60,13 @@ export default {
                         console.error(error)
                     }
                 })
-                .catch((error) => {
-                    error.inner.forEach(() => {
-                        this.errors[error.path] = error.message
+                .catch((errors) => {
+                    errors.inner.forEach(element => {
+                        this.errors[element.path] = element.message
+                        window.$("#" + element.path).removeClass("is-valid");
+                        window.$("#" + element.path).addClass("is-invalid");
+                        window.$("#feedback-" + element.path).removeClass("valid-feedback");
+                        window.$("#feedback-" + element.path).addClass("invalid-feedback");
                     })
                 })
         },
@@ -100,13 +95,22 @@ export default {
                 .validateAt(field, this.values)
                 .then(() => {
                     this.errors[field] = ""
+                    window.$("#" + field).removeClass("is-invalid");
+                    window.$("#" + field).addClass("is-valid");
+                    window.$("#feedback-" + field).removeClass("invalid-feedback");
+                    window.$("#feedback-" + field).addClass("valid-feedback");
                 })
                 .catch((error) => {
                     this.errors[field] = error.message
+                    window.$("#" + field).removeClass("is-valid");
+                    window.$("#" + field).addClass("is-invalid");
+                    window.$("#feedback-" + field).removeClass("valid-feedback");
+                    window.$("#feedback-" + field).addClass("invalid-feedback");
                 })
+                
         }
-    }
 
+    }
 
 }
 
@@ -121,5 +125,12 @@ const loginFormSchema = object().shape({
     padding: 1cm;
     background-color: #ebdbc7;
     border-radius: 25px;
+}
+.errorMessage {
+    font-size: 11px;
+    margin-bottom: 0%;
+}
+.invalid-feedback, .valid-feedback {
+    margin-top: 0 !important;
 }
 </style>
