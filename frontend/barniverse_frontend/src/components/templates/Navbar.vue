@@ -55,26 +55,29 @@
                 </li>
             </ul>
             <ul id="userContent" class="navbar-nav nav nav-tabs flex-fill">
-                <!-- my username -->
-                <!-- <li id="userContentItem" class="nav-item ms-auto">
-                    <router-link id="user" class="nav-link navItemStyle" to="/user">
-                        Maximilian Obelsberg
-                    </router-link>
-                </li> -->
+                <!-- OBSERVER - logged out -->
                 <!-- register new user -->
-                <li id="userContentItem" class="nav-item ms-auto">
+                <li v-if="role==''" id="userContentItem" class="nav-item ms-auto">
                     <router-link id="register" class="nav-link navItemStyle" to="/register">
                         Register
                     </router-link>
                 </li>
                 <!-- login -->
-                <li class="nav-item navIcon">
+                <li v-if="role==''" class="nav-item navIcon">
                     <router-link id="login" class="nav-link navItemStyle" to="/login">
                         <i class="bi bi-box-arrow-in-right" alt="Login"></i>
                     </router-link>
                 </li>
+
+                <!-- USER/ADMIN - logged in -->
+                <!-- my username -->
+                <li v-if="role!=''" id="userContentItem" class="nav-item ms-auto">
+                    <router-link id="user" class="nav-link navItemStyle" to="#">
+                        {{this.username}}
+                    </router-link>
+                </li>
                 <!-- logout -->
-                <li class="nav-item navIcon" @click="logout">
+                <li v-if="role!=''" class="nav-item navIcon" @click="logout">
                     <router-link id="logout" class="nav-link navItemStyle" to="/">
                         <i class="bi bi-box-arrow-right" alt="Logout"></i>
                     </router-link>
@@ -89,14 +92,15 @@ export default {
     name: "Navbar",
     data: () => ({
         role: "",
-        roles: ""
+        roles: "",
+        username: ""
     }),
     beforeMount() {
         this.roles = window.roles;
-        this.reloadRole();
+        this.reloadData();
 
         window.event.on('reloadJWT', () => {
-            this.reloadRole();
+            this.reloadData();
         });
     },
     mounted() {
@@ -118,8 +122,9 @@ export default {
         });
     },
     methods: {
-        reloadRole() {
+        reloadData() {
             this.role = window.role
+            this.username = window.username
         },
         logout() {
             sessionStorage.removeItem("jwt-token");
