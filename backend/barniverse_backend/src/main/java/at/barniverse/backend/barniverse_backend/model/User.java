@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * entity for an user,
+ * entity for a user,
  * property definitions as well as getter and setter functions
  */
 @Entity
@@ -28,7 +28,7 @@ public class User implements IEntity {
     private String lastname;
 
     @NotBlank(message = "Username is mandatory!")
-    @Size(min = 5, message = "Username has to be at least 5 characters long!")
+    @Size(min = 5, max = 20, message = "Username has to be between 5 and 20 characters long!")
     private String username;
 
     @NotBlank(message = "Email is mandatory!")
