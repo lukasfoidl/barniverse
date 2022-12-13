@@ -85,17 +85,20 @@
 </template>
 
 <script>
-import jwtDecoder from 'vue-jwt-decode'
-
 export default {
     name: "Navbar",
     data: () => ({
         role: "",
-        roles: {
-            ROLE_USER: "ROLE_USER",
-            ROLE_ADMIN: "ROLE_ADMIN"
-        }
+        roles: ""
     }),
+    beforeMount() {
+        this.roles = window.roles;
+        this.reloadRole();
+
+        window.event.on('reloadJWT', () => {
+            this.reloadRole();
+        });
+    },
     mounted() {
         // set correct style for changing between mobile and desktop mode
         window.$(window).on('resize', function() {
@@ -129,19 +132,14 @@ export default {
             window.$(".navItemStyleActive").removeClass("navItemStyleActive");
             window.$("#home").addClass("navItemStyleActive");
         });
-
-        window.event.on('reloadJWT', () => {
-            this.reloadJWT();
-        });
     },
     methods: {
-        reloadJWT() {
-            const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
-            this.role = jwt == null ? "" : jwt.role
+        reloadRole() {
+            this.role = window.role
         },
         logout() {
             sessionStorage.removeItem("jwt-token");
-            this.reloadJWT();
+            window.event.emit("reloadJWT");
         }
     }
 }

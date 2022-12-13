@@ -11,25 +11,6 @@ import ImprintView from "../views/ImprintView"
 import UserView from "../views/UserView"
 import PageNotFoundView from "../views/PageNotFoundView"
 
-//WARNING: routes are not locked according the user role yet
-
-// import jwtDecoder from 'vue-jwt-decode'
-
-// var role = "";
-// const roles = {
-//     ROLE_USER: "ROLE_USER",
-//     ROLE_ADMIN: "ROLE_ADMIN"
-// }
-
-// window.event.on('reloadJWT', () => {
-//     reloadJWT();
-// });
-
-// function reloadJWT() {
-//     const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
-//     role =  jwt == null ? "" : jwt.role
-// }
-
 const routes = [
     {
         name: "home",
@@ -50,21 +31,31 @@ const routes = [
         name: "myAuctions",
         path: "/myAuctions",
         component: MyAuctionsView,
-        // beforeEnter: () => {
-        //     if (role != roles.ROLE_USER || role != roles.ROLE_ADMIN) {
-        //         return '/'
-        //     }
-        // },
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
     },
     {
         name: "myOffers",
         path: "/myOffers",
         component: MyOffersView,
-        // beforeEnter: () => {
-        //     if (role != roles.ROLE_USER || role != roles.ROLE_ADMIN) {
-        //         return '/'
-        //     }
-        // },
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: 'user',
+        path: '/user', 
+        component: UserView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
     },
     {
         name: "register",
@@ -87,16 +78,6 @@ const routes = [
         component: ImprintView
     },
     {
-        name: "user",
-        path: "/user",
-        component: UserView,
-        // beforeEnter: () => {
-        //     if (role != roles.ROLE_ADMIN) {
-        //         return '/'
-        //     }
-        // },
-    },
-    {
         path: '/:catchAll(.*)*',
         name: "PageNotFoundView",
         component: PageNotFoundView
@@ -106,6 +87,6 @@ const routes = [
 const router = createRouter({
     routes,
     history: createWebHistory(process.env.BASE_URL),
-})
+});
 
 export default router;
