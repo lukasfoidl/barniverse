@@ -116,22 +116,6 @@ export default {
                 window.$("#userContentItem").addClass("ms-auto");
             }
         });
-
-        // set correct nav-tab as active on selection
-        window.$(document).on("click", ".navItemStyle", function (event) {
-            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
-            if (event.target.tagName.toLowerCase() != "a") {
-                window.$(event.target.parentElement).addClass("navItemStyleActive"); // necessary for icons
-            } else {
-                window.$(event.target).addClass("navItemStyleActive");
-            }
-        });
-
-        // set home-tab on active if image or brandname get selected
-        window.$(document).on("click", ".navbarBrand", function() {
-            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
-            window.$("#home").addClass("navItemStyleActive");
-        });
     },
     methods: {
         reloadRole() {
@@ -140,6 +124,17 @@ export default {
         logout() {
             sessionStorage.removeItem("jwt-token");
             window.event.emit("reloadJWT");
+        }
+    },
+    watch:{
+        $route (to) {
+            if (to.name != "imprint" && to.name != "help") {
+                var id = "#" + to.name
+                this.$nextTick(() => {
+                    window.$(".navItemStyleActive").removeClass("navItemStyleActive");
+                    window.$(id).addClass("navItemStyleActive");
+                })
+            }
         }
     }
 }
