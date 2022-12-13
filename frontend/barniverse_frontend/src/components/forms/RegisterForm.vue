@@ -1,26 +1,23 @@
 <template>
-
-    <div id="ImageRegister">
+    <div>
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
                     <!-- Firstname-->
                     <label class="form-label" for="firstName">First Name</label>
-                    <input type="text" class="form-control form-control-lg" v-model="form.values.fname" id="fname" @blur="validate('fname')" />
+                    <input type="text" class="form-control form-control-lg" v-model="values.fname" id="fname" @blur="validate('fname')" />
                     <div class="" id= "feedback-fname">
-                         <p class ="errorMessage">{{ form.errors.fname }}&nbsp;</p>
+                         <p class ="errorMessage">{{ errors.fname }}&nbsp;</p>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6 mb-4">
                 <div class="form-outline">
                     <!-- Lastname-->
                     <label class="form-label" for="lastName">Last Name</label>
-                    <input type="text" class="form-control form-control-lg" v-model="form.values.lname" id="lname"
-                        @blur="validate('lname')" />
+                    <input type="text" class="form-control form-control-lg" v-model="values.lname" id="lname" @blur="validate('lname')" />
                         <div class="" id= "feedback-lname">
-                            <p class ="errorMessage">{{ form.errors.lname }}&nbsp;</p>
+                            <p class ="errorMessage">{{ errors.lname }}&nbsp;</p>
                         </div>
                 </div>
             </div>
@@ -39,7 +36,6 @@
             </div>
 
             <div class="col-md-6 mb-4 ">
-
                 <div class="form-outline ">
                     <!-- Username-->
                     <label class="form-label" for="Username">Username</label>
@@ -85,18 +81,7 @@
                     </div>
                 </div>
             </div>
-        <!-- Phone Number not needed-->
-        <!--<div class="col-md-6 mb-4 pb-2">
-                <div class="form-outline">
-                    <label class="form-label" for="phoneNumber">Phone Number</label>
-                    <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-                    <div class="" id= "feedback-confirmPassword">
-                        <p class ="errorMessage">{{ form.errors.phonenumber }}&nbsp;</p>
-                    </div>
-                </div>
-            </div>-->
         </div>
-
 
         <div class="row">
             <div class="col-md-12 mb-4 pb-2">
@@ -114,101 +99,75 @@
             <p v-if="!!form.errors.fname" class="text-danger">
                 {{ form.errors.fname }}
             </p>
-            <p v-if="!!form.errors.lname" class="text-danger">
-                {{ form.errors.lname }}
+            <p v-if="!!errors.lname" class="text-danger">
+                {{ errors.lname }}
             </p>
-            <p v-if="!!form.errors.username" class="text-danger">
-                {{ form.errors.username }}
+            <p v-if="!!errors.username" class="text-danger">
+                {{ errors.username }}
             </p>
-            <p v-if="!!form.errors.emailR" class="text-danger">
-                {{ form.errors.emailR }}
+            <p v-if="!!errors.emailR" class="text-danger">
+                {{ errors.emailR }}
             </p>
-            <p v-if="!!form.errors.passwordR" class="text-danger">
-                {{ form.errors.passwordR }}
+            <p v-if="!!errors.passwordR" class="text-danger">
+                {{ errors.passwordR }}
             </p>
-            <p v-if="!!form.errors.confirmPassword" class="text-danger">
-                {{ form.errors.confirmPassword }}
+            <p v-if="!!errors.confirmPassword" class="text-danger">
+                {{ errors.confirmPassword }}
             </p>
-            <p v-if="!!form.errors.dateOfBirth" class="text-danger">
-                {{ form.errors.dateOfBirth }}
+            <p v-if="!!errors.dateOfBirth" class="text-danger">
+                {{ errors.dateOfBirth }}
             </p>
-            <p v-if="!!form.errors.profilePicture" class="text-danger">
-                {{ form.errors.profilePicture }}
+            <p v-if="!!errors.profilePicture" class="text-danger">
+                {{ errors.profilePicture }}
             </p>
-
         </div>-->
-
 
         <div class="mt-4 pt-2">
             <input class="btn btn-primary btn-lg" type="submit" v-on:click.prevent="register" value="Register" />
         </div>
-
         <div class="mt-4">
             <router-link id="login" class="link" to="/login">
                 already have an account?
             </router-link>
         </div>
-
     </div>
-
-
 </template>
 
 <script>
-
 import { date, object, string } from "yup"
+import http from "../../http"
+
 export default {
-
-
     name: "RegisterForm",
     data: () => ({
-        form: {
-            values: {
+        values: {
 
-                fname: "",
-                lname: "",
-                username: "",
-                emailR: "",
-                passwordR: "",
-                confirmPassword: "",
-                dateOfBirth: null, // need empty date obj
-                profilePicture: ""
+            fname: "",
+            lname: "",
+            username: "",
+            emailR: "",
+            passwordR: "",
+            confirmPassword: "",
+            dateOfBirth: null, // need empty date obj
+            profilePicture: ""
 
-            },
-            errors: {}
-        }
+        },
+        errors: {}
     }),
     methods: {
         //Register Button
         async register() {
-
-            console.log(this.form.values.fname)
-            console.log(this.form.values.lname)
-            console.log(this.form.values.username)
-            console.log(this.form.values.emailR)
-            console.log(this.form.values.passwordR)
-            console.log(this.form.values.confirmPassword)
-            console.log(this.form.values.dateOfBirth)
-            console.log(this.form.values.profilePicture)
-
             registerFormSchema
-                .validate(this.form.values, { abortEarly: false })
-                .then(() => {
-                    
-                    this.form.errors = {
-
-                        fname: "",
-                        lname: "",
-                        username: "",
-                        emailR: "",
-                        passwordR: "",
-                        confirmPassword: "",
-                        dateOfBirth: "",
-                        profilePicture: ""
+                .validate(this.values, { abortEarly: true })
+                .then(async () => {
+                    try {
+                        console.log("REGISTER")
+                        await this.saveUser();
+                    } catch (error) {
+                        console.error(error)
                     }
                 })
                 .catch((errors) => {
-                    
                     errors.inner.forEach(element => {
                         console.log(element.path)
                         this.form.errors[element.path] = element.message
@@ -219,9 +178,39 @@ export default {
                     })
                 })
         },
+        async saveUser() {
+            const data = {
+                firstname: this.values.fname,
+                lastname: this.values.lname,
+                username: this.values.username,
+                email: this.values.emailR,
+                password: this.values.passwordR,
+                picture: this.values.profilePicture,
+                birthday: this.values.dateOfBirth,
+            };
+            http.post("/register", data)
+                .then(function (response) {
+                    sessionStorage.setItem("jwt-token", response.data['jwt-token']);
+                    window.event.emit("reloadJWT");
+                    window.router.push('/')
+                    const data = {
+                        title: "Welcome in the Barniverse!",
+                        text: "User created successfully!"
+                    }
+                    window.event.emit("showModal", data);
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    const data = {
+                        title: "Error (" + error.response.status + ")",
+                        text: error.response.data
+                    }
+                    window.event.emit("showModal", data);
+                });
+        },
         validate(field) {
             registerFormSchema
-                .validateAt(field, this.form.values)
+                .validateAt(field, this.values)
                 .then(() => {
                     this.form.errors[field] = "Looks Good."
                     console.log(field);
@@ -230,8 +219,6 @@ export default {
                     window.$("#feedback-" + field).removeClass("invalid-feedback");
                     window.$("#feedback-" + field).addClass("valid-feedback");
                     
-                    
-                })
                 .catch((error) => {
                     this.form.errors[field] = error.message
                     console.log(field);
@@ -242,7 +229,6 @@ export default {
                 })
         }
     }
-
 }
 
 //validate here
@@ -257,21 +243,13 @@ const registerFormSchema = object().shape({
     }),
     dateOfBirth: date(),
     profilePicture: string()
-
-
 })
-
-
 </script>
 
 <style>
 #formRegister {
     width: 40em;
-
 }
-
-
-
 .errorMessage{
     font-size: 11px;
     margin-bottom: 0%;

@@ -22,8 +22,16 @@
 
 <script>
 export default {
-    name: "Modal"
+    name: "Modal",
+    mounted() {
+        window.event.on("showModal", (data) => {
+            window.$("#errorModalTitle").text(data.title);
+            window.$("#errorModalContent").text(data.text);
+            new window.bootstrap.Modal(window.$("#errorModal"), {}).show();
+        });
+    }
 }
+
 // new window.bootstrap.Modal(window.$("#errorModal"), {}).show(); --> show Modal through javascript because >> window.$('#errorModal').modal('show') << is not working
 </script>
 

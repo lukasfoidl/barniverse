@@ -14,7 +14,9 @@
     "bootstrap-icons": "^1.9.1",
     "core-js": "^3.8.3",
     "jquery": "^3.6.1",
+    "mitt": "^3.0.0",
     "vue": "^3.2.41",
+    "vue-jwt-decode": "^0.1.0",
     "vue-router": "^4.1.6",
     "yup": "^0.32.11"
   },
