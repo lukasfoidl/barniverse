@@ -1,84 +1,85 @@
 <template>
-    <div class="container">
-    <div class=" rounded card usercard mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-4 border-right">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-circle mt-5 userImg" id= "img" :src="values.picture">
-                    <div class=" col-md-12 mt-3">
-                        <input class ="mt-2 form-control form-control-sm"  id ="file" type="file" @change="onChangePicture">
-                        <button class="mt-4 btn btn-primary" @click="saveProfilePicture">Upload Image</button>
+    <div class="row">
+        <div class="col-md-6 centerPictureDiv">
+            <div class="d-flex flex-column align-items-center text-center">
+                <img class="rounded-circle userImg" id="img" :src="values.picture">
+                <div class="col-md-12 mt-3">
+                    <input class="mt-2 form-control form-control-sm" id="file" type="file" @change="onChangePicture">
+                    <button class="mt-4 btn btn-primary" @click="saveProfilePicture">Upload Image</button>
+                </div>
+                <span> </span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="labels">First Name </label>
+                    <input type="text" class="form-control" v-model="this.values.firstname" id="firstnameEdit"
+                        @blur="validate('firstname')">
+                    <div class="" id="feedback-firstname">
+                        <p class="errorMessage">{{ errors.firstname }}&nbsp;</p>
                     </div>
-                    <span> </span>
+                </div>
+                <div class="col-md-6">
+                    <label class="labels">Last Name </label>
+                    <input type="text" class="form-control" v-model="this.values.lastname" id="lastnameEdit"
+                        @blur="validate('lastname')">
+                    <div class="" id="feedback-lastname">
+                        <p class="errorMessage">{{ errors.lastname }}&nbsp;</p>
+                    </div>
                 </div>
             </div>
-        <div class="col-md-6 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">MyProfile</h4>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <label class="labels">First Name </label>
-                        <input type="text" class="form-control"  v-model="this.values.firstname"  id = "firstnameEdit" @blur="validate('firstname')"  >
-                        <div class="" id= "feedback-firstname">
-                            <p class ="errorMessage">{{ errors.firstname }}&nbsp;</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="labels">Last Name </label>
-                        <input type="text" class="form-control" v-model="this.values.lastname"  id = "lastnameEdit" @blur="validate('lastname')" >
-                        <div class="" id= "feedback-lastname">
-                            <p class ="errorMessage">{{ errors.lastname }}&nbsp;</p>
-                        </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="labels">Username</label>
+                    <input type="text" class="form-control" id="usernameEdit" v-model="this.values.username"
+                        @blur="validate('username')">
+                    <div class="" id="feedback-username">
+                        <p class="errorMessage">{{ errors.username }}&nbsp;</p>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <label class="labels">Username</label>
-                        <input type="text" class="form-control" id = "usernameEdit"  v-model="this.values.username" @blur="validate('username')" >
-                        <div class="" id= "feedback-username">
-                            <p class ="errorMessage">{{ errors.username }}&nbsp;</p>
-                        </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="labels">Email</label>
+                    <input type="text" class="form-control" id="emailEdit" v-model="this.values.email"
+                        @blur="validate('email')">
+                    <div class="" id="feedback-email">
+                        <p class="errorMessage">{{ errors.email }}&nbsp;</p>
                     </div>
-                    <div class="col-md-12">
-                        <label class="labels">Email</label>
-                        <input type="text" class="form-control" id = "emailEdit"  v-model="this.values.email" @blur="validate('email')" >
-                        <div class="" id= "feedback-email">
-                            <p class ="errorMessage">{{ errors.email }}&nbsp;</p>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="col-md-12">
-                        <label class="labels">New Password</label>
-                        <input type="password" class="form-control" v-model="values.password" @blur="validate('password')">
-                        <div class="" id= "feedback-password">
-                            <p class ="errorMessage">{{ errors.password }}&nbsp;</p>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Confirm New Password</label>
-                        <input type="password" class="form-control" v-model="values.confirmPassword" @blur="validate('confirmPassword')">
-                        <div class="" id= "feedback-password">
-                            <p class ="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
-                        </div>
-                    </div>
-                    -->
                 </div>
-                
-                
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button"  @click="validateAndUpdate">Save Changes</button></div>
-                <div class="mt-5 text-center"><button class="btn btn-danger" type="button" @click="deactivateProfile" >Delete Profile</button></div>
+                <!--
+                <div class="col-md-12">
+                    <label class="labels">New Password</label>
+                    <input type="password" class="form-control" v-model="values.password" @blur="validate('password')">
+                    <div class="" id= "feedback-password">
+                        <p class ="errorMessage">{{ errors.password }}&nbsp;</p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label class="labels">Confirm New Password</label>
+                    <input type="password" class="form-control" v-model="values.confirmPassword" @blur="validate('confirmPassword')">
+                    <div class="" id= "feedback-password">
+                        <p class ="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
+                    </div>
+                </div>
+            -->
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary buttonSpacer" @click="validateAndUpdate">
+                    Save Changes
+                </button>
+                <button class="btn btn-danger" @click="deactivateProfile">Delete
+                    Profile
+                </button>
             </div>
         </div>
     </div>
-</div>
-</div>
 </template>
 
 <script>
 import http from "@/http"
-import {  object, string } from "yup"
+import { object, string } from "yup"
 // import http from "@/http"
 
 
@@ -119,7 +120,7 @@ export default {
                     this.errors[field] = ""
                     window.$("#" + field + "Edit").removeClass("is-invalid");
                     window.$("#feedback-" + field).removeClass("invalid-feedback");
-                  
+
                 })
                 .catch((error) => {
                     this.errors[field] = error.message
@@ -127,7 +128,7 @@ export default {
                     window.$("#feedback-" + field).addClass("invalid-feedback");
                 })
         },
-        async updateUser(){
+        async updateUser() {
             try {
                 const data = {
                     id: this.user.id,
@@ -143,23 +144,24 @@ export default {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
+                window.event.emit("reloadUsername", response.data.username)
                 const modalData = {
                     title: "Info (" + response.status + ")",
                     text: "User updated successfully!"
                 }
                 window.event.emit("showModal", modalData);
-            } catch(error) {
+            } catch (error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
                 window.event.emit("showModal", modalData);
             }
-        }, 
-        onChangePicture(e){
+        },
+        onChangePicture(e) {
             this.values.picture = e.target.files[0];
         },
-        async deactivateProfile(){
+        async deactivateProfile() {
             try {
                 const response = await http.put("users/" + window.uuid, null, {
                     headers: {
@@ -171,17 +173,17 @@ export default {
                 window.router.push("/")
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "User deactivated successfully!"
+                    text: "User deleted successfully!" // deleted and not deactivated because of "Delete"-Button
                 }
                 window.event.emit("showModal", modalData);
-            } catch(error) {
+            } catch (error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
                 window.event.emit("showModal", modalData);
             }
-        },          
+        },
     }
 }
 
@@ -197,17 +199,29 @@ const editUserFormSchema = object().shape({
 </script>
 
 <style>
-.userImg{
+.userImg {
     width: 150px;
     height: 150px;
     border-style: solid;
-    border-color:#ebdbc7;
+    border-color: #ebdbc7;
 }
-.fullName{
+
+.fullName {
     font-size: 20px;
 }
-.usercard{
+
+.usercard {
     max-width: 100%;
     background-color: #ebdbc7;
+}
+
+.buttonSpacer {
+    margin-right: 10px;
+}
+
+.centerPictureDiv {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 </style>

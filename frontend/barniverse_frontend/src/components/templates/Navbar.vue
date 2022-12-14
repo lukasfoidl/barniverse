@@ -102,6 +102,9 @@ export default {
         window.event.on('reloadJWT', () => {
             this.reloadData();
         });
+        window.event.on('reloadUsername', () => {
+            this.reloadData();
+        });
     },
     mounted() {
         // set correct style for changing between mobile and desktop mode

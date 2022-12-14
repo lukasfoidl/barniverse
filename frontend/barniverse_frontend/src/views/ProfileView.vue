@@ -1,6 +1,10 @@
 <template>
-    <div>
-        <UserForm :key="user.id" :user="user"/>
+    <div id="backgroundRegister">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-9 col-xl-6">
+                <UserForm :key="user.id" :user="user"/>
+            </div>
+        </div>
     </div>
 </template>
 
