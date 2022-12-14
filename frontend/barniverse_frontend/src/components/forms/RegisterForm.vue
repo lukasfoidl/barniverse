@@ -192,7 +192,7 @@ export default {
             registerFormSchema
                 .validateAt(field, this.values)
                 .then(() => {
-                    this.errors[field] = "Looks Good."
+                    this.errors[field] = ""
                     window.$("#" + field).removeClass("is-invalid");
                     window.$("#" + field).addClass("is-valid");
                     window.$("#feedback-" + field).removeClass("invalid-feedback");

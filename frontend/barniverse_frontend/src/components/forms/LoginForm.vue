@@ -1,11 +1,7 @@
 <template>
     <div>
-
-        <form id="formLogin">
-
-            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
             <!--Email-->
-            <div class="form-outline mb-4">
+            <div>
                 <label class="form-label" for="form2Example18">Email </label>
                 <input type="email" id="email" class="form-control form-control-lg" v-model="values.email" @blur="validate('email')" />
                 <div class="" id="feedback-email">
@@ -13,7 +9,7 @@
                 </div>
             </div>
             <!--Password-->
-            <div class="form-outline mb-4">
+            <div>
                 <label class="form-label" for="form2Example28">Password</label>
                 <input type="password" id="password" class="form-control form-control-lg" v-model="values.password" @blur="validate('password')" />
                 <div class="" id="feedback-password">
@@ -25,10 +21,9 @@
                 <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
             </div>
 
-            <p>Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link></p>
-
-        </form>
-
+            <div>
+                Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link>
+            </div>
     </div>
 </template>
 
@@ -121,11 +116,6 @@ const loginFormSchema = object().shape({
 </script>
 
 <style>
-#formLogin {
-    padding: 1cm;
-    background-color: #ebdbc7;
-    border-radius: 25px;
-}
 .errorMessage {
     font-size: 11px;
     margin-bottom: 0%;

@@ -1,16 +1,11 @@
 <template>
-    <div>
+    <div id="backgroundRegister">
         <div class="row justify-content-center align-items-center">
             <div class="col-12 col-lg-9 col-xl-6">
-                <div class="shadow-2-strong">
-                    <div class="card-body p-4">
-                        <LoginForm />
-                    </div>
-                </div>
+                <LoginForm />
             </div>
         </div>
     </div>
-   
 </template>
 
 <script>
