@@ -137,7 +137,7 @@ export default {
                     username: this.values.username,
                     email: this.values.email,
                     picture: this.values.picture,
-                    status: this.user.status
+                    state: this.user.state
                 }
                 const response = await http.put("users", data, {
                     headers: {

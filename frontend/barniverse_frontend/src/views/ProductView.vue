@@ -22,7 +22,12 @@ export default {
                 const response = await http.get("products")
                 this.products = response.data
             } catch(error) {
-                console.error(error)
+                console.log(error)
+                const data = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                }
+                window.event.emit("showModal", data);
             }
 
         }

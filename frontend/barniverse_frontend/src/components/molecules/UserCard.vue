@@ -31,9 +31,9 @@
                             <input class="form-control" v-if="this.allowEdit" type="text" v-model="this.editData.firstname">
                         </div>
                         <div class="mt-3">
-                            <span v-if="!this.allowEdit"> Status: </span>
+                            <span v-if="!this.allowEdit"> State: </span>
                             <span v-if="this.allowEdit">Lastname:</span>
-                            <span v-if="!this.allowEdit">{{user.status}}</span>
+                            <span v-if="!this.allowEdit">{{user.state}}</span>
                             <input class="form-control"  v-if="this.allowEdit" type="text" v-model="this.editData.lastname">
                             
                         </div>
@@ -75,7 +75,7 @@ export default{
             username:"",
             email:"",
             admin:"",
-            status:"",
+            state:"",
             picture:""
         }
     
@@ -89,7 +89,7 @@ export default{
             this.editData["username"] = this.user.username
             this.editData["email"] = this.user.email
             this.editData["admin"] = this.user.admin
-            this.editData["status"] = this.user.status
+            this.editData["state"] = this.user.state
         }, 
         async updateThisUser(){
             //function to update User
@@ -106,7 +106,7 @@ export default{
             //             email: this.editData.email, 
             //             picture: "", 
             //             is_admin: this.editData.admin, 
-            //             status: this.editData.status
+            //             state: this.editData.state
             //         }
             //     })
             //     console.log(response)
@@ -147,7 +147,7 @@ export default{
             //             email: this.user.email, 
             //             picture: "", 
             //             admin: this.user.admin, 
-            //             status: 1 //this 0 active 1 blocked 2 deleted
+            //             state: 1 //this 0 active 1 blocked 2 deleted
             //         }
             //     })
             //     console.log(response)
@@ -172,7 +172,7 @@ export default{
             //             email: this.user.email, 
             //             picture: "", 
             //             admin: !this.user.admin, //switch true false
-            //             status: this.user.status 
+            //             state: this.user.state 
             //         }
             //     })
             //     console.log(response)
@@ -195,7 +195,7 @@ export default{
             //             email: this.user.email, 
             //             picture: "", 
             //             admin: this.user.admin, 
-            //             status: 0 //this 0 active 1 blocked 2 deleted
+            //             state: 0 //this 0 active 1 blocked 2 deleted
             //         }
             //     })
             //     console.log(response)
@@ -208,8 +208,8 @@ export default{
 
     },
     beforeMount(){
-        console.log(this.user.status)
-        if(this.user.status =="active"){
+        console.log(this.user.state)
+        if(this.user.state =="active"){
             this.blocked = true; 
         }
 

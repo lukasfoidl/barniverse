@@ -1,7 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
-import at.barniverse.backend.barniverse_backend.dto.IDto;
-import at.barniverse.backend.barniverse_backend.enums.UStatus;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -44,8 +43,8 @@ public class User implements IEntity {
     @NotNull(message = "Definition if user is admin or not is mandatory!")
     private boolean isAdmin;
 
-    @NotNull(message = "Status of user is mandatory!")
-    private UStatus status;
+    @NotNull(message = "State of user is mandatory!")
+    private UserState state;
 
 //----getter and setter----
 
@@ -115,12 +114,12 @@ public class User implements IEntity {
         isAdmin = admin;
     }
 
-    public UStatus getStatus() {
-        return status;
+    public UserState getState() {
+        return state;
     }
 
-    public void setStatus(UStatus status) {
-        this.status = status;
+    public void setState(UserState state) {
+        this.state = state;
     }
 
 }

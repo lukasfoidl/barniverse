@@ -19,6 +19,9 @@ import java.io.IOException;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.JWT_TOKEN_EXPIRED;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.JWT_TOKEN_INVALID;
 
+/**
+ * filters every request and checks the json web token
+ */
 @Component
 public class JWTFilter extends OncePerRequestFilter {
 

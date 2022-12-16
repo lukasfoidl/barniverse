@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.ACCESS_DENIED;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.UNAUTHORIZED;
 
+/**
+ * configuration class for security configuration
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

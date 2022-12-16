@@ -1,16 +1,13 @@
 package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
-import at.barniverse.backend.barniverse_backend.enums.UStatus;
-import at.barniverse.backend.barniverse_backend.model.IEntity;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import at.barniverse.backend.barniverse_backend.transformer.UserTransformer;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -92,7 +89,7 @@ public class UserService extends BaseService {
         if (user.isEmpty() || user.get().getId() != id) {
             return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
         }
-        user.get().setStatus(UStatus.deleted);
+        user.get().setState(UserState.deleted);
         try {
             userRepository.save(user.get());
         } catch (Exception exception) {

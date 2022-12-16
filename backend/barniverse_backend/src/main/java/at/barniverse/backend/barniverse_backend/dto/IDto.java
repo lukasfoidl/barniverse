@@ -1,7 +1,7 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
 /**
- * defines basic functions for dtos, all dto classes need to implement this interface
+ * defines basic functions for dtos
  */
 public interface IDto {
 

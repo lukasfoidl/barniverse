@@ -28,7 +28,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         // password should not be sent to the client
         userDto.setPicture(user.getPicture());
         userDto.setAdmin(user.isAdmin());
-        userDto.setStatus(user.getStatus());
+        userDto.setState(user.getState());
 
         return userDto;
     }
@@ -51,7 +51,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         user.setPassword(userDto.getPassword());
         user.setPicture(userDto.getPicture());
         user.setAdmin(userDto.isAdmin());
-        user.setStatus(userDto.getStatus());
+        user.setState(userDto.getState());
 
         return user;
     }

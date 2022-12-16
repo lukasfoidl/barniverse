@@ -1,6 +1,6 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
-import at.barniverse.backend.barniverse_backend.enums.OStatus;
+import at.barniverse.backend.barniverse_backend.enums.OfferState;
 
 import java.util.Date;
 
@@ -14,7 +14,7 @@ public class OfferDto implements IDto {
     private double price;
     private double quantity;
     private Date deliveryDate;
-    private OStatus status;
+    private OfferState state;
     private UserDto user;
     private AuctionDto auction;
 
@@ -54,12 +54,12 @@ public class OfferDto implements IDto {
         this.deliveryDate = deliveryDate;
     }
 
-    public OStatus getStatus() {
-        return status;
+    public OfferState getState() {
+        return state;
     }
 
-    public void setStatus(OStatus status) {
-        this.status = status;
+    public void setState(OfferState state) {
+        this.state = state;
     }
 
     public UserDto getUser() {

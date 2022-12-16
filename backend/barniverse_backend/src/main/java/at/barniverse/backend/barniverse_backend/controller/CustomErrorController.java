@@ -9,13 +9,22 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * controller which handles error messages
+ */
 @RestController
 public class CustomErrorController implements ErrorController {
 
     private static final String PATH = "/error";
 
+    /**
+     * converts HttpServletRequests in responses the client can work with
+     * @param request error request with status code and message which needs to be converted
+     * @param response not used
+     * @return error message with corresponding status code
+     */
     @RequestMapping(PATH)
-    public ResponseEntity<Object> handleError(final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
+    public ResponseEntity<Object> handleError(final HttpServletRequest request, final HttpServletResponse response) {
         String message = (String) request.getAttribute("javax.servlet.error.message");
         HttpStatus status = HttpStatus.resolve((Integer) request.getAttribute("javax.servlet.error.status_code"));
         assert status != null;

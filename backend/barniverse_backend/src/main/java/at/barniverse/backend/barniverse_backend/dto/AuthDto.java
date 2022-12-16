@@ -1,5 +1,9 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
+/**
+ * dto for authentication,
+ * property definitions as well as getter and setter functions
+ */
 public class AuthDto {
 
     private String email;
@@ -13,6 +17,8 @@ public class AuthDto {
         this.role = role;
         this.uuid = uuid;
     }
+
+//----getter and setter----
 
     public String getEmail() {
         return email;

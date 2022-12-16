@@ -1,6 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
-import at.barniverse.backend.barniverse_backend.enums.OStatus;
+import at.barniverse.backend.barniverse_backend.enums.OfferState;
 import at.barniverse.backend.barniverse_backend.validation.AfterToday;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,8 +34,8 @@ public class Offer implements IEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date deliveryDate;
 
-    @NotNull(message = "Status of order is mandatory!")
-    private OStatus status;
+    @NotNull(message = "State of order is mandatory!")
+    private OfferState state;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_offer_userId"))
@@ -83,12 +83,12 @@ public class Offer implements IEntity {
         this.deliveryDate = deliveryDate;
     }
 
-    public OStatus getStatus() {
-        return status;
+    public OfferState getState() {
+        return state;
     }
 
-    public void setStatus(OStatus status) {
-        this.status = status;
+    public void setState(OfferState state) {
+        this.state = state;
     }
 
     public User getUser() {

@@ -34,7 +34,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         offerDto.setPrice(offer.getPrice());
         offerDto.setQuantity(offer.getQuantity());
         offerDto.setDeliveryDate(offer.getDeliveryDate());
-        offerDto.setStatus(offer.getStatus());
+        offerDto.setState(offer.getState());
         offerDto.setUser(userTransformer.convertToDto(offer.getUser()));
         offerDto.setAuction(auctionTransformer.convertToDto(offer.getAuction()));
 
@@ -59,7 +59,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         offer.setPrice(offerDto.getPrice());
         offer.setQuantity(offerDto.getQuantity());
         offer.setDeliveryDate(offerDto.getDeliveryDate());
-        offer.setStatus(offerDto.getStatus());
+        offer.setState(offerDto.getState());
 
         // no cascading enabled, only id for foreign key relevant, sub entities irrelevant
         User user = new User();

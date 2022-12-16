@@ -1,5 +1,6 @@
 package at.barniverse.backend.barniverse_backend.security;
 
+import at.barniverse.backend.barniverse_backend.enums.RoleConverter;
 import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,21 @@ import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.Optional;
 
+/**
+ * extension class for authentication process which loads needed data
+ */
 @Component
 public class AuthUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * loads corresponding user data from database
+     * @param email email of the user which needs to be loaded
+     * @return user data needed for authentication
+     * @throws UsernameNotFoundException thrown if no user exists to the given email
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user;
@@ -32,14 +42,6 @@ public class AuthUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 email,
                 user.get().getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(convertToRole(user.get().isAdmin()))));
-    }
-
-    private String convertToRole(boolean isAdmin) {
-        if (isAdmin) {
-            return "ROLE_ADMIN";
-        } else {
-            return "ROLE_USER";
-        }
+                Collections.singletonList(new SimpleGrantedAuthority(RoleConverter.getRole(user.get().isAdmin()).toString())));
     }
 }
