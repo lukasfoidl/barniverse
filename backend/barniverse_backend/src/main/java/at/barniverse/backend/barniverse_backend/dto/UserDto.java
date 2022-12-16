@@ -1,6 +1,6 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
-import at.barniverse.backend.barniverse_backend.enums.UStatus;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 /**
  * dto for user entity,
@@ -16,7 +16,7 @@ public class UserDto implements IDto {
     private String password;
     private String picture;
     private boolean isAdmin;
-    private UStatus status;
+    private UserState state;
 
 //----getter and setter----
 
@@ -82,12 +82,12 @@ public class UserDto implements IDto {
         isAdmin = admin;
     }
 
-    public UStatus getStatus() {
-        return status;
+    public UserState getState() {
+        return state;
     }
 
-    public void setStatus(UStatus status) {
-        this.status = status;
+    public void setState(UserState state) {
+        this.state = state;
     }
 
 }

@@ -8,7 +8,9 @@ import RegisterView from "../views/RegisterView"
 import LoginView from "../views/LoginView"
 import HelpView from "../views/HelpView"
 import ImprintView from "../views/ImprintView"
+import UserView from "../views/UserView"
 import PageNotFoundView from "../views/PageNotFoundView"
+import ProfileView from "../views/ProfileView"
 
 const routes = [
     {
@@ -24,17 +26,47 @@ const routes = [
     {
         name: "auctions",
         path: "/auctions",
-        component: AuctionView
+        component: AuctionView,
     },
     {
         name: "myAuctions",
         path: "/myAuctions",
-        component: MyAuctionsView
+        component: MyAuctionsView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
     },
     {
         name: "myOffers",
         path: "/myOffers",
-        component: MyOffersView
+        component: MyOffersView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: 'user',
+        path: '/user', 
+        component: UserView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "profile",
+        path: "/profile",
+        component: ProfileView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
     },
     {
         name: "register",
@@ -60,12 +92,12 @@ const routes = [
         path: '/:catchAll(.*)*',
         name: "PageNotFoundView",
         component: PageNotFoundView
-      },
+    },
 ];
 
 const router = createRouter({
     routes,
     history: createWebHistory(process.env.BASE_URL),
-})
+});
 
 export default router;

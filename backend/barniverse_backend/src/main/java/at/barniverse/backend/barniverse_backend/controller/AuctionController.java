@@ -4,6 +4,8 @@ import at.barniverse.backend.barniverse_backend.dto.AuctionDto;
 import at.barniverse.backend.barniverse_backend.services.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,6 +32,7 @@ public class AuctionController {
      * get all saved auctions from the database
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path="/auctions")
     public ResponseEntity<Object> getAuctions() {
         return auctionService.getAuctions();

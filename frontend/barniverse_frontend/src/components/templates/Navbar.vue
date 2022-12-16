@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbarStyle">
         <div class="navbar-brand">
             <router-link id="image" class="navbarBrand" to="/">
-                <img src="../../images/logo_transparent_zugeschnitten.png" width="60" height="60" class="d-inline-block align-bottom" alt="Logo from Barniverse">
+                <img src="logo_transparent_zugeschnitten.png" width="60" height="60" class="d-inline-block align-bottom" alt="Logo from Barniverse">
             </router-link>
         </div>
         <ul class="navbar-nav nav nav-tabs">
@@ -35,44 +35,53 @@
                         Auctions
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
                     <!-- my auctions I created and the placed offers for this auction -->
                     <router-link id="myAuctions" class="nav-link navItemStyle" to="/myAuctions">
                         My Auctions
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
                     <!-- my offers I placed -->
                     <router-link id="myOffers" class="nav-link navItemStyle" to="/myOffers">
                         My Offers
                     </router-link>
                 </li>
+                <li v-if="role == roles.ROLE_ADMIN" class="nav-item">
+                    <!-- my offers I placed -->
+                    <router-link id="user" class="nav-link navItemStyle" to="/user">
+                        User
+                    </router-link>
+                </li>
             </ul>
             <ul id="userContent" class="navbar-nav nav nav-tabs flex-fill">
-                <!-- my username -->
-                <!-- <li id="userContentItem" class="nav-item ms-auto">
-                    <router-link id="user" class="nav-link navItemStyle" to="/user">
-                        Maximilian Obelsberg
-                    </router-link>
-                </li> -->
+                <!-- OBSERVER - logged out -->
                 <!-- register new user -->
-                <li id="userContentItem" class="nav-item ms-auto">
+                <li v-if="role==''" id="userContentItem" class="nav-item ms-auto">
                     <router-link id="register" class="nav-link navItemStyle" to="/register">
                         Register
                     </router-link>
                 </li>
                 <!-- login -->
-                <li class="nav-item navIcon">
+                <li v-if="role==''" class="nav-item navIcon">
                     <router-link id="login" class="nav-link navItemStyle" to="/login">
                         <i class="bi bi-box-arrow-in-right" alt="Login"></i>
                     </router-link>
                 </li>
+
+                <!-- USER/ADMIN - logged in -->
+                <!-- my username -->
+                <li v-if="role!=''" id="userContentItem" class="nav-item ms-auto">
+                    <router-link id="profile" class="nav-link navItemStyle" to="profile">
+                        {{this.username}}
+                    </router-link>
+                </li>
                 <!-- logout -->
-                <!-- <li class="nav-item navIcon">
-                    <router-link id="logout" class="nav-link navItemStyle" to="/logout">
+                <li v-if="role!=''" class="nav-item navIcon" @click="logout">
+                    <router-link id="logout" class="nav-link navItemStyle" to="/">
                         <i class="bi bi-box-arrow-right" alt="Logout"></i>
                     </router-link>
-                </li> -->
+                </li>
             </ul>
         </div>
     </nav>
@@ -81,6 +90,22 @@
 <script>
 export default {
     name: "Navbar",
+    data: () => ({
+        role: "",
+        roles: "",
+        username: ""
+    }),
+    beforeMount() {
+        this.roles = window.roles;
+        this.reloadData();
+
+        window.event.on('reloadJWT', () => {
+            this.reloadData();
+        });
+        window.event.on('reloadUsername', () => {
+            this.reloadData();
+        });
+    },
     mounted() {
         // set correct style for changing between mobile and desktop mode
         window.$(window).on('resize', function() {
@@ -98,22 +123,27 @@ export default {
                 window.$("#userContentItem").addClass("ms-auto");
             }
         });
-
-        // set correct nav-tab as active on selection
-        window.$(document).on("click", ".navItemStyle", function (event) {
-            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
-            if (event.target.tagName.toLowerCase() != "a") {
-                window.$(event.target.parentElement).addClass("navItemStyleActive"); // necessary for icons
-            } else {
-                window.$(event.target).addClass("navItemStyleActive");
+    },
+    methods: {
+        reloadData() {
+            this.role = window.role
+            this.username = window.username
+        },
+        logout() {
+            sessionStorage.removeItem("jwt-token");
+            window.event.emit("reloadJWT");
+        }
+    },
+    watch:{
+        $route (to) {
+            if (to.name != "imprint" && to.name != "help") {
+                var id = "#" + to.name
+                this.$nextTick(() => {
+                    window.$(".navItemStyleActive").removeClass("navItemStyleActive");
+                    window.$(id).addClass("navItemStyleActive");
+                })
             }
-        });
-
-        // set home-tab on active if image or brandname get selected
-        window.$(document).on("click", ".navbarBrand", function() {
-            window.$(".navItemStyleActive").removeClass("navItemStyleActive");
-            window.$("#home").addClass("navItemStyleActive");
-        });
+        }
     }
 }
 </script>

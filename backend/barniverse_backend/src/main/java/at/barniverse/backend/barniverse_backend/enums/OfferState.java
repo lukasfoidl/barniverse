@@ -1,9 +1,9 @@
 package at.barniverse.backend.barniverse_backend.enums;
 
 /**
- * status for offers
+ * state for offers
  */
-public enum OStatus {
+public enum OfferState {
 
     /**
      * offer is still running (0)

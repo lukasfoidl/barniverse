@@ -18,13 +18,36 @@ import Navbar from "./components/templates/Navbar.vue"
 import Footer from "./components/templates/Footer.vue"
 import Modal from "./components/molecules/Modal.vue";
 
+import jwtDecoder from 'vue-jwt-decode'
+
 export default {
     name: 'App',
     components: {
-    Navbar,
-    Footer,
-    Modal
-}
+        Navbar,
+        Footer,
+        Modal
+    },
+    beforeMount() {
+        this.reloadJWT();
+
+        window.event.on('reloadJWT', () => {
+            this.reloadJWT();
+        });
+        window.event.on('reloadUsername', (username) => {
+            this.reloadUsername(username);
+        });
+    },
+    methods: {
+        reloadJWT() {
+            const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
+            window.role = jwt == null ? "" : jwt.role
+            window.username = jwt == null ? "" : jwt.username
+            window.uuid = jwt == null ? "" : jwt.uuid
+        },
+        reloadUsername(username) {
+            window.username = username
+        }
+    }
 }
 </script>
 

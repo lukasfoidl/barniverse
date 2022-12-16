@@ -21,7 +21,7 @@
                 <CarouselItem 
                     v-if="product.images.length == 0"
                     :key="99999"
-                    :image="{ id: '99999', file: 'images/ImageNotFound.jpg' }"
+                    :image="{ id: '99999', file: 'NoImage.jpg' }"
                     :alt="'No image found.'"
                     v-bind:class="{ active: (true) }"
                 />

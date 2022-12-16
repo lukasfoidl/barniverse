@@ -1,7 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
-import at.barniverse.backend.barniverse_backend.dto.IDto;
-import at.barniverse.backend.barniverse_backend.enums.UStatus;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -10,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * entity for an user,
+ * entity for a user,
  * property definitions as well as getter and setter functions
  */
 @Entity
@@ -28,7 +27,7 @@ public class User implements IEntity {
     private String lastname;
 
     @NotBlank(message = "Username is mandatory!")
-    @Size(min = 5, message = "Username has to be at least 5 characters long!")
+    @Size(min = 5, max = 20, message = "Username has to be between 5 and 20 characters long!")
     private String username;
 
     @NotBlank(message = "Email is mandatory!")
@@ -44,8 +43,8 @@ public class User implements IEntity {
     @NotNull(message = "Definition if user is admin or not is mandatory!")
     private boolean isAdmin;
 
-    @NotNull(message = "Status of user is mandatory!")
-    private UStatus status;
+    @NotNull(message = "State of user is mandatory!")
+    private UserState state;
 
 //----getter and setter----
 
@@ -115,12 +114,12 @@ public class User implements IEntity {
         isAdmin = admin;
     }
 
-    public UStatus getStatus() {
-        return status;
+    public UserState getState() {
+        return state;
     }
 
-    public void setStatus(UStatus status) {
-        this.status = status;
+    public void setState(UserState state) {
+        this.state = state;
     }
 
 }

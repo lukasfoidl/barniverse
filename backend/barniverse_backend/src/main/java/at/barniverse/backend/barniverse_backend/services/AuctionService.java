@@ -5,6 +5,7 @@ import at.barniverse.backend.barniverse_backend.repository.AuctionRepository;
 import at.barniverse.backend.barniverse_backend.transformer.AuctionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,114 +1,126 @@
 <template>
     <div>
-        
-        <form  id="formLogin" >
-
-            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
-
-            <div class="form-outline mb-4">
-                <label class="form-label" for="form2Example18">Email </label>
-                <input type="email" id="email" class="form-control form-control-lg" v-model="form.values.email" @blur="validate('email')"/>
-            </div>
-
-            <div class="form-outline mb-4">
-                <label class="form-label" for="form2Example28">Password</label>
-                <input type="password" id="password" class="form-control form-control-lg" v-model="form.values.password" @blur="validate('password')"/>
-            </div>
+            <!--Email-->
             <div>
-                <p v-if="!!form.errors.email" class="text-danger">
-                    {{form.errors.email}}
-                </p>
-                <p v-if="!!form.errors.password" class="text-danger">
-                    {{form.errors.password}}
-                </p>
-                                        
+                <label class="form-label" for="form2Example18">Email </label>
+                <input type="email" id="email" class="form-control form-control-lg" v-model="values.email" @blur="validate('email')" />
+                <div class="" id="feedback-email">
+                    <p class="errorMessage">{{ errors.email }}&nbsp;</p>
+                </div>
             </div>
-            <div class="pt-1 mb-4">
-                    <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
+            <!--Password-->
+            <div>
+                <label class="form-label" for="form2Example28">Password</label>
+                <input type="password" id="password" class="form-control form-control-lg" v-model="values.password" @blur="validate('password')" />
+                <div class="" id="feedback-password">
+                    <p class="errorMessage">{{ errors.password }}&nbsp;</p>
+                </div>
             </div>
-
             
-            <p>Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link> </p>
+            <div class="pt-1 mb-4">
+                <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
+            </div>
 
-        </form>
-
-                        
-
-
+            <div>
+                Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link>
+            </div>
     </div>
 </template>
 
 <script>
-
-import {  object, string } from "yup"
+import { object, string } from "yup"
+import http from "../../http"
 
 export default {
-    name: "LoginForm", 
+    name: "LoginForm",
     data: () => ({
-        form: {
-            values: {
-                
-                
-                email:"",
-                password:"",
-                
-
-            },
-            errors: {}
+        values: {
+            email: "",
+            password: "",
+        },
+        errors: {
+            email: "",
+            password: "",
         }
     }),
     methods: {
-        //Register Button
         async login() {
-            
-            console.log(this.form.values.email)
-            console.log(this.form.values.password)
             loginFormSchema
-                .validate(this.form.values, {abortEarly: true})
-                .then(() => {
-                    this.form.error = {
-                         
-                        
-                        
-                        email:"", 
-                        password:"", 
-                        
+                .validate(this.values, { abortEarly: false })
+                .then(async () => {
+                    try {
+                        console.log("LOGIN")
+                        await this.authenticate();
+                    } catch (error) {
+                        console.error(error)
                     }
                 })
-                .catch((error) => {
-                    error.inner.forEach(() => {
-                        this.forms.errors[error.path] = error.message
+                .catch((errors) => {
+                    errors.inner.forEach(element => {
+                        this.errors[element.path] = element.message
+                        window.$("#" + element.path).removeClass("is-valid");
+                        window.$("#" + element.path).addClass("is-invalid");
+                        window.$("#feedback-" + element.path).removeClass("valid-feedback");
+                        window.$("#feedback-" + element.path).addClass("invalid-feedback");
                     })
                 })
         },
+        async authenticate() {
+            const data = {
+                email: this.values.email,
+                password: this.values.password
+            };
+            http.post("/login", data)
+                .then(function (response) {
+                    sessionStorage.setItem("jwt-token", response.data['jwt-token']);
+                    window.router.push('/')
+                    window.event.emit("reloadJWT");
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    const data = {
+                        title: "Error (" + error.response.status + ")",
+                        text: error.response.data
+                    }
+                    window.event.emit("showModal", data);
+                });
+        },
         validate(field) {
             loginFormSchema
-                .validateAt(field, this.form.values)
+                .validateAt(field, this.values)
                 .then(() => {
-                    this.form.errors[field] = ""
+                    this.errors[field] = ""
+                    window.$("#" + field).removeClass("is-invalid");
+                    window.$("#" + field).addClass("is-valid");
+                    window.$("#feedback-" + field).removeClass("invalid-feedback");
+                    window.$("#feedback-" + field).addClass("valid-feedback");
                 })
                 .catch((error) => {
-                    this.form.errors[field] = error.message
+                    this.errors[field] = error.message
+                    window.$("#" + field).removeClass("is-valid");
+                    window.$("#" + field).addClass("is-invalid");
+                    window.$("#feedback-" + field).removeClass("valid-feedback");
+                    window.$("#feedback-" + field).addClass("invalid-feedback");
                 })
+                
         }
+
     }
-    
-    
+
 }
 
-
 const loginFormSchema = object().shape({
-    
-     
-    email: string().email("Email must be valid!").required("Email is required!"), 
-    password: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"), 
-    })
+    email: string().email("Email must be valid!").required("Email is required!"),
+    password: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
+})
 </script>
 
 <style>
-#formLogin{
-    padding: 1cm;
-    background-color: #ebdbc7;
-    border-radius: 25px;
+.errorMessage {
+    font-size: 11px;
+    margin-bottom: 0%;
+}
+.invalid-feedback, .valid-feedback {
+    margin-top: 0 !important;
 }
 </style>
