@@ -3,7 +3,7 @@
             <!--Email-->
             <div>
                 <label class="form-label" for="form2Example18">Email </label>
-                <input type="email" id="email" class="form-control form-control-lg" v-model="values.email" @blur="validate('email')" />
+                <input type="email" id="email" class="form-control" v-model="values.email" @blur="validate('email')" />
                 <div class="" id="feedback-email">
                     <p class="errorMessage">{{ errors.email }}&nbsp;</p>
                 </div>
@@ -11,14 +11,14 @@
             <!--Password-->
             <div>
                 <label class="form-label" for="form2Example28">Password</label>
-                <input type="password" id="password" class="form-control form-control-lg" v-model="values.password" @blur="validate('password')" />
+                <input type="password" id="password" class="form-control" v-model="values.password" @blur="validate('password')" />
                 <div class="" id="feedback-password">
                     <p class="errorMessage">{{ errors.password }}&nbsp;</p>
                 </div>
             </div>
             
             <div class="pt-1 mb-4">
-                <button class="btn btn-primary btn-lg" type="button" v-on:click.prevent="login">Login</button>
+                <button class="btn btn-primary" type="button" v-on:click.prevent="login">Login</button>
             </div>
 
             <div>

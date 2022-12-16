@@ -1,14 +1,12 @@
 <template>
-    <div class="carousel-item box-size">
-        <img class="d-block w-100 productImage box-size" :src="this.imageURL" :alt="this.alt">
-    </div>
+    <img :src="this.imageURL" :alt="this.alt">
 </template>
 
 <script>
 import http from "../../http"
 
 export default {
-    name: "CarouselItem",
+    name: "Image",
     props: ["image", "alt"],
     data: () => ({
         imageURL: "ImageNotFound.jpg"
@@ -30,13 +28,4 @@ export default {
 </script>
 
 <style>
-.productImage {
-    border-radius: 0.375rem;
-}
-
-.box-size {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-}
 </style>

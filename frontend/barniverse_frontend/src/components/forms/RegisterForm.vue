@@ -4,7 +4,7 @@
             <div class="form-outline">
                 <!-- Firstname-->
                 <label class="form-label" for="firstName">First Name</label>
-                <input type="text" class="form-control form-control-lg" v-model="values.fname" id="fname"
+                <input type="text" class="form-control" v-model="values.fname" id="fname"
                     @blur="validate('fname')" />
                 <div class="" id="feedback-fname">
                     <p class="errorMessage">{{ errors.fname }}&nbsp;</p>
@@ -15,7 +15,7 @@
             <div class="form-outline">
                 <!-- Lastname-->
                 <label class="form-label" for="lastName">Last Name</label>
-                <input type="text" class="form-control form-control-lg" v-model="values.lname" id="lname"
+                <input type="text" class="form-control" v-model="values.lname" id="lname"
                     @blur="validate('lname')" />
                 <div class="" id="feedback-lname">
                     <p class="errorMessage">{{ errors.lname }}&nbsp;</p>
@@ -29,7 +29,7 @@
             <div class="form-outline">
                 <!-- Email-->
                 <label class="form-label" for="emailAddress">Email</label>
-                <input type="email" id="emailR" class="form-control form-control-lg" v-model="values.emailR"
+                <input type="email" id="emailR" class="form-control" v-model="values.emailR"
                     aria-describedby="emailHelp" @blur="validate('emailR')" />
                 <div class="" id="feedback-emailR">
                     <p class="errorMessage">{{ errors.emailR }}&nbsp;</p>
@@ -41,7 +41,7 @@
             <div class="form-outline ">
                 <!-- Username-->
                 <label class="form-label" for="Username">Username</label>
-                <input class="form-control form-control-lg" type="text" v-model="values.username" id="username"
+                <input class="form-control" type="text" v-model="values.username" id="username"
                     @blur="validate('username')" />
                 <div class="" id="feedback-username">
                     <p class="errorMessage">{{ errors.username }}&nbsp;</p>
@@ -55,7 +55,7 @@
             <div class="form-outline">
                 <!-- Password-->
                 <label class="form-label" for="passwordRegister">Password</label>
-                <input type="password" id="passwordR" class="form-control form-control-lg" v-model="values.passwordR"
+                <input type="password" id="passwordR" class="form-control" v-model="values.passwordR"
                     @blur="validate('passwordR')" />
                 <div class="" id="feedback-passwordR">
                     <p class="errorMessage">{{ errors.passwordR }}&nbsp;</p>
@@ -67,7 +67,7 @@
             <div class="form-outline">
                 <!-- Confirm Password-->
                 <label class="form-label" for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" class="form-control form-control-lg"
+                <input type="password" id="confirmPassword" class="form-control"
                     v-model="values.confirmPassword" @blur="validate('confirmPassword')" />
                 <div class="" id="feedback-confirmPassword">
                     <p class="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
@@ -80,7 +80,7 @@
         <div class="col-md-12">
             <div class="form-outline">
                 <label class="form-label" for="emailAddress">Profile Picture</label>
-                <input type="file" class="form-control form-control-lg" v-on:change="values.profilePicture"
+                <input type="file" class="form-control" v-on:change="values.profilePicture"
                     placeholder="Photo" capture @blur="validate('profilePicture')" />
                 <div class="" id="feedback-confirmPassword">
                     <p class="errorMessage">{{ errors.profilePicture }}&nbsp;</p>
@@ -90,7 +90,7 @@
     </div>
 
     <div class="mt-4">
-        <input class="btn btn-primary btn-lg" type="submit" v-on:click.prevent="register" value="Register" />
+        <input class="btn btn-primary" type="submit" v-on:click.prevent="register" value="Register" />
     </div>
     <div class="mt-4">
         <router-link id="login" class="link" to="/login">

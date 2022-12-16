@@ -4,7 +4,7 @@
             <div class="d-flex flex-column align-items-center text-center">
                 <img class="rounded-circle userImg" id="img" :src="values.picture">
                 <div class="col-md-12 mt-3">
-                    <input class="mt-2 form-control form-control-sm" id="file" type="file" @change="onChangePicture">
+                    <input class="mt-2 form-control" id="file" type="file" @change="onChangePicture">
                     <button class="mt-4 btn btn-primary" @click="saveProfilePicture">Upload Image</button>
                 </div>
                 <span> </span>

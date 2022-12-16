@@ -47,7 +47,7 @@
 
 <script>
 import CarouselIndicator from '../atoms/CarouselIndicator.vue';
-import CarouselItem from '../atoms/CarouselItem.vue';
+import CarouselItem from '../organisms/CarouselItem.vue';
 
 export default {
     name: "ProductCard",
