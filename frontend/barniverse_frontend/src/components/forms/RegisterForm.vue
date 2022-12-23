@@ -160,7 +160,7 @@ export default {
                         title: "Welcome in the Barniverse!",
                         text: "User created successfully!"
                     }
-                    window.event.emit("showModal", data);
+                    window.event.emit("showErrorModal", data);
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -168,7 +168,7 @@ export default {
                         title: "Error (" + error.response.status + ")",
                         text: error.response.data
                     }
-                    window.event.emit("showModal", data);
+                    window.event.emit("showErrorModal", data);
                 });
         },
         validate(field) {

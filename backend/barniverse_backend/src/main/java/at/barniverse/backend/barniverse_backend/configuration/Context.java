@@ -59,6 +59,6 @@ public class Context {
     /**
      * application wide origins that are allowed for CORS requests
      */
-    public static final String CORS_ORIGINS = "http://localhost:8082/";
+    public static final String CORS_ORIGINS = "http://localhost:8080/";
 
 }

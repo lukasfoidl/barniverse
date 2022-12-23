@@ -1,15 +1,15 @@
 <template>
     <div id="backgroundRegister">
         <div class="row justify-content-center align-items-center">
-            <div class="col-12 col-lg-9 col-xl-6">
-                <UserForm :key="user.id" :user="user"/>
+            <div class="col-12 col-md-9 col-lg-9 col-xl-6">
+                <UserForm v-if="user.length != 0" :key="user.id" :user="user"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import UserForm from '@/components/forms/UserForm.vue';
+import UserForm from '../components/forms/UserForm.vue';
 import http from "../http"
 
 export default {
@@ -32,7 +32,7 @@ export default {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", data);
+                window.event.emit("showErrorModal", data);
             }
         },
     },

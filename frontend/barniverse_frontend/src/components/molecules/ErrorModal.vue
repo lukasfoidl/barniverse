@@ -13,7 +13,7 @@
                     <div id="errorModalContent"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -22,9 +22,9 @@
 
 <script>
 export default {
-    name: "Modal",
+    name: "ErrorModal",
     mounted() {
-        window.event.on("showModal", (data) => {
+        window.event.on("showErrorModal", (data) => {
             window.$("#errorModalTitle").text(data.title);
             window.$("#errorModalContent").text(data.text);
             new window.bootstrap.Modal(window.$("#errorModal"), {}).show();

@@ -10,13 +10,15 @@
         <Footer />
     </div>
 
-    <Modal />
+    <ErrorModal />
+    <PermissionModal />
 </template>
 
 <script>
 import Navbar from "./components/templates/Navbar.vue"
 import Footer from "./components/templates/Footer.vue"
-import Modal from "./components/molecules/Modal.vue";
+import ErrorModal from "./components/molecules/ErrorModal.vue";
+import PermissionModal from "./components/molecules/PermissionModal.vue";
 
 import jwtDecoder from 'vue-jwt-decode'
 
@@ -25,7 +27,8 @@ export default {
     components: {
         Navbar,
         Footer,
-        Modal
+        ErrorModal,
+        PermissionModal
     },
     beforeMount() {
         this.reloadJWT();

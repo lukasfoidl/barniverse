@@ -1,16 +1,14 @@
 <template>
     <div class="row">
-        <div class="col-md-6 centerPictureDiv">
+        <div class="centerPictureDiv mb-3">
             <div class="d-flex flex-column align-items-center text-center">
                 <img class="rounded-circle userImg" id="img" :src="values.picture">
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-2">
                     <input class="mt-2 form-control" id="file" type="file" @change="onChangePicture">
-                    <button class="mt-4 btn btn-primary" @click="saveProfilePicture">Upload Image</button>
                 </div>
-                <span> </span>
             </div>
         </div>
-        <div class="col-md-6">
+        <div>
             <div class="row">
                 <div class="col-md-6">
                     <label class="labels">First Name </label>
@@ -69,8 +67,11 @@
                 <button class="btn btn-primary buttonSpacer" @click="validateAndUpdate">
                     Save Changes
                 </button>
-                <button class="btn btn-danger" @click="deactivateProfile">Delete
-                    Profile
+                <button class="btn btn-secondary buttonSpacer" @click="changePassword">
+                    Change password
+                </button>
+                <button class="btn btn-danger buttonSpacer" @click="getPermission">
+                    Delete Profile
                 </button>
             </div>
         </div>
@@ -80,15 +81,13 @@
 <script>
 import http from "@/http"
 import { object, string } from "yup"
-// import http from "@/http"
-
 
 export default {
     name: "UserForm",
     props: ["user"],
     data: () => ({
         values: {},
-        errors: {}
+        errors: {},
     }),
     mounted() {
         this.values.firstname = this.user.firstname
@@ -96,6 +95,18 @@ export default {
         this.values.username = this.user.username
         this.values.email = this.user.email
         this.values.picture = this.user.picture
+
+        window.event.on("permissionGranted_deactivateProfile", () => {
+            this.deactivateProfile()
+        });
+
+        window.event.on("permissionGranted_test", () => {
+            console.log("test")
+        });
+    },
+    unmounted() {
+        window.event.all.delete("permissionGranted_deactivateProfile");
+        window.event.all.delete("permissionGranted_test");
     },
     methods: {
         //validate function when the save changes button it pressed
@@ -149,17 +160,25 @@ export default {
                     title: "Info (" + response.status + ")",
                     text: "User updated successfully!"
                 }
-                window.event.emit("showModal", modalData);
+                window.event.emit("showErrorModal", modalData);
             } catch (error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", modalData);
+                window.event.emit("showErrorModal", modalData);
             }
         },
         onChangePicture(e) {
             this.values.picture = e.target.files[0];
+        },
+        getPermission() {
+            var modalData = {
+                title: "Warning",
+                text: "Do you really want to delete user " + window.username + "?",
+                id: "deactivateProfile"
+            }
+            window.event.emit("showPermissionModal", modalData)
         },
         async deactivateProfile() {
             try {
@@ -175,15 +194,23 @@ export default {
                     title: "Info (" + response.status + ")",
                     text: "User deleted successfully!" // deleted and not deactivated because of "Delete"-Button
                 }
-                window.event.emit("showModal", modalData);
+                window.event.emit("showErrorModal", modalData);
             } catch (error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", modalData);
+                window.event.emit("showErrorModal", modalData);
             }
         },
+        changePassword() {
+            var modalData = {
+                title: "Warning",
+                text: "Test",
+                id: "test"
+            }
+            window.event.emit("showPermissionModal", modalData)
+        }
     }
 }
 
@@ -216,7 +243,7 @@ const editUserFormSchema = object().shape({
 }
 
 .buttonSpacer {
-    margin-right: 10px;
+   margin: 5px;
 }
 
 .centerPictureDiv {

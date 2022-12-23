@@ -27,7 +27,7 @@ export default {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", data);
+                window.event.emit("showErrorModal", data);
             }
 
         }
