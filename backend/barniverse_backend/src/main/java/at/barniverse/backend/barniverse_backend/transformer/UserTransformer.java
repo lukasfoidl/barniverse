@@ -27,7 +27,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         userDto.setEmail(user.getEmail());
         // password should not be sent to the client
         userDto.setPicture(user.getPicture());
-        userDto.setAdmin(user.isAdmin());
+        userDto.setIsAdmin(user.getIsAdmin());
         userDto.setState(user.getState());
 
         return userDto;
@@ -50,7 +50,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setPicture(userDto.getPicture());
-        user.setAdmin(userDto.isAdmin());
+        user.setIsAdmin(userDto.getIsAdmin());
         user.setState(userDto.getState());
 
         return user;
@@ -59,7 +59,8 @@ public class UserTransformer implements ITransformer<User, UserDto> {
     /**
      * repairs user entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
-     * password property gets set to password property from database, because the password can not be updated with standard user update (PUT)
+     * password property gets set to password property from database, because the password can not be updated with standard user update (PUT), <br>
+     * isAdmin property gets set to isAdmin property from database, because the admin characteristic can not be updated with standard user update (PUT)
      * @param user entity which needs to be repaired
      * @param dbUser entity with the missing data
      * @return repaired entity
@@ -68,6 +69,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
     public User repairEntity(User user, User dbUser) {
         user.setId(dbUser.getId()); // set id to update existing entity
         user.setPassword(dbUser.getPassword()); // password can not be updated with standard user update (PUT)
+        user.setIsAdmin(dbUser.getIsAdmin()); // is admin can not be updated with standard user update (PUT)
         return user;
     }
 }

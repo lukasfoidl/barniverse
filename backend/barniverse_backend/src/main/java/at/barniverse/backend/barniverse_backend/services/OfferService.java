@@ -45,7 +45,7 @@ public class OfferService extends BaseService {
      * @return response with corresponding status code and loaded offer dto or error message in case of failure
      */
     public ResponseEntity<Object> getOffer(int id) {
-        return getEntity(offerRepository, offerTransformer, id);
+        return getEntityAsDto(offerRepository, offerTransformer, id);
     }
 
     /**

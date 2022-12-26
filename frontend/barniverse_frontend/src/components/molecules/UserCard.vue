@@ -126,11 +126,11 @@ export default{
                 console.log("DELETED")
                 console.log(response)
             } catch (error) {
-                const data = {
+                const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showErrorModal", data);
+                window.event.emit("showErrorModal", modalData);
             }
         }, 
         async blockThisUser(){

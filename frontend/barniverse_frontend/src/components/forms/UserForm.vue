@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <!-- <div class="row">
         <div class="centerPictureDiv mb-3">
             <div class="d-flex flex-column align-items-center text-center">
                 <img class="rounded-circle userImg" id="img" :src="values.picture">
@@ -8,146 +8,124 @@
                 </div>
             </div>
         </div>
-        <div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="labels">First Name </label>
-                    <input type="text" class="form-control" v-model="this.values.firstname" id="firstnameEdit"
-                        @blur="validate('firstname')">
-                    <div class="" id="feedback-firstname">
-                        <p class="errorMessage">{{ errors.firstname }}&nbsp;</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="labels">Last Name </label>
-                    <input type="text" class="form-control" v-model="this.values.lastname" id="lastnameEdit"
-                        @blur="validate('lastname')">
-                    <div class="" id="feedback-lastname">
-                        <p class="errorMessage">{{ errors.lastname }}&nbsp;</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="labels">Username</label>
-                    <input type="text" class="form-control" id="usernameEdit" v-model="this.values.username"
-                        @blur="validate('username')">
-                    <div class="" id="feedback-username">
-                        <p class="errorMessage">{{ errors.username }}&nbsp;</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="labels">Email</label>
-                    <input type="text" class="form-control" id="emailEdit" v-model="this.values.email"
-                        @blur="validate('email')">
-                    <div class="" id="feedback-email">
-                        <p class="errorMessage">{{ errors.email }}&nbsp;</p>
-                    </div>
-                </div>
-                <!--
-                <div class="col-md-12">
-                    <label class="labels">New Password</label>
-                    <input type="password" class="form-control" v-model="values.password" @blur="validate('password')">
-                    <div class="" id= "feedback-password">
-                        <p class ="errorMessage">{{ errors.password }}&nbsp;</p>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <label class="labels">Confirm New Password</label>
-                    <input type="password" class="form-control" v-model="values.confirmPassword" @blur="validate('confirmPassword')">
-                    <div class="" id= "feedback-password">
-                        <p class ="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
-                    </div>
-                </div>
-            -->
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary buttonSpacer" @click="validateAndUpdate">
-                    Save Changes
-                </button>
-                <button class="btn btn-secondary buttonSpacer" @click="changePassword">
-                    Change password
-                </button>
-                <button class="btn btn-danger buttonSpacer" @click="getPermission">
-                    Delete Profile
-                </button>
-            </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-md-6">
+            <FirstNameInput :trigger="trigger" :firstname="this.user.firstname" />
+        </div>
+        <div class="col-md-6">
+            <LastNameInput :trigger="trigger" :lastname="this.user.lastname" />
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <EmailInput :trigger="trigger" :email="this.user.email" />
+        </div>
+        <div class="col-md-6">
+            <UsernameInput :trigger="trigger" :username="this.user.username" />
+        </div>
+    </div>
+            
+    <div class="text-center">
+        <button class="btn btn-primary buttonSpacer" @click="getValues">
+            Save Changes
+        </button>
+        <button class="btn btn-secondary buttonSpacer" @click="changePassword">
+            Change password
+        </button>
+        <button class="btn btn-danger buttonSpacer" @click="getPermission">
+            Delete Profile
+        </button>
+    </div>
+
+    <ChangePasswordModal :id="this.user.id" />
 </template>
 
 <script>
 import http from "@/http"
-import { object, string } from "yup"
+import FirstNameInput from "../molecules/FirstNameInput.vue"
+import LastNameInput from "../molecules/LastNameInput.vue"
+import EmailInput from "../molecules/EmailInput.vue"
+import UsernameInput from "../molecules/UsernameInput.vue"
+import ChangePasswordModal from "../molecules/ChangePasswordModal.vue"
 
 export default {
     name: "UserForm",
     props: ["user"],
+    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, ChangePasswordModal },
     data: () => ({
-        values: {},
+        values: [
+            "firstname",
+            "lastname",
+            "username",
+            "email",
+            // profilePicture: ""
+        ],
         errors: {},
+        validationResults: {},
+        trigger: false
     }),
     mounted() {
-        this.values.firstname = this.user.firstname
-        this.values.lastname = this.user.lastname
-        this.values.username = this.user.username
-        this.values.email = this.user.email
-        this.values.picture = this.user.picture
+        window.event.on("validationSuccessful", async (data) => {
+            this.checkValidationResults(data);
+        })
 
         window.event.on("permissionGranted_deactivateProfile", () => {
             this.deactivateProfile()
         });
-
-        window.event.on("permissionGranted_test", () => {
-            console.log("test")
-        });
     },
     unmounted() {
         window.event.all.delete("permissionGranted_deactivateProfile");
-        window.event.all.delete("permissionGranted_test");
+        window.event.all.delete("validationSuccessful");
     },
     methods: {
-        //validate function when the save changes button it pressed
-        validateAndUpdate() {
-            editUserFormSchema
-                .validate(this.values, { abortEarly: false })
-                .then(async () => {
-                    this.updateUser();
-                })
-                .catch((errors) => {
-                    errors.inner.forEach(element => {
-                        console.log(element.path)
-                        this.errors[element.path] = element.message
-                    })
-                })
+        // Save Changes Button
+        getValues() {
+            this.validationResults = {}
+            this.trigger = !this.trigger // change of trigger triggers validation events of children
         },
-        //validate function for a field if the input has changed
-        validate(field) {
-            editUserFormSchema
-                .validateAt(field, this.values)
-                .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field + "Edit").removeClass("is-invalid");
-                    window.$("#feedback-" + field).removeClass("invalid-feedback");
+        async checkValidationResults(data) {
+            // save validation results
+            this.validationResults[data.field] = data.value;
 
-                })
-                .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field + "Edit").addClass("is-invalid");
-                    window.$("#feedback-" + field).addClass("invalid-feedback");
-                })
+            // only if all results received
+            if (Object.keys(this.validationResults).length === this.values.length) {
+                // check if all values have been successfully validated and added to validationResults
+                for (var index in this.values) {
+                    var foundKey = false
+                    for (var key in this.validationResults) {
+                        if (this.values[index] === key) {
+                            foundKey = true;
+                            break;
+                        }
+                    }
+                    if (!foundKey) {
+                        return;
+                    }
+                }
+                try {
+                    console.log("UPDATE")
+                    await this.updateUser();
+                } catch (error) {
+                    const modalData = {
+                        title: "Error (" + error.response.status + ")",
+                        text: error.response.data
+                    }
+                    window.event.emit("showErrorModal", modalData);
+                }
+            }
         },
         async updateUser() {
             try {
                 const data = {
                     id: this.user.id,
-                    firstname: this.values.firstname,
-                    lastname: this.values.lastname,
-                    username: this.values.username,
-                    email: this.values.email,
-                    picture: this.values.picture,
+                    firstname: this.validationResults.firstname,
+                    lastname: this.validationResults.lastname,
+                    username: this.validationResults.username,
+                    email: this.validationResults.email,
+                    // picture: this.values.picture,
+                    picture: "",
                     state: this.user.state
                 }
                 const response = await http.put("users", data, {
@@ -155,13 +133,14 @@ export default {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                window.event.emit("reloadUsername", response.data.username)
+                sessionStorage.setItem("jwt-token", response.data["jwt-token"]);
+                window.event.emit("reloadJWT");
                 const modalData = {
                     title: "Info (" + response.status + ")",
                     text: "User updated successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-            } catch (error) {
+            } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
@@ -172,6 +151,7 @@ export default {
         onChangePicture(e) {
             this.values.picture = e.target.files[0];
         },
+        // Delete Profile Button
         getPermission() {
             var modalData = {
                 title: "Warning",
@@ -204,25 +184,10 @@ export default {
             }
         },
         changePassword() {
-            var modalData = {
-                title: "Warning",
-                text: "Test",
-                id: "test"
-            }
-            window.event.emit("showPermissionModal", modalData)
+            window.event.emit("showChangePasswordModal")
         }
     }
 }
-
-const editUserFormSchema = object().shape({
-    firstname: string().required("First Name is required!"),
-    lastname: string().required("Last Name is reuired!"),
-    username: string().min(5, "Username must be between 5 and 20 Characters long!").max(20, "Username must be between 5 and 20 Characters long!").required("Username is required!"),
-    email: string().email("Email must be valid!").required("Email is required!"),
-    profilePicture: string()
-
-
-})
 </script>
 
 <style>

@@ -1,35 +1,22 @@
 <template>
     <div>
-            <!--Email-->
-            <div>
-                <label class="form-label" for="form2Example18">Email </label>
-                <input type="email" id="email" class="form-control" v-model="values.email" @blur="validate('email')" />
-                <div class="" id="feedback-email">
-                    <p class="errorMessage">{{ errors.email }}&nbsp;</p>
-                </div>
-            </div>
-            <!--Password-->
-            <div>
-                <label class="form-label" for="form2Example28">Password</label>
-                <input type="password" id="password" class="form-control" v-model="values.password" @blur="validate('password')" />
-                <div class="" id="feedback-password">
-                    <p class="errorMessage">{{ errors.password }}&nbsp;</p>
-                </div>
-            </div>
-            
-            <div class="pt-1 mb-4">
-                <button class="btn btn-primary" type="button" v-on:click.prevent="login">Login</button>
-            </div>
+        <EmailInput :trigger="trigger" />
+        <PasswordInput :trigger="trigger" />
 
-            <div>
-                Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link>
-            </div>
+        <div class="pt-1 mb-4">
+            <button class="btn btn-primary" type="button" v-on:click="getValues">Login</button>
+        </div>
+
+        <div>
+            Don't have an account? <router-link id="register" class="link" to="/register">Register here</router-link>
+        </div>
     </div>
 </template>
 
 <script>
-import { object, string } from "yup"
 import http from "../../http"
+import EmailInput from "../molecules/EmailInput.vue"
+import PasswordInput from "../molecules/PasswordInput.vue";
 
 export default {
     name: "LoginForm",
@@ -38,89 +25,75 @@ export default {
             email: "",
             password: "",
         },
-        errors: {
-            email: "",
-            password: "",
-        }
+        validationResults: [],
+        trigger: false
     }),
+    mounted() {
+        window.event.on("validationSuccessful", async (data) => {
+            this.checkValidationResults(data);
+        })
+    },
+    unmounted() {
+        window.event.all.delete("validationSuccessful");
+    },
     methods: {
-        async login() {
-            loginFormSchema
-                .validate(this.values, { abortEarly: false })
-                .then(async () => {
-                    try {
-                        console.log("LOGIN")
-                        await this.authenticate();
-                    } catch (error) {
-                        console.error(error)
-                    }
-                })
-                .catch((errors) => {
-                    errors.inner.forEach(element => {
-                        this.errors[element.path] = element.message
-                        window.$("#" + element.path).removeClass("is-valid");
-                        window.$("#" + element.path).addClass("is-invalid");
-                        window.$("#feedback-" + element.path).removeClass("valid-feedback");
-                        window.$("#feedback-" + element.path).addClass("invalid-feedback");
-                    })
-                })
+        // Login Button
+        getValues() {
+            this.validationResults = []
+            this.trigger = !this.trigger // change of trigger triggers validation events of children
         },
-        async authenticate() {
-            const data = {
-                email: this.values.email,
-                password: this.values.password
-            };
-            http.post("/login", data)
-                .then(function (response) {
-                    sessionStorage.setItem("jwt-token", response.data['jwt-token']);
-                    window.router.push('/')
-                    window.event.emit("reloadJWT");
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    const data = {
+        async checkValidationResults(data) {
+            // save validation results
+            this.validationResults.push(data.field);
+            this.values[data.field] = data.value;
+
+            // only if all results received
+            if (this.validationResults.length === Object.keys(this.values).length) {
+                // check if all values have been successfully validated and added to validationResults
+                for (var key in this.values) {
+                    var foundKey = false
+                    for (var index in this.validationResults) {
+                        if (this.validationResults[index] === key) {
+                            foundKey = true;
+                            break;
+                        }
+                    }
+                    if (!foundKey) {
+                        return;
+                    }
+                }
+                try {
+                    console.log("LOGIN")
+                    await this.authenticate();
+                } catch (error) {
+                    const modalData = {
                         title: "Error (" + error.response.status + ")",
                         text: error.response.data
                     }
-                    window.event.emit("showErrorModal", data);
-                });
+                    window.event.emit("showErrorModal", modalData);
+                }
+            }
         },
-        validate(field) {
-            loginFormSchema
-                .validateAt(field, this.values)
-                .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field).removeClass("is-invalid");
-                    window.$("#" + field).addClass("is-valid");
-                    window.$("#feedback-" + field).removeClass("invalid-feedback");
-                    window.$("#feedback-" + field).addClass("valid-feedback");
-                })
-                .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field).removeClass("is-valid");
-                    window.$("#" + field).addClass("is-invalid");
-                    window.$("#feedback-" + field).removeClass("valid-feedback");
-                    window.$("#feedback-" + field).addClass("invalid-feedback");
-                })
-                
+        async authenticate() {
+            try {
+                const response = await http.post("/login", this.values)
+                sessionStorage.setItem("jwt-token", response.data["jwt-token"]);
+                window.router.push("/");
+                window.event.emit("reloadJWT");
+            } catch (error) {
+                console.log(error);
+                const data = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                };
+                window.event.emit("showErrorModal", data);
+            }
         }
-
-    }
-
+    },
+    components: { EmailInput, PasswordInput }
 }
 
-const loginFormSchema = object().shape({
-    email: string().email("Email must be valid!").required("Email is required!"),
-    password: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
-})
 </script>
 
 <style>
-.errorMessage {
-    font-size: 11px;
-    margin-bottom: 0%;
-}
-.invalid-feedback, .valid-feedback {
-    margin-top: 0 !important;
-}
 </style>

@@ -11,10 +11,15 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+
+import static at.barniverse.backend.barniverse_backend.configuration.Context.ERROR;
 
 /**
  * creates and validates json web tokens
@@ -28,9 +33,22 @@ public class JWTUtil {
     /**
      * generates a json web token
      * @param authDto dto with the needed data for token generation
+     * @return response with the corresponding status code and a jwt token or error message in case of failure
+     */
+    public ResponseEntity<Object> getToken(AuthDto authDto) {
+        String token = generateToken(authDto);
+        if (token == null) {
+            return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
+    }
+
+    /**
+     * extension method which generates a json web token
+     * @param authDto dto with the needed data for token generation
      * @return json web token
      */
-    public String generateToken(AuthDto authDto) {
+    private String generateToken(AuthDto authDto) {
         try {
             return JWT.create()
                     .withSubject("User Details")

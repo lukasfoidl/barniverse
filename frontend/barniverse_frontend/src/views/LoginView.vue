@@ -1,7 +1,7 @@
 <template>
     <div id="backgroundRegister">
         <div class="row justify-content-center align-items-center">
-            <div class="col-12 col-lg-9 col-xl-6">
+            <div class="col-12 col-md-9 col-lg-6 col-xl-6">
                 <LoginForm />
             </div>
         </div>

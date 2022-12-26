@@ -76,7 +76,7 @@ public class ProductService extends BaseService {
      * @return response with corresponding status code and loaded product dto or error message in case of failure
      */
     public ResponseEntity<Object> getProduct(int id) {
-        return getEntity(productRepository, productTransformer, id);
+        return getEntityAsDto(productRepository, productTransformer, id);
     }
 
     /**

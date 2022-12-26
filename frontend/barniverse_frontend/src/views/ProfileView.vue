@@ -28,11 +28,11 @@ export default {
                 })
                 this.user = response.data
             } catch(error) {
-                const data = {
+                const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showErrorModal", data);
+                window.event.emit("showErrorModal", modalData);
             }
         },
     },

@@ -19,7 +19,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.*;
@@ -41,28 +40,30 @@ public class AuthService extends BaseService {
     /**
      * register a new user (add new user to the database)
      * @param userDto object sent from the client
-     * @return response with the corresponding status code and a jwt token and error message in case of failure
+     * @return response with the corresponding status code and a jwt token or error message in case of failure
      */
     public ResponseEntity<Object> register(UserDto userDto) {
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDto.setState(UserState.active);
-        ResponseEntity<Object> response = addEntity(userRepository, userTransformer, userValidationService, userDto);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            User dbUser = (User) response.getBody();
-            String token = jwtUtil.generateToken(new AuthDto (userDto.getEmail(), userDto.getUsername(), Role.ROLE_USER.toString(), Integer.toString(dbUser.getId())));
-            if (token == null) {
-                return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
+        userDto.setIsAdmin(false);
+        User user = userTransformer.convertToEntity(userDto);
+        ResponseEntity<Object> validationResponse = userValidationService.validateEntity(user);
+        if (validationResponse.getStatusCode() != HttpStatus.OK) {
+            return validationResponse;
         }
-        return response;
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        ResponseEntity<Object> response = saveAndGet(userRepository, userTransformer, user);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        UserDto dbUserDto = (UserDto) response.getBody();
+        return jwtUtil.getToken(new AuthDto (userDto.getEmail(), userDto.getUsername(), Role.ROLE_USER.toString(), Integer.toString(dbUserDto.getId())));
     }
 
     /**
      * authenticate a user
      * @param loginCredentialsDto login credentials sent from the client
      * @return response with the corresponding status code and a jwt token if the user gets authenticated <br>
-     * and error message in case of failure
+     * or error message in case of failure
      */
     public ResponseEntity<Object> login(LoginCredentialsDto loginCredentialsDto) {
         try {
@@ -76,11 +77,7 @@ public class AuthService extends BaseService {
             if (user.getState() != UserState.active) {
                 return new ResponseEntity<>(INVALID_STATE, HttpStatus.FORBIDDEN);
             }
-            String token = jwtUtil.generateToken(new AuthDto(user.getEmail(), user.getUsername(), RoleConverter.getRole(user.isAdmin()).toString(), Integer.toString(user.getId())));
-            if (token == null) {
-                return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
+            return jwtUtil.getToken(new AuthDto(user.getEmail(), user.getUsername(), RoleConverter.getRole(user.getIsAdmin()).toString(), Integer.toString(user.getId())));
         } catch (AuthenticationException authExc) {
             return new ResponseEntity<>(INVALID_LOGIN_CREDENTIALS, HttpStatus.UNAUTHORIZED);
         }

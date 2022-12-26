@@ -23,11 +23,11 @@ export default {
                 this.products = response.data
             } catch(error) {
                 console.log(error)
-                const data = {
+                const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showErrorModal", data);
+                window.event.emit("showErrorModal", modalData);
             }
 
         }

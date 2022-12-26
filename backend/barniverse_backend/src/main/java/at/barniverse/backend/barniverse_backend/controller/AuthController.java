@@ -23,7 +23,7 @@ public class AuthController {
     /**
      * register a new user (add new user to the database)
      * @param userDto object sent from the client
-     * @return response with the corresponding status code and a jwt token and error message in case of failure
+     * @return response with the corresponding status code and a jwt token or error message in case of failure
      */
     @PostMapping(path="/register")
     public ResponseEntity<Object> register(@RequestBody UserDto userDto) {
@@ -34,7 +34,7 @@ public class AuthController {
      * authenticate a user
      * @param loginCredentialsDto login credentials sent from the client
      * @return response with the corresponding status code and a jwt token if the user gets authenticated <br>
-     * and error message in case of failure
+     * or error message in case of failure
      */
     @PostMapping(path="/login")
     public ResponseEntity<Object> login(@RequestBody LoginCredentialsDto loginCredentialsDto) {

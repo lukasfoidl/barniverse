@@ -1,5 +1,6 @@
 package at.barniverse.backend.barniverse_backend.controller;
 
+import at.barniverse.backend.barniverse_backend.dto.ChangePasswordDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
 import at.barniverse.backend.barniverse_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserController {
     /**
      * add a user to the database
      * @param userDto object sent from the client
-     * @return response with corresponding status code and added user or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     @PostMapping(path="/users")
     public ResponseEntity<Object> addUser(@RequestBody UserDto userDto) {
@@ -56,7 +57,7 @@ public class UserController {
     /**
      * update specific user in the database
      * @param userDto object sent from the client (with id)
-     * @return response with corresponding status code and updated user or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(path="/users")
@@ -78,12 +79,23 @@ public class UserController {
     /**
      * deactivate specific user
      * @param id id of the specific user
-     * @return response with corresponding status code and updated user or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(path="/users/{id}")
     public ResponseEntity<Object> deactivateUser(@PathVariable int id) {
         return userService.deactivateUser(id);
+    }
+
+    /**
+     * changing password of specific user
+     * @param changePasswordDto change password dto sent from the client
+     * @return response with corresponding status code and error message in case of failure
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PutMapping(path="/users/changePassword")
+    public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        return userService.changePassword(changePasswordDto);
     }
 
 }

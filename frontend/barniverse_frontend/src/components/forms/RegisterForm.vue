@@ -1,96 +1,47 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-            <div class="form-outline">
-                <!-- Firstname-->
-                <label class="form-label" for="firstName">First Name</label>
-                <input type="text" class="form-control" v-model="values.fname" id="fname"
-                    @blur="validate('fname')" />
-                <div class="" id="feedback-fname">
-                    <p class="errorMessage">{{ errors.fname }}&nbsp;</p>
-                </div>
-            </div>
+            <FirstNameInput :trigger="trigger"/>
         </div>
         <div class="col-md-6">
-            <div class="form-outline">
-                <!-- Lastname-->
-                <label class="form-label" for="lastName">Last Name</label>
-                <input type="text" class="form-control" v-model="values.lname" id="lname"
-                    @blur="validate('lname')" />
-                <div class="" id="feedback-lname">
-                    <p class="errorMessage">{{ errors.lname }}&nbsp;</p>
-                </div>
-            </div>
+            <LastNameInput :trigger="trigger" />
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-6">
-            <div class="form-outline">
-                <!-- Email-->
-                <label class="form-label" for="emailAddress">Email</label>
-                <input type="email" id="emailR" class="form-control" v-model="values.emailR"
-                    aria-describedby="emailHelp" @blur="validate('emailR')" />
-                <div class="" id="feedback-emailR">
-                    <p class="errorMessage">{{ errors.emailR }}&nbsp;</p>
-                </div>
-            </div>
+            <EmailInput :trigger="trigger"/>
         </div>
-
         <div class="col-md-6">
-            <div class="form-outline ">
-                <!-- Username-->
-                <label class="form-label" for="Username">Username</label>
-                <input class="form-control" type="text" v-model="values.username" id="username"
-                    @blur="validate('username')" />
-                <div class="" id="feedback-username">
-                    <p class="errorMessage">{{ errors.username }}&nbsp;</p>
-                </div>
-            </div>
+            <UsernameInput :trigger="trigger" />
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-6">
-            <div class="form-outline">
-                <!-- Password-->
-                <label class="form-label" for="passwordRegister">Password</label>
-                <input type="password" id="passwordR" class="form-control" v-model="values.passwordR"
-                    @blur="validate('passwordR')" />
-                <div class="" id="feedback-passwordR">
-                    <p class="errorMessage">{{ errors.passwordR }}&nbsp;</p>
-                </div>
-            </div>
+            <PasswordInput :trigger="trigger" />
         </div>
-
         <div class="col-md-6">
-            <div class="form-outline">
-                <!-- Confirm Password-->
-                <label class="form-label" for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" class="form-control"
-                    v-model="values.confirmPassword" @blur="validate('confirmPassword')" />
-                <div class="" id="feedback-confirmPassword">
-                    <p class="errorMessage">{{ errors.confirmPassword }}&nbsp;</p>
-                </div>
-            </div>
+            <ConfirmationPasswordInput :trigger="trigger" />
         </div>
     </div>
+    <!-- <div class="row">
+        <ProfilePictureInput :trigger="trigger" />
+    </div> -->
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-12">
             <div class="form-outline">
                 <label class="form-label" for="emailAddress">Profile Picture</label>
                 <input type="file" class="form-control" v-on:change="values.profilePicture"
                     placeholder="Photo" capture @blur="validate('profilePicture')" />
-                <div class="" id="feedback-confirmPassword">
+                <div class="" id="feedback-confirmationPassword">
                     <p class="errorMessage">{{ errors.profilePicture }}&nbsp;</p>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="mt-4">
-        <input class="btn btn-primary" type="submit" v-on:click.prevent="register" value="Register" />
+        <input class="btn btn-primary" type="submit" v-on:click.prevent="getValues" value="Register" />
     </div>
     <div class="mt-4">
         <router-link id="login" class="link" to="/login">
@@ -100,110 +51,108 @@
 </template>
 
 <script>
-import { object, string } from "yup"
 import http from "../../http"
+import FirstNameInput from "../molecules/FirstNameInput.vue"
+import LastNameInput from "../molecules/LastNameInput.vue"
+import EmailInput from "../molecules/EmailInput.vue"
+import UsernameInput from "../molecules/UsernameInput.vue"
+import ConfirmationPasswordInput from "../molecules/ConfirmationPasswordInput.vue"
+import PasswordInput from "../molecules/PasswordInput.vue"
 
 export default {
     name: "RegisterForm",
     data: () => ({
         values: {
-
-            fname: "",
-            lname: "",
+            firstname: "",
+            lastname: "",
             username: "",
-            emailR: "",
-            passwordR: "",
-            confirmPassword: "",
-            profilePicture: ""
-
+            email: "",
+            password: "",
+            confirmationPassword: "",
+            // profilePicture: ""
         },
-        errors: {}
+        errors: {},
+        validationResults: [],
+        trigger: false
     }),
+    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, ConfirmationPasswordInput, PasswordInput },
+    mounted() {
+        window.event.on("validationSuccessful", async (data) => {
+            this.checkValidationResults(data);
+        })
+    },
+    unmounted() {
+        window.event.all.delete("validationSuccessful");
+    },
     methods: {
-        //Register Button
-        async register() {
-            registerFormSchema
-                .validate(this.values, { abortEarly: false })
-                .then(async () => {
-                    try {
-                        console.log("REGISTER")
-                        await this.saveUser();
-                    } catch (error) {
-                        console.error(error)
-                    }
-                })
-                .catch((errors) => {
-                    errors.inner.forEach(element => {
-                        this.errors[element.path] = element.message
-                        window.$("#" + element.path).removeClass("is-valid");
-                        window.$("#" + element.path).addClass("is-invalid");
-                        window.$("#feedback-" + element.path).removeClass("valid-feedback");
-                        window.$("#feedback-" + element.path).addClass("invalid-feedback");
-                    })
-                })
+        // Register Button
+        getValues() {
+            this.validationResults = []
+            this.trigger = !this.trigger // change of trigger triggers validation events of children
         },
-        async saveUser() {
-            const data = {
-                firstname: this.values.fname,
-                lastname: this.values.lname,
-                username: this.values.username,
-                email: this.values.emailR,
-                password: this.values.passwordR,
-                picture: this.values.profilePicture,
-            };
-            http.post("/register", data)
-                .then(function (response) {
-                    sessionStorage.setItem("jwt-token", response.data['jwt-token']);
-                    window.event.emit("reloadJWT");
-                    window.router.push('/')
-                    const data = {
-                        title: "Welcome in the Barniverse!",
-                        text: "User created successfully!"
+        async checkValidationResults(data) {
+            // save validation results
+            this.validationResults.push(data.field);
+            this.values[data.field] = data.value;
+
+            // only if all results received
+            if (this.validationResults.length === Object.keys(this.values).length) {
+                // check if all values have been successfully validated and added to validationResults
+                for (var key in this.values) {
+                    var foundKey = false
+                    for (var index in this.validationResults) {
+                        if (this.validationResults[index] === key) {
+                            foundKey = true;
+                            break;
+                        }
                     }
-                    window.event.emit("showErrorModal", data);
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    const data = {
+                    if (!foundKey) {
+                        return;
+                    }
+                }
+                try {
+                    console.log("REGISTER")
+                    await this.saveUser();
+                } catch (error) {
+                    const modalData = {
                         title: "Error (" + error.response.status + ")",
                         text: error.response.data
                     }
-                    window.event.emit("showErrorModal", data);
-                });
+                    window.event.emit("showErrorModal", modalData);
+                }
+            }
         },
-        validate(field) {
-            registerFormSchema
-                .validateAt(field, this.values)
-                .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field).removeClass("is-invalid");
-                    window.$("#" + field).addClass("is-valid");
-                    window.$("#feedback-" + field).removeClass("invalid-feedback");
-                    window.$("#feedback-" + field).addClass("valid-feedback");
-                })
-                .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field).removeClass("is-valid");
-                    window.$("#" + field).addClass("is-invalid");
-                    window.$("#feedback-" + field).removeClass("valid-feedback");
-                    window.$("#feedback-" + field).addClass("invalid-feedback");
-                })
-        }
+        async saveUser() {
+            try {
+                const data = {
+                    firstname: this.values.firstname,
+                    lastname: this.values.lastname,
+                    email: this.values.email,
+                    username: this.values.username,
+                    password: this.values.password,
+                    // picture: this.values.picture
+                }
+                const response = await http.post("/register", data)
+                sessionStorage.setItem("jwt-token", response.data['jwt-token']);
+                window.event.emit("reloadJWT");
+                window.router.push('/')
+                const modalData = {
+                    title: "Welcome in the Barniverse!",
+                    text: "User created successfully!"
+                }
+                window.event.emit("showErrorModal", modalData);
+            } catch (error) {
+                console.log(error)
+                const modalData = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                }
+                window.event.emit("showErrorModal", modalData);
+            }
+        },
     }
 }
-
-//validate here
-const registerFormSchema = object().shape({
-    fname: string().required("First Name is required!"),
-    lname: string().required("Last Name is reuired!"),
-    username: string().min(5, "Username must be between 5 and 20 Characters long!").max(20, "Username must be between 5 and 20 Characters long!").required("Username is required!"),
-    emailR: string().email("Email must be valid!").required("Email is required!"),
-    passwordR: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
-    confirmPassword: string().min(8, "Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function (value) {
-        return this.parent.passwordR === value
-    }),
-    profilePicture: string()
-})
+    // profilePicture: string()
 </script>
 
 <style>

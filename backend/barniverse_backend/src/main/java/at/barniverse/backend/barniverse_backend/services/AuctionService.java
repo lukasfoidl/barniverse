@@ -5,7 +5,6 @@ import at.barniverse.backend.barniverse_backend.repository.AuctionRepository;
 import at.barniverse.backend.barniverse_backend.transformer.AuctionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,7 +45,7 @@ public class AuctionService extends BaseService {
      * @return response with corresponding status code and loaded auction dto or error message in case of failure
      */
     public ResponseEntity<Object> getAuction(int id) {
-        return getEntity(auctionRepository, auctionTransformer, id);
+        return getEntityAsDto(auctionRepository, auctionTransformer, id);
     }
 
     /**
