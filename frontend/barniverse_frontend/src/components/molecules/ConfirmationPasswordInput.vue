@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Confirm Password-->
         <label class="form-label" for="confirmationPassword">Confirm Password</label>
-        <input type="password" id="confirmationPassword" class="form-control" v-model="values.confirmationPassword"
+        <input type="password" :id="'confirmationPassword' + userId" class="form-control" v-model="values.confirmationPassword"
             @blur="validate('confirmationPassword', false)" />
-        <div class="" id="feedback-confirmationPassword">
+        <div class="" :id="'feedback-confirmationPassword' + userId">
             <p class="errorMessage">{{ errors.confirmationPassword }}&nbsp;</p>
         </div>
     </div>
@@ -17,7 +17,7 @@ import { object, string } from "yup"
 
 export default {
     name: "ConfirmationPasswordInput",
-    props: ["trigger"],
+    props: ["trigger", "userId"],
     data: () => ({
         values: {
             password: "",
@@ -41,25 +41,26 @@ export default {
                 .validateAt(field, this.values)
                 .then(() => {
                 this.errors[field] = "";
-                window.$("#" + field).removeClass("is-invalid");
-                window.$("#" + field).addClass("is-valid");
-                window.$("#feedback-" + field).removeClass("invalid-feedback");
-                window.$("#feedback-" + field).addClass("valid-feedback");
+                window.$("#" + field + this.userId).removeClass("is-invalid");
+                window.$("#" + field + this.userId).addClass("is-valid");
+                window.$("#feedback-" + field + this.userId).removeClass("invalid-feedback");
+                window.$("#feedback-" + field + this.userId).addClass("valid-feedback");
                 this.sendValidationResults(field, shouldSendEvent);
             })
                 .catch((error) => {
                 this.errors[field] = error.message;
-                window.$("#" + field).removeClass("is-valid");
-                window.$("#" + field).addClass("is-invalid");
-                window.$("#feedback-" + field).removeClass("valid-feedback");
-                window.$("#feedback-" + field).addClass("invalid-feedback");
+                window.$("#" + field + this.userId).removeClass("is-valid");
+                window.$("#" + field + this.userId).addClass("is-invalid");
+                window.$("#feedback-" + field + this.userId).removeClass("valid-feedback");
+                window.$("#feedback-" + field + this.userId).addClass("invalid-feedback");
             });
         },
         sendValidationResults(field, shouldSendEvent) {
             if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
                 const modalData = {
                     field: field,
-                    value: this.values.confirmationPassword
+                    value: this.values.confirmationPassword,
+                    userId: this.userId
                 };
                 window.event.emit("validationSuccessful", modalData);
             }

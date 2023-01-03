@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Password-->
         <label class="form-label" for="password">Password</label>
-        <input type="password" id="password" class="form-control" v-model="values.password" @change="passwordInputChanged"
+        <input type="password" :id="'password' + userId" class="form-control" v-model="values.password" @change="passwordInputChanged"
             @blur="validate('password', false)" />
-        <div class="" id="feedback-password">
+        <div class="" :id="'feedback-password' + userId">
             <p class="errorMessage">{{ errors.password }}&nbsp;</p>
         </div>
     </div>
@@ -17,7 +17,7 @@ import { object, string } from "yup"
 
 export default {
     name: "PasswordInput",
-    props: ["trigger"],
+    props: ["trigger", "userId"],
     data: () => ({
         values: {
             password: "",
@@ -32,18 +32,18 @@ export default {
                 .validateAt(field, this.values)
                 .then(() => {
                     this.errors[field] = ""
-                    window.$("#" + field).removeClass("is-invalid");
-                    window.$("#" + field).addClass("is-valid");
-                    window.$("#feedback-" + field).removeClass("invalid-feedback");
-                    window.$("#feedback-" + field).addClass("valid-feedback");
+                    window.$("#" + field + this.userId).removeClass("is-invalid");
+                    window.$("#" + field + this.userId).addClass("is-valid");
+                    window.$("#feedback-" + field + this.userId).removeClass("invalid-feedback");
+                    window.$("#feedback-" + field + this.userId).addClass("valid-feedback");
                     this.sendValidationResults(field, shouldSendEvent)
                 })
                 .catch((error) => {
                     this.errors[field] = error.message
-                    window.$("#" + field).removeClass("is-valid");
-                    window.$("#" + field).addClass("is-invalid");
-                    window.$("#feedback-" + field).removeClass("valid-feedback");
-                    window.$("#feedback-" + field).addClass("invalid-feedback");
+                    window.$("#" + field + this.userId).removeClass("is-valid");
+                    window.$("#" + field + this.userId).addClass("is-invalid");
+                    window.$("#feedback-" + field + this.userId).removeClass("valid-feedback");
+                    window.$("#feedback-" + field + this.userId).addClass("invalid-feedback");
                 })
         },
         sendValidationResults(field, shouldSendEvent) {
@@ -51,6 +51,7 @@ export default {
                 const modalData = {
                     field: field,
                     value: this.values.password,
+                    userId: this.userId
                 }
                 window.event.emit("validationSuccessful", modalData);
             }

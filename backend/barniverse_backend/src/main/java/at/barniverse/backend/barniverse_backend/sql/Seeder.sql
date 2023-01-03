@@ -2,21 +2,21 @@ use barniverseDB;
 
 # seed user table
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', 'test123', '', true, '0');
+VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', 'test123', '', true, '0');
+VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (3, 'Admin', 'Admin', 'admin', 'admin@barniverse.at', 'admin123', '', true, '0');
+VALUES (3, 'Admin', 'Admin', 'admin', 'admin@barniverse.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', 'test123', '', false, '0');
+VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', 'test123', '', false, '0');
+VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', 'test123', '', false, '0');
+VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', 'test123', '', false, '1');
+VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', 'testtest', '', false, '1');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'test123', '', false, '2');
+VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'testtest', '', false, '2');
 
 # seed product table
 INSERT INTO product (id, name, description)

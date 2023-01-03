@@ -25,19 +25,21 @@
 export default {
     name: "PermissionModal",
     data: () => ({
-        id: ""
+        id: "",
+        type: ""
     }),
     mounted() {
         window.event.on("showPermissionModal", (data) => {
             window.$("#permissionModalTitle").text(data.title);
             window.$("#permissionModalContent").text(data.text);
             this.id = data.id;
+            this.type = data.type;
             new window.bootstrap.Modal(window.$("#permissionModal"), {}).show();
         });
     },
     methods: {
         permissionGranted() {
-            window.event.emit("permissionGranted_" + this.id, this.id)
+            window.event.emit("permissionGranted_" + this.type, this.id)
         }
     }
 }

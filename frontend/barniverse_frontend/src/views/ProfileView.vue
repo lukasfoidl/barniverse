@@ -1,15 +1,13 @@
 <template>
-    <div id="backgroundRegister">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-12 col-md-9 col-lg-9 col-xl-6">
-                <UserForm v-if="user.length != 0" :key="user.id" :user="user"/>
-            </div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-9 col-lg-9 col-xl-6">
+            <UserFormWorker v-if="user.length != 0" :key="user.id" :user="user"/>
         </div>
     </div>
 </template>
 
 <script>
-import UserForm from '../components/forms/UserForm.vue';
+import UserFormWorker from '@/components/molecules/UserFormWorker.vue';
 import http from "../http"
 
 export default {
@@ -17,7 +15,7 @@ export default {
     data: () => ({
         user: []
     }),
-    components:{ UserForm }, 
+    components:{ UserFormWorker }, 
     methods: {
         async requestUser() {
             try {

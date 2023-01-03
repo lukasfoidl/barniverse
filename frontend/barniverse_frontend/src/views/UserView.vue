@@ -1,17 +1,20 @@
 <template>
-    <div>
-
-        <UserCard v-for="user in allUser" :key="user.id" :user="user"> </UserCard>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-10 col-xl-8">
+            <div class="accordion" id="userList">
+                <UserAccordionElement v-for="user in allUser" :key="user.id" :user="user" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import UserCard from "@/components/molecules/UserCard.vue"
+import UserAccordionElement from "@/components/molecules/UserAccordionElement.vue"
 import http from "../http"
 
 export default {
     name: "UserView",
-    components: { UserCard },
+    components: { UserAccordionElement },
     data: () => ({
         allUser: []
     }),
@@ -23,7 +26,8 @@ export default {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                this.allUser = response.data
+                this.allUser = response.data.sort(
+                    (a, b) => (a.lastname > b.lastname) ? 1 : (a.lastname < b.lastname) ? -1 : 0);
             } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
@@ -35,7 +39,7 @@ export default {
     },
     beforeMount() {
         this.requestUsers();
-    }
+    },
 }
 
 </script>

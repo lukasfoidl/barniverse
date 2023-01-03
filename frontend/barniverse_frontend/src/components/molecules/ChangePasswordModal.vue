@@ -10,8 +10,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <PasswordInput :key="key" :trigger="trigger"/>
-                    <ConfirmationPasswordInput :key="key" :trigger="trigger" />                        
+                    <PasswordInput :key="key" :trigger="trigger" :userId="this.id"/>
+                    <ConfirmationPasswordInput :key="key" :trigger="trigger" :userId="this.id"/>                        
                 </div>
                 <div class="modal-footer">
                     <button :id="this.id" type="button" class="btn btn-primary" @click="getValues">Change Password</button>
@@ -47,7 +47,9 @@ export default {
             this.modal.show();
         });
         window.event.on("validationSuccessful", async (data) => {
-            this.checkValidationResults(data);
+            if (this.id == data.userId) {
+                this.checkValidationResults(data);
+            }
         })
     },
     unmounted() {

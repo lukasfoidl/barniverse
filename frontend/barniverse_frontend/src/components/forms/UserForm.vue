@@ -1,59 +1,32 @@
 <template>
-    <!-- <div class="row">
-        <div class="centerPictureDiv mb-3">
-            <div class="d-flex flex-column align-items-center text-center">
-                <img class="rounded-circle userImg" id="img" :src="values.picture">
-                <div class="col-md-12 mt-2">
-                    <input class="mt-2 form-control" id="file" type="file" @change="onChangePicture">
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <div class="row">
         <div class="col-md-6">
-            <FirstNameInput :trigger="trigger" :firstname="this.user.firstname" />
+            <FirstNameInput :trigger="this.trigger" :firstname="this.user.firstname" :userId="this.user.id" />
         </div>
         <div class="col-md-6">
-            <LastNameInput :trigger="trigger" :lastname="this.user.lastname" />
+            <LastNameInput :trigger="this.trigger" :lastname="this.user.lastname" :userId="this.user.id" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <EmailInput :trigger="trigger" :email="this.user.email" />
+            <EmailInput :trigger="this.trigger" :email="this.user.email" :userId="this.user.id" />
         </div>
         <div class="col-md-6">
-            <UsernameInput :trigger="trigger" :username="this.user.username" />
+            <UsernameInput :trigger="this.trigger" :username="this.user.username" :userId="this.user.id" />
         </div>
     </div>
-            
-    <div class="text-center">
-        <button class="btn btn-primary buttonSpacer" @click="getValues">
-            Save Changes
-        </button>
-        <button class="btn btn-secondary buttonSpacer" @click="changePassword">
-            Change password
-        </button>
-        <button class="btn btn-danger buttonSpacer" @click="getPermission">
-            Delete Profile
-        </button>
-    </div>
-
-    <ChangePasswordModal :id="this.user.id" />
 </template>
 
 <script>
-import http from "@/http"
 import FirstNameInput from "../molecules/FirstNameInput.vue"
 import LastNameInput from "../molecules/LastNameInput.vue"
 import EmailInput from "../molecules/EmailInput.vue"
 import UsernameInput from "../molecules/UsernameInput.vue"
-import ChangePasswordModal from "../molecules/ChangePasswordModal.vue"
 
 export default {
     name: "UserForm",
-    props: ["user"],
-    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, ChangePasswordModal },
+    props: ["trigger", "user"],
+    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput },
     data: () => ({
         values: [
             "firstname",
@@ -63,28 +36,19 @@ export default {
             // profilePicture: ""
         ],
         errors: {},
-        validationResults: {},
-        trigger: false
+        validationResults: {}
     }),
     mounted() {
         window.event.on("validationSuccessful", async (data) => {
-            this.checkValidationResults(data);
+            if (this.user.id == data.userId) {
+                this.checkValidationResults(data);
+            }
         })
-
-        window.event.on("permissionGranted_deactivateProfile", () => {
-            this.deactivateProfile()
-        });
     },
     unmounted() {
-        window.event.all.delete("permissionGranted_deactivateProfile");
         window.event.all.delete("validationSuccessful");
     },
     methods: {
-        // Save Changes Button
-        getValues() {
-            this.validationResults = {}
-            this.trigger = !this.trigger // change of trigger triggers validation events of children
-        },
         async checkValidationResults(data) {
             // save validation results
             this.validationResults[data.field] = data.value;
@@ -104,21 +68,8 @@ export default {
                         return;
                     }
                 }
-                try {
-                    console.log("UPDATE")
-                    await this.updateUser();
-                } catch (error) {
-                    const modalData = {
-                        title: "Error (" + error.response.status + ")",
-                        text: error.response.data
-                    }
-                    window.event.emit("showErrorModal", modalData);
-                }
-            }
-        },
-        async updateUser() {
-            try {
-                const data = {
+                console.log("UPDATE")
+                const modalData = {
                     id: this.user.id,
                     firstname: this.validationResults.firstname,
                     lastname: this.validationResults.lastname,
@@ -128,92 +79,17 @@ export default {
                     picture: "",
                     state: this.user.state
                 }
-                const response = await http.put("users", data, {
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
-                    }
-                })
-                sessionStorage.setItem("jwt-token", response.data["jwt-token"]);
-                window.event.emit("reloadJWT");
-                const modalData = {
-                    title: "Info (" + response.status + ")",
-                    text: "User updated successfully!"
-                }
-                window.event.emit("showErrorModal", modalData);
-            } catch(error) {
-                const modalData = {
-                    title: "Error (" + error.response.status + ")",
-                    text: error.response.data
-                }
-                window.event.emit("showErrorModal", modalData);
+                window.event.emit("validationCompleted", modalData);                    
             }
         },
-        onChangePicture(e) {
-            this.values.picture = e.target.files[0];
-        },
-        // Delete Profile Button
-        getPermission() {
-            var modalData = {
-                title: "Warning",
-                text: "Do you really want to delete user " + window.username + "?",
-                id: "deactivateProfile"
-            }
-            window.event.emit("showPermissionModal", modalData)
-        },
-        async deactivateProfile() {
-            try {
-                const response = await http.put("users/" + window.uuid, null, {
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
-                    }
-                })
-                sessionStorage.removeItem("jwt-token");
-                window.event.emit("reloadJWT");
-                window.router.push("/")
-                const modalData = {
-                    title: "Info (" + response.status + ")",
-                    text: "User deleted successfully!" // deleted and not deactivated because of "Delete"-Button
-                }
-                window.event.emit("showErrorModal", modalData);
-            } catch (error) {
-                const modalData = {
-                    title: "Error (" + error.response.status + ")",
-                    text: error.response.data
-                }
-                window.event.emit("showErrorModal", modalData);
-            }
-        },
-        changePassword() {
-            window.event.emit("showChangePasswordModal")
+    },
+    watch: { 
+        trigger: function() {
+            this.validationResults = {}
         }
     }
 }
 </script>
 
 <style>
-.userImg {
-    width: 150px;
-    height: 150px;
-    border-style: solid;
-    border-color: #ebdbc7;
-}
-
-.fullName {
-    font-size: 20px;
-}
-
-.usercard {
-    max-width: 100%;
-    background-color: #ebdbc7;
-}
-
-.buttonSpacer {
-   margin: 5px;
-}
-
-.centerPictureDiv {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
 </style>

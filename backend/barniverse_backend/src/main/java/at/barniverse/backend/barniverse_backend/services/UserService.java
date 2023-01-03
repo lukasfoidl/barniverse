@@ -9,6 +9,7 @@ import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import at.barniverse.backend.barniverse_backend.security.JWTUtil;
 import at.barniverse.backend.barniverse_backend.transformer.UserTransformer;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,11 +83,11 @@ public class UserService extends BaseService {
     }
 
     /**
-     * deactivate specific user
+     * deletes a user with state deleted
      * @param id id of the specific user
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> deactivateUser(int id) {
+    public ResponseEntity<Object> deleteWithState(int id) {
         ResponseEntity<Object> response = getEntity(userRepository, id);
         if (response.getStatusCode() != HttpStatus.OK) {
             return response;
@@ -114,5 +115,46 @@ public class UserService extends BaseService {
         }
         user.setPassword(passwordEncoder.encode(changePasswordDto.getPassword()));
         return save(userRepository, user);
+    }
+
+    /**
+     * toggles the admin value of a specific user (give admin rights or take admin rights)
+     * @param id id of the specific user
+     * @return response with corresponding status code and error message in case of failure
+     */
+    public ResponseEntity<Object> toggleAdmin(int id) {
+        ResponseEntity<Object> response = getEntity(userRepository, id);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        User user = (User) response.getBody();
+        user.setIsAdmin(!user.getIsAdmin());
+        return save(userRepository, user);
+    }
+
+    /**
+     * toggles the user state of a specific user (deactivate or activate)
+     * @param id id of the specific user
+     * @return response with corresponding status code and error message in case of failure
+     */
+    public ResponseEntity<Object> toggleState(int id) {
+        ResponseEntity<Object> response = getEntity(userRepository, id);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        User user = (User) response.getBody();
+        if (user.getState() == UserState.active) {
+            user.setState(UserState.blocked);
+        } else if (user.getState() == UserState.blocked) {
+            user.setState(UserState.active);
+        } else {
+           return new ResponseEntity<>("User is deleted and cannot be changed!", HttpStatus.BAD_REQUEST);
+        }
+        ResponseEntity<Object> userResponse = saveAndGet(userRepository, userTransformer, user);
+        if (userResponse.getStatusCode() != HttpStatus.OK) {
+            return userResponse;
+        }
+        UserDto userDto = (UserDto) userResponse.getBody();
+        return new ResponseEntity<>(userDto.getState(), HttpStatus.OK);
     }
 }
