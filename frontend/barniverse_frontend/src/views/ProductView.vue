@@ -1,5 +1,5 @@
 <template>
-    <div id="cardList" class="cardList centerContent">
+    <div id="cardList" class="centerContent">
         <div class="row centerContent">
             <ProductCard v-for="product in products" :key="product.id" :product="product"/>
         </div>
@@ -39,11 +39,6 @@ export default {
 </script>
 
 <style>
-.cardList {
-    display: flex;
-    flex-direction: row;
-}
-
 .centerContent {
     justify-content: center;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card col-xs-12 col-sm-10 col-md-5 col-lg-3">
         <div :id="id" class="carousel slide card-image-area" data-ride="carousel">
             <ol v-if="product.images.length > 1" class="carousel-indicators">
                 <CarouselIndicator 
@@ -36,11 +36,20 @@
             </a>
         </div>
         <div class="card-body">
-            <h5 class="card-title">{{product.name}}</h5>
-            <p class="card-text">{{product.description}}</p>
+            <h5 class="card-title text-truncate">{{product.name}}</h5>
+            <p class="card-text text-truncate-custom">{{product.description}}</p>
         </div>
-        <div class="card-body auctionLink">
-            <a href="#" class="card-link">Create Auction</a>
+        <div class="card-body auctionLink bottom-area">
+            <Popover placement="right" hover=true>
+                <i class="bi bi-info-circle icon" alt="Details"></i>
+                <template #content>
+                    <div class="popover card-body">
+                        <h5 class="card-title">{{product.name}}</h5>
+                        <p class="card-text">{{product.description}}</p>
+                    </div>
+                </template>
+            </Popover>
+            <a href="#" class="card-link ms-auto">Create Auction</a>
         </div>
     </div>
 </template>
@@ -48,19 +57,20 @@
 <script>
 import CarouselIndicator from '@/components/atoms/CarouselIndicator.vue';
 import CarouselItem from '@/components/molecules/CarouselItem.vue';
+import Popover from "vue3-popper"
 
 export default {
     name: "ProductCard",
     props: ["product"],
     data: () => ({
         id: "",
-        hid: ""
+        hid: "",
     }),
     mounted() {
         this.id = "id" + this.product.id
         this.hid = "#" + this.id
     },
-    components: { CarouselItem, CarouselIndicator }
+    components: { CarouselItem, CarouselIndicator, Popover }
 }
 </script>
 
@@ -100,13 +110,38 @@ export default {
 
 .card {
     margin: 10px;
-    min-width: 18rem;
-    max-width: 18rem;
     padding: 10px;
 }
 
 .carousel-item-area {
-    width: 266px;
-    height: 238.8px;
+    width: 200px;
+    height: 200px;
+}
+
+.bottom-area {
+    flex: none;
+    display: flex;
+}
+
+.text-truncate-custom {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; 
+    overflow: hidden; 
+}
+
+.icon {
+    color:black
+}
+.popover {
+    --popper-theme-background-color: #ffffff;
+    --popper-theme-background-color-hover: #ffffff;
+    --popper-theme-text-color: #333333;
+    --popper-theme-border-width: 1px;
+    --popper-theme-border-style: solid;
+    --popper-theme-border-color: #eeeeee;
+    --popper-theme-border-radius: 6px;
+    --popper-theme-padding: 32px;
+    --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
 }
 </style>
