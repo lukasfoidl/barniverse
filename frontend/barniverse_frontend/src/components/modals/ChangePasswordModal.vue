@@ -24,8 +24,8 @@
 
 <script>
 import http from "@/http"
-import ConfirmationPasswordInput from "./ConfirmationPasswordInput.vue";
-import PasswordInput from "./PasswordInput.vue";
+import ConfirmationPasswordInput from "@/components/inputs/ConfirmationPasswordInput.vue";
+import PasswordInput from "@/components/inputs/PasswordInput.vue";
 
 export default {
     name: "ChangePasswordModal",

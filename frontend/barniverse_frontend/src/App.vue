@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import Navbar from "./components/templates/Navbar.vue"
-import Footer from "./components/templates/Footer.vue"
-import ErrorModal from "./components/molecules/ErrorModal.vue";
-import PermissionModal from "./components/molecules/PermissionModal.vue";
+import Navbar from "@/components/templates/Navbar.vue"
+import Footer from "@/components/templates/Footer.vue"
+import ErrorModal from "@/components/modals/ErrorModal.vue";
+import PermissionModal from "@/components/modals/PermissionModal.vue";
 
 import jwtDecoder from 'vue-jwt-decode'
 

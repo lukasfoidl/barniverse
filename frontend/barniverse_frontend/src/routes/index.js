@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView"
-import ProductView from "../views/ProductView"
-import AuctionView from "../views/AuctionView"
-import MyAuctionsView from "../views/MyAuctionsView"
-import MyOffersView from "../views/MyOffersView"
-import RegisterView from "../views/RegisterView"
-import LoginView from "../views/LoginView"
-import HelpView from "../views/HelpView"
-import ImprintView from "../views/ImprintView"
-import UserView from "../views/UserView"
-import PageNotFoundView from "../views/PageNotFoundView"
-import ProfileView from "../views/ProfileView"
+import HomeView from "@/views/HomeView"
+import ProductView from "@/views/ProductView"
+import AuctionView from "@/views/AuctionView"
+import MyAuctionsView from "@/views/MyAuctionsView"
+import MyOffersView from "@/views/MyOffersView"
+import RegisterView from "@/views/RegisterView"
+import LoginView from "@/views/LoginView"
+import HelpView from "@/views/HelpView"
+import ImprintView from "@/views/ImprintView"
+import UserView from "@/views/UserView"
+import PageNotFoundView from "@/views/PageNotFoundView"
+import ProfileView from "@/views/ProfileView"
 
 const routes = [
     {

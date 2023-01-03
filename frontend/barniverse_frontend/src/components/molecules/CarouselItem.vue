@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Image from "../atoms/Image.vue"
+import Image from "@/components/atoms/Image.vue"
 
 export default {
     name: "CarouselItem",

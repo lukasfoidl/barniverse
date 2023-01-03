@@ -41,10 +41,10 @@
 
 <script>
 import http from "@/http"
-import UserForm from '../forms/UserForm.vue';
+import UserForm from '@/components/forms/UserForm.vue';
 
 export default {
-    name: "UserAccordionElement",
+    name: "UserItemWorker",
     props: ["user"],
     components: { UserForm },
     data: () => ({

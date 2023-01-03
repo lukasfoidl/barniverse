@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 
 import jquery from "jquery"
 window.$ = jquery
@@ -14,7 +14,7 @@ window.bootstrap = bootstrap
 import mitt from 'mitt';
 window.event = mitt();
 
-import router from "./routes";
+import router from "@/routes";
 window.router = router
 
 window.roles = {

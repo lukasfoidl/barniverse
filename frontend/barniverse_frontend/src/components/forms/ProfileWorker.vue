@@ -29,11 +29,11 @@
 
 <script>
 import http from "@/http"
-import ChangePasswordModal from "./ChangePasswordModal.vue"
-import UserForm from "../forms/UserForm.vue"
+import ChangePasswordModal from "@/components/modals/ChangePasswordModal.vue"
+import UserForm from "@/components/forms/UserForm.vue"
 
 export default {
-    name: "UserFormWorker",
+    name: "ProfileWorker",
     props: ["user"],
     components: { UserForm, ChangePasswordModal },
     data: () => ({

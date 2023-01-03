@@ -2,19 +2,19 @@
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-md-12 col-lg-10 col-xl-8">
             <div class="accordion" id="userList">
-                <UserAccordionElement v-for="user in allUser" :key="user.id" :user="user" />
+                <UserItemWorker v-for="user in allUser" :key="user.id" :user="user" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import UserAccordionElement from "@/components/molecules/UserAccordionElement.vue"
-import http from "../http"
+import UserItemWorker from "@/components/forms/UserItemWorker.vue"
+import http from "@/http"
 
 export default {
     name: "UserView",
-    components: { UserAccordionElement },
+    components: { UserItemWorker },
     data: () => ({
         allUser: []
     }),

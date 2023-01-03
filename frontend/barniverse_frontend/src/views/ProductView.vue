@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import ProductCard from "../components/molecules/ProductCard.vue";
-import http from "../http"
+import ProductCard from "@/components/cards/ProductCard.vue";
+import http from "@/http"
 
 export default {
     name: "ProductView",

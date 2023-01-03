@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import FirstNameInput from "../molecules/FirstNameInput.vue"
-import LastNameInput from "../molecules/LastNameInput.vue"
-import EmailInput from "../molecules/EmailInput.vue"
-import UsernameInput from "../molecules/UsernameInput.vue"
+import FirstNameInput from "@/components/inputs/FirstNameInput.vue"
+import LastNameInput from "@/components/inputs/LastNameInput.vue"
+import EmailInput from "@/components/inputs/EmailInput.vue"
+import UsernameInput from "@/components/inputs/UsernameInput.vue"
 
 export default {
     name: "UserForm",

@@ -51,13 +51,13 @@
 </template>
 
 <script>
-import http from "../../http"
-import FirstNameInput from "../molecules/FirstNameInput.vue"
-import LastNameInput from "../molecules/LastNameInput.vue"
-import EmailInput from "../molecules/EmailInput.vue"
-import UsernameInput from "../molecules/UsernameInput.vue"
-import ConfirmationPasswordInput from "../molecules/ConfirmationPasswordInput.vue"
-import PasswordInput from "../molecules/PasswordInput.vue"
+import http from "@/http"
+import FirstNameInput from "@/components/inputs/FirstNameInput.vue"
+import LastNameInput from "@/components/inputs/LastNameInput.vue"
+import EmailInput from "@/components/inputs/EmailInput.vue"
+import UsernameInput from "@/components/inputs/UsernameInput.vue"
+import ConfirmationPasswordInput from "@/components/inputs/ConfirmationPasswordInput.vue"
+import PasswordInput from "@/components/inputs/PasswordInput.vue"
 
 export default {
     name: "RegisterForm",

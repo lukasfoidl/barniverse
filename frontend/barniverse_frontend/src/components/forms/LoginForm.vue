@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import http from "../../http"
-import EmailInput from "../molecules/EmailInput.vue"
-import PasswordInput from "../molecules/PasswordInput.vue";
+import http from "@/http"
+import EmailInput from "@/components/inputs/EmailInput.vue"
+import PasswordInput from "@/components/inputs/PasswordInput.vue";
 
 export default {
     name: "LoginForm",

@@ -1,21 +1,21 @@
 <template>
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-md-9 col-lg-9 col-xl-6">
-            <UserFormWorker v-if="user.length != 0" :key="user.id" :user="user"/>
+            <ProfileWorker v-if="user.length != 0" :key="user.id" :user="user"/>
         </div>
     </div>
 </template>
 
 <script>
-import UserFormWorker from '@/components/molecules/UserFormWorker.vue';
-import http from "../http"
+import ProfileWorker from '@/components/forms/ProfileWorker.vue';
+import http from "@/http"
 
 export default {
     name: "ProfileView",
     data: () => ({
         user: []
     }),
-    components:{ UserFormWorker }, 
+    components:{ ProfileWorker }, 
     methods: {
         async requestUser() {
             try {
