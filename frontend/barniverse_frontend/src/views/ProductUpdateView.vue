@@ -6,6 +6,7 @@
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" type="button" v-on:click="triggerValidation">Save Changes</button>
                 <button class="btn btn-danger buttonSpacer" type="button" v-on:click="getPermission">Delete</button>
+                <button class="btn btn-secondary buttonSpacer" type="button" v-on:click="cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -27,13 +28,11 @@ export default {
     },
     mounted() {
         window.event.on("validationCompleted", (data) => {
-            this.createProduct(data)
+            this.updateProduct(data)
         });
 
-        window.event.on("permissionGranted_deleteProduct", (id) => {
-            if (id == this.product.id) {
-                this.deleteProduct()
-            }
+        window.event.on("permissionGranted_deleteProduct", () => {
+            this.deleteProduct()
         });
     },
     unmounted() {
@@ -44,19 +43,22 @@ export default {
         triggerValidation() {
             this.trigger = !this.trigger
         },
-        async createProduct(data) {
-            // because images are not fully implmented yet
-            data.images = this.product.images
-
+        async updateProduct(data) {
             try {
-                const response = await http.put("/products", data, {
+                const requestBody = {
+                    id: data.id,
+                    title: data.title,
+                    description: data.description,
+                    images: this.product.images // because images are not fully implmented yet
+                }
+                const response = await http.put("/products", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "Product  " + this.product.name + " updated successfully!"
+                    text: "Product  " + data.title + " updated successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
                 this.$router.push("/products")
@@ -71,7 +73,7 @@ export default {
         getPermission() {
             var modalData = {
                 title: "Warning",
-                text: "Do you really want to delete " + this.product.name + "?",
+                text: "Do you really want to delete " + this.product.title + "?",
                 id: this.product.id,
                 type: "deleteProduct"
             }
@@ -86,7 +88,7 @@ export default {
                 })
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "Product " + this.product.name + " deleted successfully!"
+                    text: "Product " + this.product.title + " deleted successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
                 this.$router.push("/products");
@@ -98,6 +100,9 @@ export default {
                 window.event.emit("showErrorModal", modalData);
             }
         },
+        cancel() {
+            this.$router.push("/products")
+        }
     }
 }
 </script>

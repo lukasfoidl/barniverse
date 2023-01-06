@@ -36,7 +36,7 @@
             </a>
         </div>
         <div class="card-body">
-            <h5 class="card-title text-truncate">{{product.name}}</h5>
+            <h5 class="card-title text-truncate">{{product.title}}</h5>
             <p class="card-text text-truncate-custom">{{product.description}}</p>
         </div>
         <div class="card-body auctionLink bottom-area">
@@ -44,13 +44,13 @@
                 <i class="bi bi-info-circle icon" alt="Details"></i>
                 <template #content>
                     <div class="popover card-body">
-                        <h5 class="card-title">{{product.name}}</h5>
+                        <h5 class="card-title">{{product.title}}</h5>
                         <p class="card-text">{{product.description}}</p>
                     </div>
                 </template>
             </Popover>
-            <i v-if="isAdmin" class="bi bi-pencil-fill editStyle" alt="Update product" @click="navigateToProductUpdateView"></i>
-            <a href="#" class="card-link ms-auto">Create Auction</a>
+            <i v-if="isAdmin" class="bi bi-pencil-fill editStyle pointer" alt="Update product" @click="navigateToProductUpdateView"></i>
+            <a v-if="isAdmin || isUser" class="card-link ms-auto pointer" @click="navigateToAuctionCreateView">Create Auction</a>
         </div>
     </div>
 </template>
@@ -76,11 +76,18 @@ export default {
         navigateToProductUpdateView() {
             this.$store.commit("saveProduct", { product: this.product })
             this.$router.push("/products/update")
+        },
+        navigateToAuctionCreateView() {
+            this.$store.commit("saveProduct", { product: this.product })
+            this.$router.push("/auctions/create")
         }
     },
     computed: {
         isAdmin() {
             return this.$store.getters.isAdmin
+        },
+        isUser() {
+            return this.$store.getters.isUser
         }
     }
 }
@@ -162,6 +169,9 @@ export default {
 .editStyle, .editStyle:hover {
     color: black;
     margin-left: 10px;
+}
+
+.pointer {
     cursor: pointer;
 }
 </style>

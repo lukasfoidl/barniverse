@@ -40,126 +40,37 @@
         </div>
     </div> -->
 
-    <div class="pt-1">
-        <input class="btn btn-primary" type="submit" v-on:click.prevent="getValues" value="Register" />
-    </div>
-    <div class="mt-4">
-        <router-link id="login" class="link" to="/login">
-            already have an account?
-        </router-link>
-    </div>
+    <InputValidationHandler :trigger="trigger" :objectId="objectId" :values="values" />
 </template>
 
 <script>
-import http from "@/http"
 import FirstNameInput from "@/components/inputs/FirstNameInput.vue"
 import LastNameInput from "@/components/inputs/LastNameInput.vue"
 import EmailInput from "@/components/inputs/EmailInput.vue"
 import UsernameInput from "@/components/inputs/UsernameInput.vue"
 import ConfirmationPasswordInput from "@/components/inputs/ConfirmationPasswordInput.vue"
 import PasswordInput from "@/components/inputs/PasswordInput.vue"
+import InputValidationHandler from "../inputs/InputValidationHandler.vue"
 
 export default {
     name: "RegisterForm",
+    props: ["trigger"],
     data: () => ({
-        values: {
-            firstname: "",
-            lastname: "",
-            username: "",
-            email: "",
-            password: "",
-            confirmationPassword: "",
-            // profilePicture: ""
-        },
-        errors: {},
-        validationResults: [],
-        trigger: false
+        values: [
+            "firstname",
+            "lastname",
+            "username",
+            "email",
+            "password",
+            "confirmationPassword",
+        ],
+        objectId: undefined
     }),
-    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, ConfirmationPasswordInput, PasswordInput },
-    mounted() {
-        window.event.on("validationSuccessful", async (data) => {
-            this.checkValidationResults(data);
-        })
-    },
-    unmounted() {
-        window.event.all.delete("validationSuccessful");
-    },
-    methods: {
-        // Register Button
-        getValues() {
-            this.validationResults = []
-            this.trigger = !this.trigger // change of trigger triggers validation events of children
-        },
-        async checkValidationResults(data) {
-            // save validation results
-            this.validationResults.push(data.field);
-            this.values[data.field] = data.value;
-
-            // only if all results received
-            if (this.validationResults.length === Object.keys(this.values).length) {
-                // check if all values have been successfully validated and added to validationResults
-                for (var key in this.values) {
-                    var foundKey = false
-                    for (var index in this.validationResults) {
-                        if (this.validationResults[index] === key) {
-                            foundKey = true;
-                            break;
-                        }
-                    }
-                    if (!foundKey) {
-                        return;
-                    }
-                }
-                try {
-                    console.log("REGISTER")
-                    await this.saveUser();
-                } catch (error) {
-                    const modalData = {
-                        title: "Error (" + error.response.status + ")",
-                        text: error.response.data
-                    }
-                    window.event.emit("showErrorModal", modalData);
-                }
-            }
-        },
-        async saveUser() {
-            try {
-                const data = {
-                    firstname: this.values.firstname,
-                    lastname: this.values.lastname,
-                    email: this.values.email,
-                    username: this.values.username,
-                    password: this.values.password,
-                    // picture: this.values.picture
-                }
-                const response = await http.post("/register", data)
-                sessionStorage.setItem("jwt-token", response.data['jwt-token']);
-                window.event.emit("reloadJWT");
-                this.$router.push('/')
-                const modalData = {
-                    title: "Welcome in the Barniverse!",
-                    text: "User created successfully!"
-                }
-                window.event.emit("showErrorModal", modalData);
-            } catch (error) {
-                console.log(error)
-                const modalData = {
-                    title: "Error (" + error.response.status + ")",
-                    text: error.response.data
-                }
-                window.event.emit("showErrorModal", modalData);
-            }
-        },
-    }
+    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, ConfirmationPasswordInput, PasswordInput, InputValidationHandler },
 }
-    // profilePicture: string()
 </script>
 
 <style>
-#formRegister {
-    width: 40em;
-}
-
 .errorMessage {
     font-size: 11px;
     margin-bottom: 0%;

@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <ProductForm :trigger="trigger" :product="product"/>
+            <ChangePasswordForm :trigger="trigger" />
 
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" @click="triggerValidation">Save</button>
@@ -13,22 +13,17 @@
 
 <script>
 import http from "@/http"
-import ProductForm from '@/components/forms/ProductForm.vue';
+import ChangePasswordForm from '@/components/forms/ChangePasswordForm.vue';
 
 export default {
-    name: "ProductCreateView",
-    components: { ProductForm },
+    name: "ChangePasswordView",
+    components: { ChangePasswordForm },
     data: () => ({
-        product: {
-            id: undefined,
-            title: "",
-            description: ""
-        },
         trigger: false,
     }),
     mounted() {
         window.event.on("validationCompleted", (data) => {
-            this.createProduct(data)
+            this.changePassword(data)
         });
     },
     unmounted() {
@@ -36,27 +31,26 @@ export default {
     },
     methods: {
         triggerValidation() {
-            this.trigger = !this.trigger
+            this.trigger = !this.trigger // change of trigger triggers validation events of children
         },
-        async createProduct(data) {
+        async changePassword(data) {
             try {
                 const requestBody = {
-                    title: data.title,
-                    description: data.description,
-                    images: []
+                    id: this.$store.state.uuid,
+                    password: data.password,
                 }
-                const response = await http.post("/products", requestBody, {
+                const response = await http.put("users/changePassword", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "Product created successfully!"
+                    text: "Password updated successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-                this.$router.push("/products")
-            } catch(error) {
+                this.$router.push("/profile")
+            } catch (error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
@@ -65,7 +59,7 @@ export default {
             }
         },
         cancel() {
-            this.$router.push("/products")
+            this.$router.push("/profile")
         }
     }
 }

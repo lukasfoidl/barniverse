@@ -1,7 +1,10 @@
 <template>
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <ProductForm :trigger="trigger" :product="product"/>
+
+            <span class="badge rounded-pill text-bg-warning">In Development</span>
+
+            <AuctionForm :trigger="trigger" :auction="auction"/>
 
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" @click="triggerValidation">Save</button>
@@ -13,13 +16,13 @@
 
 <script>
 import http from "@/http"
-import ProductForm from '@/components/forms/ProductForm.vue';
+import AuctionForm from '@/components/forms/AuctionForm.vue';
 
 export default {
-    name: "ProductCreateView",
-    components: { ProductForm },
+    name: "AuctionCreateView",
+    components: { AuctionForm },
     data: () => ({
-        product: {
+        auction: {
             id: undefined,
             title: "",
             description: ""
@@ -28,7 +31,7 @@ export default {
     }),
     mounted() {
         window.event.on("validationCompleted", (data) => {
-            this.createProduct(data)
+            this.createAuction(data)
         });
     },
     unmounted() {
@@ -38,24 +41,34 @@ export default {
         triggerValidation() {
             this.trigger = !this.trigger
         },
-        async createProduct(data) {
+        async createAuction(data) {
             try {
                 const requestBody = {
                     title: data.title,
                     description: data.description,
-                    images: []
+                    minPrice: data.minPrice,
+                    maxPrice: data.maxPrice,
+                    minQuantity: data.minQuantity,
+                    maxQuantity: data.maxQuantity,
+                    startDeliveryDate: data.startDeliveryDate,
+                    endDeliveryDate: data.endDeliveryDate,
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    locked: false,
+                    user: { id: this.$store.state.uuid },
+                    product: { id: this.$store.state.product.id }
                 }
-                const response = await http.post("/products", requestBody, {
+                const response = await http.post("/auctions", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "Product created successfully!"
+                    text: "Auction created successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-                this.$router.push("/products")
+                this.$router.push("/myAuctions")
             } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
@@ -72,7 +85,4 @@ export default {
 </script>
 
 <style>
-.buttonSpacer {
-   margin: 5px;
-}
 </style>

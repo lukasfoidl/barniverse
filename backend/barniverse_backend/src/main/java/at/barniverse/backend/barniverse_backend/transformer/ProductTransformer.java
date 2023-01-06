@@ -30,7 +30,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
         ProductDto productDto = new ProductDto();
 
         productDto.setId(product.getId());
-        productDto.setName((product.getName()));
+        productDto.setTitle((product.getTitle()));
         productDto.setDescription(product.getDescription());
         productDto.setState(product.getState());
         productDto.setImages(convertImagesToDto(product.getImages()));
@@ -50,7 +50,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
         Product product = new Product();
 
         // id gets set from database
-        product.setName(productDto.getName());
+        product.setTitle(productDto.getTitle());
         product.setDescription(productDto.getDescription());
         product.setState(productDto.getState());
         product.setImages(convertImagesToEntity(productDto.getImages()));

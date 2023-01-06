@@ -3,10 +3,10 @@
     <div class="form-outline">
         <!-- Confirm Password-->
         <label class="form-label" for="confirmationPassword">Confirm Password</label>
-        <input type="password" :id="'confirmationPassword' + userId" class="form-control" v-model="values.confirmationPassword"
+        <input type="password" :id="'confirmationPassword' + userId" class="form-control" v-model="value"
             @blur="validate('confirmationPassword', false)" />
         <div class="" :id="'feedback-confirmationPassword' + userId">
-            <p class="errorMessage">{{ errors.confirmationPassword }}&nbsp;</p>
+            <p class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
 
@@ -19,17 +19,13 @@ export default {
     name: "ConfirmationPasswordInput",
     props: ["trigger", "userId"],
     data: () => ({
-        values: {
-            password: "",
-            confirmationPassword: ""
-        },
-        errors: {
-            confirmationPassword: ""
-        },
+        value: "",
+        error: "",
+        password : ""
     }),
     mounted() {
         window.event.on("passwordInputChanged", (data) => {
-            this.passwordInputChanged(data)
+            this.password = data
         });
     },
     unmounted() {
@@ -37,49 +33,39 @@ export default {
     },
     methods: {
         validate(field, shouldSendEvent) {
-            registerFormSchema
-                .validateAt(field, this.values)
+            var values = { confirmationPassword: this.value, password: this.password }; // necessary for successful validation (field/value object)
+            validationSchema
+                .validateAt(field, values)
                 .then(() => {
-                this.errors[field] = "";
-                window.$("#" + field + this.userId).removeClass("is-invalid");
-                window.$("#" + field + this.userId).addClass("is-valid");
-                window.$("#feedback-" + field + this.userId).removeClass("invalid-feedback");
-                window.$("#feedback-" + field + this.userId).addClass("valid-feedback");
-                this.sendValidationResults(field, shouldSendEvent);
-            })
+                    this.error = ""
+                    const data = {
+                        field: field,
+                        value: this.value,
+                        objectId: this.userId,
+                        shouldSendEvent: shouldSendEvent
+                    }
+                    window.event.emit("updateValidationSuccess", data)
+                })
                 .catch((error) => {
-                this.errors[field] = error.message;
-                window.$("#" + field + this.userId).removeClass("is-valid");
-                window.$("#" + field + this.userId).addClass("is-invalid");
-                window.$("#feedback-" + field + this.userId).removeClass("valid-feedback");
-                window.$("#feedback-" + field + this.userId).addClass("invalid-feedback");
-            });
-        },
-        sendValidationResults(field, shouldSendEvent) {
-            if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
-                const modalData = {
-                    field: field,
-                    value: this.values.confirmationPassword,
-                    userId: this.userId
-                };
-                window.event.emit("validationSuccessful", modalData);
-            }
-        },
-        passwordInputChanged(value) {
-            this.values.password = value
+                    this.error = error.message
+                    const data = {
+                        field: field,
+                        objectId: this.userId
+                    }
+                    window.event.emit("updateValidationError", data)
+                })
         },
     },
-    watch: {
-        trigger: function () {
-            this.validate("confirmationPassword", true);
+    watch: { 
+        trigger: function() {
+            this.validate("confirmationPassword", true)
         }
-    },
+    }
 }
 
-//validate here
-const registerFormSchema = object().shape({
-    confirmationPassword: string().min(8, "Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function (value) {
-        return this.parent.password === value
+const validationSchema = object().shape({
+    confirmationPassword: string().min(8, "Password must be at least 8 Characters!").required("Confirm Password is required!").test('passwords-match', 'Passwords must match', function () {
+        return this.parent.password === this.parent.confirmationPassword
     }),
 })
 </script>

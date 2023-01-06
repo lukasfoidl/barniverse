@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Lastname-->
         <label class="form-label" for="lastname">Last Name</label>
-        <input type="text" class="form-control" v-model="values.lastname" :id="'lastname' + userId" @blur="validate('lastname', false)" />
+        <input type="text" class="form-control" v-model="value" :id="'lastname' + userId" @blur="validate('lastname', false)" />
         <div class="" :id="'feedback-lastname' + userId">
-            <p class="errorMessage">{{ errors.lastname }}&nbsp;</p>
+            <p class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
 
@@ -18,45 +18,35 @@ export default {
     name: "LastNameInput",
     props: ["trigger", "lastname", "userId"],
     data: () => ({
-        values: {
-            lastname: "",
-        },
-        errors: {
-            lastname: "",
-        },
+        value: "",
+        error: "",
     }),
     mounted() {
-        this.values.lastname = this.lastname
+        this.value = this.lastname
     },
     methods: {
         validate(field, shouldSendEvent) {
-            registerFormSchema
-                .validateAt(field, this.values)
+            var values = { lastname: this.value }; // necessary for successful validation (field/value object)
+            validationSchema
+                .validateAt(field, values)
                 .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field + this.userId).removeClass("is-invalid");
-                    window.$("#" + field + this.userId).addClass("is-valid");
-                    window.$("#feedback-lastname" + field + this.userId).removeClass("invalid-feedback");
-                    window.$("#feedback-lastname" + field + this.userId).addClass("valid-feedback");
-                    this.sendValidationResults(field, shouldSendEvent)
+                    this.error = ""
+                    const data = {
+                        field: field,
+                        value: this.value,
+                        objectId: this.userId,
+                        shouldSendEvent: shouldSendEvent
+                    }
+                    window.event.emit("updateValidationSuccess", data)
                 })
                 .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field + this.userId).removeClass("is-valid");
-                    window.$("#" + field + this.userId).addClass("is-invalid");
-                    window.$("#feedback-lastname" + this.userId).removeClass("valid-feedback");
-                    window.$("#feedback-lastname" + this.userId).addClass("invalid-feedback");
+                    this.error = error.message
+                    const data = {
+                        field: field,
+                        objectId: this.userId
+                    }
+                    window.event.emit("updateValidationError", data)
                 })
-        },
-        sendValidationResults(field, shouldSendEvent) {
-            if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
-                const modalData = {
-                    field: field,
-                    value: this.values.lastname,
-                    userId: this.userId
-                }
-                window.event.emit("validationSuccessful", modalData);
-            }
         }
     },
     watch: { 
@@ -66,8 +56,7 @@ export default {
     }
 }
 
-//validate here
-const registerFormSchema = object().shape({
+const validationSchema = object().shape({
     lastname: string().required("Last name is required!"),
 })
 </script>

@@ -15,6 +15,8 @@
             <UsernameInput :trigger="this.trigger" :username="this.user.username" :userId="this.user.id" />
         </div>
     </div>
+
+    <InputValidationHandler :trigger="trigger" :objectId="this.user.id" :values="values" />
 </template>
 
 <script>
@@ -22,72 +24,20 @@ import FirstNameInput from "@/components/inputs/FirstNameInput.vue"
 import LastNameInput from "@/components/inputs/LastNameInput.vue"
 import EmailInput from "@/components/inputs/EmailInput.vue"
 import UsernameInput from "@/components/inputs/UsernameInput.vue"
+import InputValidationHandler from "../inputs/InputValidationHandler.vue"
 
 export default {
     name: "UserForm",
     props: ["trigger", "user"],
-    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput },
     data: () => ({
         values: [
-            "firstname",
-            "lastname",
-            "username",
-            "email",
-            // profilePicture: ""
-        ],
-        errors: {},
-        validationResults: {}
+                "firstname",
+                "lastname",
+                "username",
+                "email",
+            ],
     }),
-    mounted() {
-        window.event.on("validationSuccessful", async (data) => {
-            if (this.user.id == data.userId) {
-                this.checkValidationResults(data);
-            }
-        })
-    },
-    unmounted() {
-        window.event.all.delete("validationSuccessful");
-    },
-    methods: {
-        async checkValidationResults(data) {
-            // save validation results
-            this.validationResults[data.field] = data.value;
-
-            // only if all results received
-            if (Object.keys(this.validationResults).length === this.values.length) {
-                // check if all values have been successfully validated and added to validationResults
-                for (var index in this.values) {
-                    var foundKey = false
-                    for (var key in this.validationResults) {
-                        if (this.values[index] === key) {
-                            foundKey = true;
-                            break;
-                        }
-                    }
-                    if (!foundKey) {
-                        return;
-                    }
-                }
-                console.log("UPDATE")
-                const modalData = {
-                    id: this.user.id,
-                    firstname: this.validationResults.firstname,
-                    lastname: this.validationResults.lastname,
-                    username: this.validationResults.username,
-                    email: this.validationResults.email,
-                    // picture: this.values.picture,
-                    picture: "",
-                    state: this.user.state
-                }
-                window.event.emit("validationCompleted", modalData);                    
-            }
-        },
-    },
-    watch: { 
-        trigger: function() {
-            this.validationResults = {}
-        }
-    }
+    components: { FirstNameInput, LastNameInput, EmailInput, UsernameInput, InputValidationHandler },
 }
 </script>
 

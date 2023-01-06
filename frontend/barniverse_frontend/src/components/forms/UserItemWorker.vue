@@ -108,12 +108,21 @@ export default {
         },
         async updateUser(data) {
             try {
-                const response = await http.put("users", data, {
+                const requestBody = {
+                    id: this.userData.id,
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    email: data.email,
+                    username: data.username,
+                    state: this.userData.state, // does not get saved but necessary because saving requestBody on userData if successfull
+                    isAdmin: this.userData.isAdmin // does not get saved but necessary because saving requestBody on userData if successfull
+                }
+                const response = await http.put("users", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                this.userData = data;
+                this.userData = requestBody;
                 const modalData = {
                     title: "Info (" + response.status + ")",
                     text: "User " + this.userData.username + " updated successfully!"

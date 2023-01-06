@@ -1,10 +1,11 @@
 <template>
 
     <div class="form-outline">
-        <!-- Firstname-->
-        <label class="form-label" for="firstname">First Name</label>
-        <input type="text" class="form-control" v-model="value" :id="'firstname' + userId" @blur="validate('firstname', false)" />
-        <div class="" :id="'feedback-firstname' + userId">
+        <!-- Title -->
+        <label class="form-label" for="title">Title</label>
+        <input type="text" :id="'title' + objectId" class="form-control" v-model="value" aria-describedby="title"
+            @blur="validate('title', false)" />
+        <div class="" :id="'feedback-title' + objectId">
             <p class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
@@ -15,18 +16,18 @@
 import { object, string } from "yup"
 
 export default {
-    name: "FirstNameInput",
-    props: ["trigger", "firstname", "userId"],
+    name: "TitleInput",
+    props: ["trigger", "title", "objectId"],
     data: () => ({
         value: "",
         error: "",
     }),
     mounted() {
-        this.value = this.firstname
+        this.value = this.title
     },
     methods: {
         validate(field, shouldSendEvent) {
-            var values = { firstname: this.value }; // necessary for successful validation (field/value object)
+            var values = { title: this.value }; // necessary for successful validation (field/value object)
             validationSchema
                 .validateAt(field, values)
                 .then(() => {
@@ -34,7 +35,7 @@ export default {
                     const data = {
                         field: field,
                         value: this.value,
-                        objectId: this.userId,
+                        objectId: this.objectId,
                         shouldSendEvent: shouldSendEvent
                     }
                     window.event.emit("updateValidationSuccess", data)
@@ -43,7 +44,7 @@ export default {
                     this.error = error.message
                     const data = {
                         field: field,
-                        objectId: this.userId
+                        objectId: this.objectId
                     }
                     window.event.emit("updateValidationError", data)
                 })
@@ -51,13 +52,13 @@ export default {
     },
     watch: { 
         trigger: function() {
-            this.validate("firstname", true)
+            this.validate("title", true)
         }
     }
 }
 
 const validationSchema = object().shape({
-    firstname: string().required("First name is required!"),
+    title: string().required("Title is required!"),
 })
 </script>
     

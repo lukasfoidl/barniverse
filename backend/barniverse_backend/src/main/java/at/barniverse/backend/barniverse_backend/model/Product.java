@@ -1,8 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
-import at.barniverse.backend.barniverse_backend.dto.IDto;
 import at.barniverse.backend.barniverse_backend.enums.ProductState;
-import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,7 +21,7 @@ public class Product implements IEntity {
     private int id;
 
     @NotBlank(message = "Name is mandatory!")
-    private String name;
+    private String title;
 
     @Size(max = 500, message = "Description must be shorter than 500 characters!")
     private String description;
@@ -47,12 +45,12 @@ public class Product implements IEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

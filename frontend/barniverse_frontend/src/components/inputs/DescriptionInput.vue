@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Description-->
         <label class="form-label" for="description">Description</label>
-        <textarea type="textarea" rows="5" class="form-control" v-model="values.description" :id="'description' + productId" @blur="validate('description', false)" />
-        <div class="" :id="'feedback-description' + productId">
-            <p class="errorMessage">{{ errors.description }}&nbsp;</p>
+        <textarea type="textarea" rows="5" class="form-control" v-model="value" :id="'description' + objectId" @blur="validate('description', false)" />
+        <div class="" :id="'feedback-description' + objectId">
+            <p class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
 
@@ -16,47 +16,37 @@ import { object, string } from "yup"
 
 export default {
     description: "DescriptionInput",
-    props: ["trigger", "description", "productId"],
+    props: ["trigger", "description", "objectId"],
     data: () => ({
-        values: {
-            description: "",
-        },
-        errors: {
-            description: "",
-        },
+        value: "",
+        error: "",
     }),
     mounted() {
-        this.values.description = this.description
+        this.value = this.description
     },
     methods: {
         validate(field, shouldSendEvent) {
-            registerFormSchema
-                .validateAt(field, this.values)
+            var values = { description: this.value }; // necessary for successful validation (field/value object)
+            validationSchema
+                .validateAt(field, values)
                 .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field + this.productId).removeClass("is-invalid");
-                    window.$("#" + field + this.productId).addClass("is-valid");
-                    window.$("#feedback-description" + field + this.productId).removeClass("invalid-feedback");
-                    window.$("#feedback-description" + field + this.productId).addClass("valid-feedback");
-                    this.sendValidationResults(field, shouldSendEvent)
+                    this.error = ""
+                    const data = {
+                        field: field,
+                        value: this.value,
+                        objectId: this.objectId,
+                        shouldSendEvent: shouldSendEvent
+                    }
+                    window.event.emit("updateValidationSuccess", data)
                 })
                 .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field + this.productId).removeClass("is-valid");
-                    window.$("#" + field + this.productId).addClass("is-invalid");
-                    window.$("#feedback-description" + this.productId).removeClass("valid-feedback");
-                    window.$("#feedback-description" + this.productId).addClass("invalid-feedback");
+                    this.error = error.message
+                    const data = {
+                        field: field,
+                        objectId: this.objectId
+                    }
+                    window.event.emit("updateValidationError", data)
                 })
-        },
-        sendValidationResults(field, shouldSendEvent) {
-            if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
-                const modalData = {
-                    field: field,
-                    value: this.values.description,
-                    productId: this.productId
-                }
-                window.event.emit("validationSuccessful", modalData);
-            }
         }
     },
     watch: { 
@@ -66,8 +56,7 @@ export default {
     }
 }
 
-//validate here
-const registerFormSchema = object().shape({
+const validationSchema = object().shape({
     description: string().max(500, "Description must be shorter than 500 characters!"),
 })
 </script>

@@ -11,7 +11,7 @@ import java.util.List;
 public class ProductDto implements IDto {
 
     private int id;
-    private String name;
+    private String title;
     private String description;
     private ProductState state;
     private List<ProductImageDto> images;
@@ -28,12 +28,12 @@ public class ProductDto implements IDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

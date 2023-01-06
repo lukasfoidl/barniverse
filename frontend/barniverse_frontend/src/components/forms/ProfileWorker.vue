@@ -23,27 +23,22 @@
             Delete Profile
         </button>
     </div>
-
-    <ChangePasswordModal :id="this.user.id" />
 </template>
 
 <script>
 import http from "@/http"
-import ChangePasswordModal from "@/components/modals/ChangePasswordModal.vue"
 import UserForm from "@/components/forms/UserForm.vue"
 
 export default {
     name: "ProfileWorker",
     props: ["user"],
-    components: { UserForm, ChangePasswordModal },
+    components: { UserForm },
     data: () => ({
         trigger: false
     }),
     mounted() {
-        window.event.on("permissionGranted_deleteUser", (id) => {
-            if (id == this.user.id) {
-                this.deleteUser()
-            }
+        window.event.on("permissionGranted_deleteUser", () => {
+            this.deleteUser()
         });
         window.event.on("validationCompleted", (data) => {
             this.updateUser(data)
@@ -60,7 +55,14 @@ export default {
         },
         async updateUser(data) {
             try {
-                const response = await http.put("users", data, {
+                const requestBody = {
+                    id: data.id,
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    email: data.email,
+                    username: data.username,
+                }
+                const response = await http.put("users", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
@@ -117,7 +119,7 @@ export default {
             }
         },
         changePassword() {
-            window.event.emit("showChangePasswordModal")
+            this.$router.push("users/changePassword")
         }
     }
 }

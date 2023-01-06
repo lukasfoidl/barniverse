@@ -1,28 +1,28 @@
 <template>
     <div>
-        <EmailInput :trigger="trigger" />
         <PasswordInput :trigger="trigger" />
+        <ConfirmationPasswordInput :trigger="trigger" />
 
         <InputValidationHandler :trigger="trigger" :objectId="objectId" :values="values" />
     </div>
 </template>
 
 <script>
-import EmailInput from "@/components/inputs/EmailInput.vue"
 import PasswordInput from "@/components/inputs/PasswordInput.vue";
 import InputValidationHandler from "@/components/inputs/InputValidationHandler.vue";
+import ConfirmationPasswordInput from "../inputs/ConfirmationPasswordInput.vue";
 
 export default {
-    name: "LoginForm",
+    name: "ChangePasswordForm",
     props: ["trigger"],
     data: () => ({
         values: [
-            "email",
             "password",
+            "confirmationPassword",
         ],
         objectId: undefined
     }),
-    components: { EmailInput, PasswordInput, InputValidationHandler }
+    components: { PasswordInput, ConfirmationPasswordInput, InputValidationHandler, }
 }
 
 </script>

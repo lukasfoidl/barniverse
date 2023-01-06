@@ -3,10 +3,10 @@
     <div class="form-outline">
         <!-- Password-->
         <label class="form-label" for="password">Password</label>
-        <input type="password" :id="'password' + userId" class="form-control" v-model="values.password" @change="passwordInputChanged"
+        <input type="password" :id="'password' + userId" class="form-control" v-model="value" @change="passwordInputChanged"
             @blur="validate('password', false)" />
         <div class="" :id="'feedback-password' + userId">
-            <p class="errorMessage">{{ errors.password }}&nbsp;</p>
+            <p class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
 
@@ -19,45 +19,35 @@ export default {
     name: "PasswordInput",
     props: ["trigger", "userId"],
     data: () => ({
-        values: {
-            password: "",
-        },
-        errors: {
-            password: "",
-        },
+        value: "",
+        error: "",
     }),
     methods: {
         validate(field, shouldSendEvent) {
-            registerFormSchema
-                .validateAt(field, this.values)
+            var values = { password: this.value }; // necessary for successful validation (field/value object)
+            validationSchema
+                .validateAt(field, values)
                 .then(() => {
-                    this.errors[field] = ""
-                    window.$("#" + field + this.userId).removeClass("is-invalid");
-                    window.$("#" + field + this.userId).addClass("is-valid");
-                    window.$("#feedback-" + field + this.userId).removeClass("invalid-feedback");
-                    window.$("#feedback-" + field + this.userId).addClass("valid-feedback");
-                    this.sendValidationResults(field, shouldSendEvent)
+                    this.error = ""
+                    const data = {
+                        field: field,
+                        value: this.value,
+                        objectId: this.userId,
+                        shouldSendEvent: shouldSendEvent
+                    }
+                    window.event.emit("updateValidationSuccess", data)
                 })
                 .catch((error) => {
-                    this.errors[field] = error.message
-                    window.$("#" + field + this.userId).removeClass("is-valid");
-                    window.$("#" + field + this.userId).addClass("is-invalid");
-                    window.$("#feedback-" + field + this.userId).removeClass("valid-feedback");
-                    window.$("#feedback-" + field + this.userId).addClass("invalid-feedback");
+                    this.error = error.message
+                    const data = {
+                        field: field,
+                        objectId: this.userId
+                    }
+                    window.event.emit("updateValidationError", data)
                 })
         },
-        sendValidationResults(field, shouldSendEvent) {
-            if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
-                const modalData = {
-                    field: field,
-                    value: this.values.password,
-                    userId: this.userId
-                }
-                window.event.emit("validationSuccessful", modalData);
-            }
-        },
         passwordInputChanged() {
-            window.event.emit("passwordInputChanged", this.values.password);
+            window.event.emit("passwordInputChanged", this.value);
         }
     },
     watch: { 
@@ -67,8 +57,7 @@ export default {
     }
 }
 
-//validate here
-const registerFormSchema = object().shape({
+const validationSchema = object().shape({
     password: string().min(8, "Password must be at least 8 Characters!").required("Password is required!"),
 })
 </script>
