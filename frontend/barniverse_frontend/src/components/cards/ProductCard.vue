@@ -40,7 +40,7 @@
             <p class="card-text text-truncate-custom">{{product.description}}</p>
         </div>
         <div class="card-body auctionLink bottom-area">
-            <Popover placement="right" hover=true>
+            <Popover placement="right" :hover="true">
                 <i class="bi bi-info-circle icon" alt="Details"></i>
                 <template #content>
                     <div class="popover card-body">
@@ -49,6 +49,7 @@
                     </div>
                 </template>
             </Popover>
+            <i v-if="role == roles.ROLE_ADMIN" class="bi bi-pencil-fill editStyle" alt="Update product" @click="navigateToProductUpdateView"></i>
             <a href="#" class="card-link ms-auto">Create Auction</a>
         </div>
     </div>
@@ -65,12 +66,22 @@ export default {
     data: () => ({
         id: "",
         hid: "",
+        role: "",
+        roles: ""
     }),
     mounted() {
         this.id = "id" + this.product.id
         this.hid = "#" + this.id
+        this.role = window.role
+        this.roles = window.roles
     },
-    components: { CarouselItem, CarouselIndicator, Popover }
+    components: { CarouselItem, CarouselIndicator, Popover },
+    methods: {
+        navigateToProductUpdateView() {
+            this.$store.commit("saveProduct", { product: this.product })
+            this.$router.push("/products/update")
+        }
+    }
 }
 </script>
 
@@ -111,6 +122,7 @@ export default {
 .card {
     margin: 10px;
     padding: 10px;
+    height: 398px;
 }
 
 .carousel-item-area {
@@ -133,6 +145,7 @@ export default {
 .icon {
     color:black
 }
+
 .popover {
     --popper-theme-background-color: #ffffff;
     --popper-theme-background-color-hover: #ffffff;
@@ -143,5 +156,11 @@ export default {
     --popper-theme-border-radius: 6px;
     --popper-theme-padding: 32px;
     --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
+}
+
+.editStyle, .editStyle:hover {
+    color: black;
+    margin-left: 10px;
+    cursor: pointer;
 }
 </style>

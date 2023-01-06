@@ -232,5 +232,4 @@ abstract public class BaseService {
             return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

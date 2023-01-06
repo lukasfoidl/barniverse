@@ -32,6 +32,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
         productDto.setId(product.getId());
         productDto.setName((product.getName()));
         productDto.setDescription(product.getDescription());
+        productDto.setState(product.getState());
         productDto.setImages(convertImagesToDto(product.getImages()));
 
         return productDto;
@@ -51,6 +52,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
         // id gets set from database
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
+        product.setState(productDto.getState());
         product.setImages(convertImagesToEntity(productDto.getImages()));
 
         return product;
@@ -58,15 +60,17 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
 
     /**
      * repairs product entity after transformation in case of update (PUT), <br>
-     * id gets set to update entity
+     * id gets set to update entity, <br>
+     * state property gets set to state property from database, because the state of a product can not be updated with standard user update (PUT)
      * @param product entity which needs to be repaired
      * @param dbProduct entity with the missing data
      * @return repaired entity
      */
     @Override
     public Product repairEntity(Product product, Product dbProduct) {
-       product.setId(dbProduct.getId()); // set id to update existing entity
-       return product;
+        product.setId(dbProduct.getId()); // set id to update existing entity
+        product.setState((dbProduct.getState())); // state can not be updated with standard product update (PUT)
+        return product;
     }
 
     /**

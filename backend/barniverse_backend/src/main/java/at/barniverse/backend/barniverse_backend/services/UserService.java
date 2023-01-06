@@ -2,7 +2,9 @@ package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.AuthDto;
 import at.barniverse.backend.barniverse_backend.dto.ChangePasswordDto;
+import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import at.barniverse.backend.barniverse_backend.enums.RoleConverter;
 import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.model.User;
@@ -15,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * service with user related functionality
@@ -38,11 +43,22 @@ public class UserService extends BaseService {
     }
 
     /**
-     * get all saved users from the database
+     * get all saved users from the database which do not have state deleted
      * @return response with corresponding status code and loaded user dtos or error message in case of failure
      */
     public ResponseEntity<Object> getUsers() {
-        return getEntities(userRepository, userTransformer);
+        ResponseEntity<Object> response = getEntities(userRepository, userTransformer);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        List<UserDto> userDtoList = (List<UserDto>) response.getBody();
+        List<UserDto> resultList = new ArrayList<>();
+        for (UserDto userDto : userDtoList) {
+            if (userDto.getState() != UserState.deleted) {
+                resultList.add(userDto);
+            }
+        }
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     /**

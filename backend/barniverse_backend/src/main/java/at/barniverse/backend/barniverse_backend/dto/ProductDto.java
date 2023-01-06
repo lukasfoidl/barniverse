@@ -1,5 +1,7 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ public class ProductDto implements IDto {
     private int id;
     private String name;
     private String description;
+    private ProductState state;
     private List<ProductImageDto> images;
 
 //----getter and setter----
@@ -39,6 +42,14 @@ public class ProductDto implements IDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProductState getState() {
+        return state;
+    }
+
+    public void setState(ProductState state) {
+        this.state = state;
     }
 
     public List<ProductImageDto> getImages() {

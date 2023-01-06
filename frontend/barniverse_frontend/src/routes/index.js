@@ -11,6 +11,8 @@ import ImprintView from "@/views/ImprintView"
 import UserView from "@/views/UserView"
 import PageNotFoundView from "@/views/PageNotFoundView"
 import ProfileView from "@/views/ProfileView"
+import ProductUpdateView from "@/views/ProductUpdateView"
+import ProductCreateView from "@/views/ProductCreateView"
 
 const routes = [
     {
@@ -92,6 +94,26 @@ const routes = [
         path: '/:catchAll(.*)*',
         name: "PageNotFoundView",
         component: PageNotFoundView
+    },
+    {
+        name: "updateProduct",
+        path: "/products/update/",
+        component: ProductUpdateView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "createProduct",
+        path: "/products/create",
+        component: ProductCreateView,
+        beforeEnter: () => {
+            if (window.role != window.roles.ROLE_ADMIN) {
+                return '/PageNotFound'
+            }
+        }
     },
 ];
 

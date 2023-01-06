@@ -19,16 +19,18 @@ INSERT INTO user (id, firstname, lastname, username, email, password, picture, i
 VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'testtest', '', false, '2');
 
 # seed product table
-INSERT INTO product (id, name, description)
-VALUES (1, 'Gin', 'Eine 1 Liter Flasche bester Gin aus dem Jahr 2020');
-INSERT INTO product (id, name, description)
-VALUES (2, 'Gruener Veltliner', 'Bester Wein aus dem Burgenland (0.75 l)');
-INSERT INTO product (id, name, description)
-VALUES (3, 'Berliner Luft', '1 Flasche (1 l) Berliner Luft Pfefferminzlikör aus der Metropole Deutschlands');
-INSERT INTO product (id, name, description)
-VALUES (4, 'Goesser Bier', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
-INSERT INTO product (id, name, description)
-VALUES (5, 'Obstler', 'Schnaps der brutal runterbrennt, 0,75l, 40%, VORSICHT: nicht in hohen Mengen zu sich nehmen');
+INSERT INTO product (id, name, state, description)
+VALUES (1, 'Gin', '0', 'Eine 1 Liter Flasche bester Gin aus dem Jahr 2020');
+INSERT INTO product (id, name, state, description)
+VALUES (2, 'Gruener Veltliner', '0', 'Bester Wein aus dem Burgenland (0.75 l)');
+INSERT INTO product (id, name, state, description)
+VALUES (3, 'Berliner Luft', '0', '1 Flasche (1 l) Berliner Luft Pfefferminzlikör aus der Metropole Deutschlands');
+INSERT INTO product (id, name, state, description)
+VALUES (4, 'Goesser Bier', '0', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
+INSERT INTO product (id, name, state, description)
+VALUES (5, 'Obstler', '0', 'Schnaps der brutal runterbrennt, 0,75l, 40%, VORSICHT: nicht in hohen Mengen zu sich nehmen');
+INSERT INTO product (id, name, state, description)
+VALUES (6, 'abgelaufener Ayran', '1', 'Nicht mehr trinken, der bröckelt schon => deswegen gelöscht');
 
 # seed product_image table
 INSERT INTO product_image (id, file, product_id)

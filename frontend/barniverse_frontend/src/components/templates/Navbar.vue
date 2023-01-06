@@ -72,7 +72,7 @@
                 <!-- USER/ADMIN - logged in -->
                 <!-- my username -->
                 <li v-if="role!=''" id="userContentItem" class="nav-item ms-auto">
-                    <router-link id="profile" class="nav-link navItemStyle" to="profile">
+                    <router-link id="profile" class="nav-link navItemStyle" to="/profile">
                         {{this.username}}
                     </router-link>
                 </li>

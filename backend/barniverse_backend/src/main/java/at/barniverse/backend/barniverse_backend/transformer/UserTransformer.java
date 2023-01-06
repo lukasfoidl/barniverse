@@ -60,7 +60,8 @@ public class UserTransformer implements ITransformer<User, UserDto> {
      * repairs user entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * password property gets set to password property from database, because the password can not be updated with standard user update (PUT), <br>
-     * isAdmin property gets set to isAdmin property from database, because the admin characteristic can not be updated with standard user update (PUT)
+     * isAdmin property gets set to isAdmin property from database, because the admin characteristic can not be updated with standard user update (PUT), <br>
+     * state property gets set to state property from database, because the state of a user can not be updated with standard user update (PUT)
      * @param user entity which needs to be repaired
      * @param dbUser entity with the missing data
      * @return repaired entity
@@ -70,6 +71,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
         user.setId(dbUser.getId()); // set id to update existing entity
         user.setPassword(dbUser.getPassword()); // password can not be updated with standard user update (PUT)
         user.setIsAdmin(dbUser.getIsAdmin()); // is admin can not be updated with standard user update (PUT)
+        user.setState(dbUser.getState()); // state can not be updated with standard user update (PUT)
         return user;
     }
 }

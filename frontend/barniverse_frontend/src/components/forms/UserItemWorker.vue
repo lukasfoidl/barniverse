@@ -31,7 +31,7 @@
                         {{ getStateText() }}
                     </button>
                     <button :class="{disabled: isUserDeleted()}" class="btn btn-danger buttonSpacer" @click="getPermission">
-                        Delete Profile
+                        Delete
                     </button>
                 </div>
             </div>

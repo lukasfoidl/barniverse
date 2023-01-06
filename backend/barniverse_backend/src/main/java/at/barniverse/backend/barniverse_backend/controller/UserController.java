@@ -33,7 +33,7 @@ public class UserController {
     }
 
     /**
-     * get all saved users from the database
+     * get all saved users from the database which do not have state deleted
      * @return response with corresponding status code and loaded user dtos or error message in case of failure
      */
     @GetMapping(path="/users")

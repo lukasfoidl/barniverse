@@ -1,13 +1,17 @@
 <template>
+    <div class="centerContent taskbar">
+        <Taskbar />
+    </div>
     <div id="cardList" class="centerContent">
         <div class="row centerContent">
-            <ProductCard v-for="product in products" :key="product.id" :product="product"/>
+            <ProductCard v-for="product in products" :key="product.id" :product="product" />
         </div>
     </div>
 </template>
 
 <script>
 import ProductCard from "@/components/cards/ProductCard.vue";
+import Taskbar from "@/components/molecules/Taskbar.vue";
 import http from "@/http"
 
 export default {
@@ -15,13 +19,13 @@ export default {
     data: () => ({
         products: []
     }),
-    components: { ProductCard },
+    components: { ProductCard, Taskbar },
     methods: {
         async requestProducts() {
             try {
                 const response = await http.get("products")
                 this.products = response.data
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
@@ -29,8 +33,7 @@ export default {
                 }
                 window.event.emit("showErrorModal", modalData);
             }
-
-        }
+        },
     },
     beforeMount() {
         this.requestProducts();
@@ -41,5 +44,9 @@ export default {
 <style>
 .centerContent {
     justify-content: center;
+}
+
+.taskbar {
+    display: flex;
 }
 </style>

@@ -1,6 +1,8 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import at.barniverse.backend.barniverse_backend.dto.IDto;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,6 +27,9 @@ public class Product implements IEntity {
 
     @Size(max = 500, message = "Description must be shorter than 500 characters!")
     private String description;
+
+    @NotNull(message = "State of product is mandatory!")
+    private ProductState state;
 
     @OneToMany(targetEntity = ProductImage.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_productImage_productId"))
@@ -56,6 +61,14 @@ public class Product implements IEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProductState getState() {
+        return state;
+    }
+
+    public void setState(ProductState state) {
+        this.state = state;
     }
 
     public List<ProductImage> getImages() {

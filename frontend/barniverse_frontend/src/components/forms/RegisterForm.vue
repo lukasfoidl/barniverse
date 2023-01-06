@@ -40,7 +40,7 @@
         </div>
     </div> -->
 
-    <div class="mt-4">
+    <div class="pt-1">
         <input class="btn btn-primary" type="submit" v-on:click.prevent="getValues" value="Register" />
     </div>
     <div class="mt-4">
