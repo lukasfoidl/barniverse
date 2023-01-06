@@ -78,7 +78,7 @@ export default {
             try {
                 const response = await http.post("/login", this.values)
                 sessionStorage.setItem("jwt-token", response.data["jwt-token"]);
-                window.router.push("/");
+                this.$router.push("/");
                 window.event.emit("reloadJWT");
             } catch (error) {
                 console.log(error);

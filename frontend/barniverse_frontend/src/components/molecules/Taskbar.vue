@@ -1,5 +1,5 @@
 <template>
-    <router-link v-if="role == roles.ROLE_ADMIN" id="createProduct" class="createStyle" to="/products/create">
+    <router-link v-if="isAdmin" id="createProduct" class="createStyle" to="/products/create">
         <i class="bi bi-plus-square-fill" alt="Create new product"></i>
     </router-link>
 </template>
@@ -7,13 +7,10 @@
 <script>
 export default {
     name: "Taskbar",
-    data: () => ({
-        role: "",
-        roles: "",
-    }),
-    mounted() {
-        this.role = window.role;
-        this.roles = window.roles;
+    computed: {
+        isAdmin() {
+            return this.$store.getters.isAdmin
+        }
     }
 }
 </script>

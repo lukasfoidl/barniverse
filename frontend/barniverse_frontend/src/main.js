@@ -16,34 +16,17 @@ window.bootstrap = bootstrap
 import mitt from 'mitt';
 window.event = mitt();
 
+// import store
+import store from "@/store"
+
 // import router
 import router from "@/routes";
-window.router = router
 
-// import vuex store
-import { createStore } from 'vuex'
-const store = createStore({
-    state() {
-        return {
-            product: {}
-        }
-    },
-    mutations: {
-        saveProduct(state, product) {
-            state.product = product.product
-        }
-    }
-})
-
-window.roles = {
-    ROLE_USER: "ROLE_USER",
-    ROLE_ADMIN: "ROLE_ADMIN"
-}
-window.role = "ROLE_OBSERVER"
+//---------- CREATE APP ----------
 
 const app = createApp(App)
 
-app.use(router);
 app.use(store)
+app.use(router);
 
 app.mount('#app')

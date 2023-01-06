@@ -36,20 +36,14 @@ export default {
         window.event.on('reloadJWT', () => {
             this.reloadJWT();
         });
-        window.event.on('reloadUsername', (username) => {
-            this.reloadUsername(username);
-        });
     },
     methods: {
         reloadJWT() {
             const jwt = jwtDecoder.decode(sessionStorage.getItem("jwt-token") ?? "")
-            window.role = jwt == null ? "" : jwt.role
-            window.username = jwt == null ? "" : jwt.username
-            window.uuid = jwt == null ? "" : jwt.uuid
+            this.$store.commit("setRole", { role: jwt == null ? this.$store.state.roles.ROLE_OBSERVER : jwt.role })
+            this.$store.commit("setUsername", { username: jwt == null ? "" : jwt.username })
+            this.$store.commit("setUUID", { uuid: jwt == null ? "" : jwt.uuid })
         },
-        reloadUsername(username) {
-            window.username = username
-        }
     }
 }
 </script>

@@ -87,7 +87,7 @@ export default {
         getPermission() {
             var modalData = {
                 title: "Warning",
-                text: "Do you really want to delete " + window.username + "?",
+                text: "Do you really want to delete " + this.$store.state.username + "?",
                 id: this.user.id,
                 type: "deleteUser"
             }
@@ -95,17 +95,17 @@ export default {
         },
         async deleteUser() {
             try {
-                const response = await http.put("users/deleteWithState/" + window.uuid, null, {
+                const response = await http.put("users/deleteWithState/" + this.$store.state.uuid, null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
                 sessionStorage.removeItem("jwt-token");
                 window.event.emit("reloadJWT");
-                window.router.push("/")
+                this.$router.push("/")
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "User deleted successfully!"
+                    text: "User " + this.$store.state.username + " deleted successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
             } catch (error) {

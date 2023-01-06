@@ -49,7 +49,7 @@
                     </div>
                 </template>
             </Popover>
-            <i v-if="role == roles.ROLE_ADMIN" class="bi bi-pencil-fill editStyle" alt="Update product" @click="navigateToProductUpdateView"></i>
+            <i v-if="isAdmin" class="bi bi-pencil-fill editStyle" alt="Update product" @click="navigateToProductUpdateView"></i>
             <a href="#" class="card-link ms-auto">Create Auction</a>
         </div>
     </div>
@@ -66,20 +66,21 @@ export default {
     data: () => ({
         id: "",
         hid: "",
-        role: "",
-        roles: ""
     }),
     mounted() {
         this.id = "id" + this.product.id
         this.hid = "#" + this.id
-        this.role = window.role
-        this.roles = window.roles
     },
     components: { CarouselItem, CarouselIndicator, Popover },
     methods: {
         navigateToProductUpdateView() {
             this.$store.commit("saveProduct", { product: this.product })
             this.$router.push("/products/update")
+        }
+    },
+    computed: {
+        isAdmin() {
+            return this.$store.getters.isAdmin
         }
     }
 }

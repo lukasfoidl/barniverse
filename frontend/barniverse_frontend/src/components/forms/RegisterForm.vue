@@ -135,7 +135,7 @@ export default {
                 const response = await http.post("/register", data)
                 sessionStorage.setItem("jwt-token", response.data['jwt-token']);
                 window.event.emit("reloadJWT");
-                window.router.push('/')
+                this.$router.push('/')
                 const modalData = {
                     title: "Welcome in the Barniverse!",
                     text: "User created successfully!"

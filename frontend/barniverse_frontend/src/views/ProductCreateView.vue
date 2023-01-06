@@ -45,7 +45,7 @@ export default {
                     text: "Product created successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-                window.router.push("/products")
+                this.$router.push("/products")
             } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",

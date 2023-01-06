@@ -59,7 +59,7 @@ export default {
                     text: "Product  " + this.product.name + " updated successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-                window.router.push("/products")
+                this.$router.push("/products")
             } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",

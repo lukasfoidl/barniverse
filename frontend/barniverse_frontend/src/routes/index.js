@@ -13,6 +13,7 @@ import PageNotFoundView from "@/views/PageNotFoundView"
 import ProfileView from "@/views/ProfileView"
 import ProductUpdateView from "@/views/ProductUpdateView"
 import ProductCreateView from "@/views/ProductCreateView"
+import store from "@/store"
 
 const routes = [
     {
@@ -35,7 +36,7 @@ const routes = [
         path: "/myAuctions",
         component: MyAuctionsView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }
@@ -45,7 +46,7 @@ const routes = [
         path: "/myOffers",
         component: MyOffersView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }
@@ -55,7 +56,7 @@ const routes = [
         path: '/user', 
         component: UserView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }
@@ -65,7 +66,7 @@ const routes = [
         path: "/profile",
         component: ProfileView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_USER && window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }
@@ -100,7 +101,7 @@ const routes = [
         path: "/products/update/",
         component: ProductUpdateView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }
@@ -110,7 +111,7 @@ const routes = [
         path: "/products/create",
         component: ProductCreateView,
         beforeEnter: () => {
-            if (window.role != window.roles.ROLE_ADMIN) {
+            if (!store.getters.isAdmin) {
                 return '/PageNotFound'
             }
         }

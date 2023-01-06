@@ -19,7 +19,7 @@ export default {
     methods: {
         async requestUser() {
             try {
-                const response = await http.get("users/" + window.uuid, {
+                const response = await http.get("users/" + this.$store.state.uuid, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
