@@ -3,10 +3,9 @@
     <div class="form-outline">
         <!-- Title -->
         <label class="form-label" for="title">Title</label>
-        <input type="text" :id="'title' + objectId" class="form-control" v-model="value" aria-describedby="title"
-            @blur="validate('title', false)" />
+        <input type="text" :id="'title' + objectId" class="form-control" v-model="value" aria-describedby="title" @blur="validate(false)" />
         <div class="" :id="'feedback-title' + objectId">
-            <p class="errorMessage">{{ error }}&nbsp;</p>
+            <p :id="'error-title' + objectId" class="errorMessage">&nbsp;</p>
         </div>
     </div>
 
@@ -20,39 +19,26 @@ export default {
     props: ["trigger", "title", "objectId"],
     data: () => ({
         value: "",
-        error: "",
     }),
     mounted() {
         this.value = this.title
     },
     methods: {
-        validate(field, shouldSendEvent) {
+        validate(shouldSendEvent) {
             var values = { title: this.value }; // necessary for successful validation (field/value object)
-            validationSchema
-                .validateAt(field, values)
-                .then(() => {
-                    this.error = ""
-                    const data = {
-                        field: field,
-                        value: this.value,
-                        objectId: this.objectId,
-                        shouldSendEvent: shouldSendEvent
-                    }
-                    window.event.emit("updateValidationSuccess", data)
-                })
-                .catch((error) => {
-                    this.error = error.message
-                    const data = {
-                        field: field,
-                        objectId: this.objectId
-                    }
-                    window.event.emit("updateValidationError", data)
-                })
+            const data = {
+                field: "title",
+                values: values,
+                objectId: this.objectId,
+                shouldSendEvent: shouldSendEvent,
+                validationSchema: validationSchema
+            }
+            window.event.emit("validateInput", data)
         }
     },
     watch: { 
         trigger: function() {
-            this.validate("title", true)
+            this.validate(true)
         }
     }
 }

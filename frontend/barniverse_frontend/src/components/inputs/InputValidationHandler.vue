@@ -11,36 +11,37 @@ export default {
         validationResults: {},
     }),
     mounted() {
-        window.event.on("updateValidationSuccess", async (data) => {
-            this.updateValidationSuccess(data.shouldSendEvent, data.field, data.value, data.objectId)
-        })
-        window.event.on("updateValidationError", async (data) => {
-            this.updateValidationError(data.field, data.objectId)
+        window.event.on("validateInput", async (data) => {
+            if (this.objectId == data.objectId) {
+                this.validate(data)
+            }
         })
     },
     unmounted() {
-        window.event.all.delete("updateValidationSuccess");
-        window.event.all.delete("updateValidationError");
+        window.event.all.delete("validateInput");
     },
     methods: {
-        updateValidationSuccess(shouldSendEvent, field, value, objectId) {
-            window.$("#" + field + objectId).removeClass("is-invalid");
-            window.$("#" + field + objectId).addClass("is-valid");
-            window.$("#feedback-" + field + objectId).removeClass("invalid-feedback");
-            window.$("#feedback-" + field + objectId).addClass("valid-feedback");
-            this.sendValidationResults(shouldSendEvent, field, value, objectId)
+        validate(data) {
+            data.validationSchema.validateAt(data.field, data.values)
+                .then(() => {
+                    window.$("#error-" + data.field + data.objectId).html("&nbsp;")
+                    window.$("#" + data.field + data.objectId).removeClass("is-invalid");
+                    window.$("#" + data.field + data.objectId).addClass("is-valid");
+                    window.$("#feedback-" + data.field + data.objectId).removeClass("invalid-feedback");
+                    window.$("#feedback-" + data.field + data.objectId).addClass("valid-feedback");
+                    this.sendValidationResults(data)
+                })
+                .catch((error) => {
+                    window.$("#error-" + data.field + data.objectId).html(error.message)
+                    window.$("#" + data.field + data.objectId).removeClass("is-valid");
+                    window.$("#" + data.field + data.objectId).addClass("is-invalid");
+                    window.$("#feedback-" + data.field + data.objectId).removeClass("valid-feedback");
+                    window.$("#feedback-" + data.field + data.objectId).addClass("invalid-feedback");
+                })
         },
-        updateValidationError(field, objectId) {
-            window.$("#" + field + objectId).removeClass("is-valid");
-            window.$("#" + field + objectId).addClass("is-invalid");
-            window.$("#feedback-" + field + objectId).removeClass("valid-feedback");
-            window.$("#feedback-" + field + objectId).addClass("invalid-feedback");
-        },
-        sendValidationResults(shouldSendEvent, field, value, objectId) {
-            if (shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
-                if (this.objectId == objectId) {
-                    this.checkValidationResults(field, value)
-                }
+        sendValidationResults(data) {
+            if (data.shouldSendEvent) { // only send event if validation was triggered by trigger/button and not single validation
+                this.checkValidationResults(data.field, data.values[data.field])
             }
         },
         async checkValidationResults(field, value) {

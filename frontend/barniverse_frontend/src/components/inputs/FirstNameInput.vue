@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Firstname-->
         <label class="form-label" for="firstname">First Name</label>
-        <input type="text" class="form-control" v-model="value" :id="'firstname' + userId" @blur="validate('firstname', false)" />
-        <div class="" :id="'feedback-firstname' + userId">
-            <p class="errorMessage">{{ error }}&nbsp;</p>
+        <input type="text" class="form-control" v-model="value" :id="'firstname' + objectId" @blur="validate(false)" />
+        <div class="" :id="'feedback-firstname' + objectId">
+            <p :id="'error-firstname' + objectId" class="errorMessage">{{ error }}&nbsp;</p>
         </div>
     </div>
 
@@ -16,42 +16,29 @@ import { object, string } from "yup"
 
 export default {
     name: "FirstNameInput",
-    props: ["trigger", "firstname", "userId"],
+    props: ["trigger", "firstname", "objectId"],
     data: () => ({
         value: "",
-        error: "",
     }),
     mounted() {
         this.value = this.firstname
     },
     methods: {
-        validate(field, shouldSendEvent) {
+        validate(shouldSendEvent) {
             var values = { firstname: this.value }; // necessary for successful validation (field/value object)
-            validationSchema
-                .validateAt(field, values)
-                .then(() => {
-                    this.error = ""
-                    const data = {
-                        field: field,
-                        value: this.value,
-                        objectId: this.userId,
-                        shouldSendEvent: shouldSendEvent
-                    }
-                    window.event.emit("updateValidationSuccess", data)
-                })
-                .catch((error) => {
-                    this.error = error.message
-                    const data = {
-                        field: field,
-                        objectId: this.userId
-                    }
-                    window.event.emit("updateValidationError", data)
-                })
+            const data = {
+                field: "firstname",
+                values: values,
+                objectId: this.objectId,
+                shouldSendEvent: shouldSendEvent,
+                validationSchema: validationSchema
+            }
+            window.event.emit("validateInput", data)
         }
     },
     watch: { 
         trigger: function() {
-            this.validate("firstname", true)
+            this.validate(true)
         }
     }
 }

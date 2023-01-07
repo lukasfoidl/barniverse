@@ -3,9 +3,9 @@
     <div class="form-outline">
         <!-- Description-->
         <label class="form-label" for="description">Description</label>
-        <textarea type="textarea" rows="5" class="form-control" v-model="value" :id="'description' + objectId" @blur="validate('description', false)" />
+        <textarea type="textarea" rows="5" class="form-control" v-model="value" :id="'description' + objectId" @blur="validate(false)" />
         <div class="" :id="'feedback-description' + objectId">
-            <p class="errorMessage">{{ error }}&nbsp;</p>
+            <p :id="'error-description' + objectId" class="errorMessage">&nbsp;</p>
         </div>
     </div>
 
@@ -19,39 +19,26 @@ export default {
     props: ["trigger", "description", "objectId"],
     data: () => ({
         value: "",
-        error: "",
     }),
     mounted() {
         this.value = this.description
     },
     methods: {
-        validate(field, shouldSendEvent) {
+        validate(shouldSendEvent) {
             var values = { description: this.value }; // necessary for successful validation (field/value object)
-            validationSchema
-                .validateAt(field, values)
-                .then(() => {
-                    this.error = ""
-                    const data = {
-                        field: field,
-                        value: this.value,
-                        objectId: this.objectId,
-                        shouldSendEvent: shouldSendEvent
-                    }
-                    window.event.emit("updateValidationSuccess", data)
-                })
-                .catch((error) => {
-                    this.error = error.message
-                    const data = {
-                        field: field,
-                        objectId: this.objectId
-                    }
-                    window.event.emit("updateValidationError", data)
-                })
+            const data = {
+                field: "description",
+                values: values,
+                objectId: this.objectId,
+                shouldSendEvent: shouldSendEvent,
+                validationSchema: validationSchema
+            }
+            window.event.emit("validateInput", data)
         }
     },
     watch: { 
         trigger: function() {
-            this.validate("description", true)
+            this.validate(true)
         }
     }
 }

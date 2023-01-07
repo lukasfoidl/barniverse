@@ -1,7 +1,7 @@
 <template>
     <div>
-        <EmailInput :trigger="trigger" />
-        <PasswordInput :trigger="trigger" />
+        <EmailInput :trigger="trigger" :objectId="objectId" />
+        <PasswordInput :trigger="trigger" :objectId="objectId" />
 
         <InputValidationHandler :trigger="trigger" :objectId="objectId" :values="values" />
     </div>

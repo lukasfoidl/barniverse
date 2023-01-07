@@ -1,18 +1,18 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-            <FirstNameInput :trigger="this.trigger" :firstname="this.user.firstname" :userId="this.user.id" />
+            <FirstNameInput :trigger="this.trigger" :firstname="this.user.firstname" :objectId="this.user.id" />
         </div>
         <div class="col-md-6">
-            <LastNameInput :trigger="this.trigger" :lastname="this.user.lastname" :userId="this.user.id" />
+            <LastNameInput :trigger="this.trigger" :lastname="this.user.lastname" :objectId="this.user.id" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <EmailInput :trigger="this.trigger" :email="this.user.email" :userId="this.user.id" />
+            <EmailInput :trigger="this.trigger" :email="this.user.email" :objectId="this.user.id" />
         </div>
         <div class="col-md-6">
-            <UsernameInput :trigger="this.trigger" :username="this.user.username" :userId="this.user.id" />
+            <UsernameInput :trigger="this.trigger" :username="this.user.username" :objectId="this.user.id" />
         </div>
     </div>
 

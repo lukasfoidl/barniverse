@@ -3,10 +3,9 @@
     <div class="form-outline">
         <!-- Password-->
         <label class="form-label" for="password">Password</label>
-        <input type="password" :id="'password' + userId" class="form-control" v-model="value" @change="passwordInputChanged"
-            @blur="validate('password', false)" />
-        <div class="" :id="'feedback-password' + userId">
-            <p class="errorMessage">{{ error }}&nbsp;</p>
+        <input type="password" :id="'password' + objectId" class="form-control" v-model="value" @change="passwordInputChanged" @blur="validate(false)" />
+        <div class="" :id="'feedback-password' + objectId">
+            <p :id="'error-password' + objectId" class="errorMessage">&nbsp;</p>
         </div>
     </div>
 
@@ -17,34 +16,21 @@ import { object, string } from "yup"
 
 export default {
     name: "PasswordInput",
-    props: ["trigger", "userId"],
+    props: ["trigger", "objectId"],
     data: () => ({
         value: "",
-        error: "",
     }),
     methods: {
-        validate(field, shouldSendEvent) {
+        validate(shouldSendEvent) {
             var values = { password: this.value }; // necessary for successful validation (field/value object)
-            validationSchema
-                .validateAt(field, values)
-                .then(() => {
-                    this.error = ""
-                    const data = {
-                        field: field,
-                        value: this.value,
-                        objectId: this.userId,
-                        shouldSendEvent: shouldSendEvent
-                    }
-                    window.event.emit("updateValidationSuccess", data)
-                })
-                .catch((error) => {
-                    this.error = error.message
-                    const data = {
-                        field: field,
-                        objectId: this.userId
-                    }
-                    window.event.emit("updateValidationError", data)
-                })
+            const data = {
+                field: "password",
+                values: values,
+                objectId: this.objectId,
+                shouldSendEvent: shouldSendEvent,
+                validationSchema: validationSchema
+            }
+            window.event.emit("validateInput", data)
         },
         passwordInputChanged() {
             window.event.emit("passwordInputChanged", this.value);
@@ -52,7 +38,7 @@ export default {
     },
     watch: { 
         trigger: function() {
-            this.validate("password", true)
+            this.validate(true)
         }
     }
 }

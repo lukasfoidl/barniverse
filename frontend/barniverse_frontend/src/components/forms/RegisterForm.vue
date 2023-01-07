@@ -1,26 +1,26 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-            <FirstNameInput :trigger="trigger"/>
+            <FirstNameInput :trigger="trigger" :objectId="objectId" />
         </div>
         <div class="col-md-6">
-            <LastNameInput :trigger="trigger" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <EmailInput :trigger="trigger"/>
-        </div>
-        <div class="col-md-6">
-            <UsernameInput :trigger="trigger" />
+            <LastNameInput :trigger="trigger" :objectId="objectId" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <PasswordInput :trigger="trigger" />
+            <EmailInput :trigger="trigger" :objectId="objectId" />
         </div>
         <div class="col-md-6">
-            <ConfirmationPasswordInput :trigger="trigger" />
+            <UsernameInput :trigger="trigger" :objectId="objectId" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <PasswordInput :trigger="trigger" :objectId="objectId" />
+        </div>
+        <div class="col-md-6">
+            <ConfirmationPasswordInput :trigger="trigger" :objectId="objectId" />
         </div>
     </div>
     <!-- <div class="row">
