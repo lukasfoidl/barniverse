@@ -4,6 +4,7 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -37,12 +38,12 @@ public class AfterSpecificDateValidator implements ConstraintValidator<AfterSpec
                 .getPropertyValue(startDate);
         Object endDateObject = new BeanWrapperImpl(value)
                 .getPropertyValue(endDate);
-        Date startDateValue = (Date) startDateObject;
-        Date endDateValue = (Date) endDateObject;
+        LocalDateTime startDateValue = (LocalDateTime) startDateObject;
+        LocalDateTime endDateValue = (LocalDateTime) endDateObject;
 
         if (startDateValue == null || endDateValue == null) { return false; }
 
-        return endDateValue.after(startDateValue);
+        return endDateValue.compareTo(startDateValue) > 0; // after specific date
     }
 
 }

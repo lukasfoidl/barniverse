@@ -1,5 +1,6 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -15,10 +16,10 @@ public class AuctionDto implements IDto {
     private double maxPrice;
     private double minQuantity;
     private double maxQuantity;
-    private Date startDeliveryDate;
-    private Date endDeliveryDate;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDeliveryDate;
+    private LocalDateTime endDeliveryDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private boolean locked;
     private UserDto user;
     private ProductDto product;
@@ -83,35 +84,35 @@ public class AuctionDto implements IDto {
         this.maxQuantity = maxQuantity;
     }
 
-    public Date getStartDeliveryDate() {
+    public LocalDateTime getStartDeliveryDate() {
         return startDeliveryDate;
     }
 
-    public void setStartDeliveryDate(Date startDeliveryDate) {
+    public void setStartDeliveryDate(LocalDateTime startDeliveryDate) {
         this.startDeliveryDate = startDeliveryDate;
     }
 
-    public Date getEndDeliveryDate() {
+    public LocalDateTime getEndDeliveryDate() {
         return endDeliveryDate;
     }
 
-    public void setEndDeliveryDate(Date endDeliveryDate) {
+    public void setEndDeliveryDate(LocalDateTime endDeliveryDate) {
         this.endDeliveryDate = endDeliveryDate;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

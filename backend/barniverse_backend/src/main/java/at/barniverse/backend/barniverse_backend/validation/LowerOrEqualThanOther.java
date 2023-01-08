@@ -7,11 +7,11 @@ import java.lang.annotation.*;
 /**
  * annotation if a value is lower than another value
  */
-@Constraint(validatedBy = LowerThanOtherValidator.class)
+@Constraint(validatedBy = LowerOrEqualThanOtherValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(LowerThanOther.List.class)
-public @interface LowerThanOther {
+@Repeatable(LowerOrEqualThanOther.List.class)
+public @interface LowerOrEqualThanOther {
 
     String lowerField();
     String higherField();
@@ -25,7 +25,7 @@ public @interface LowerThanOther {
     @Target({ ElementType.TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
-        LowerThanOther[] value();
+        LowerOrEqualThanOther[] value();
     }
 
 

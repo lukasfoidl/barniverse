@@ -40,15 +40,7 @@
             <p class="card-text text-truncate-custom">{{product.description}}</p>
         </div>
         <div class="card-body auctionLink bottom-area">
-            <Popover placement="right" :hover="true">
-                <i class="bi bi-info-circle icon" alt="Details"></i>
-                <template #content>
-                    <div class="popover card-body">
-                        <h5 class="card-title">{{product.title}}</h5>
-                        <p class="card-text">{{product.description}}</p>
-                    </div>
-                </template>
-            </Popover>
+            <ProductDetailsPopover :product="product" />
             <i v-if="isAdmin" class="bi bi-pencil-fill editStyle pointer" alt="Update product" @click="navigateToProductUpdateView"></i>
             <a v-if="isAdmin || isUser" class="card-link ms-auto pointer" @click="navigateToAuctionCreateView">Create Auction</a>
         </div>
@@ -58,7 +50,7 @@
 <script>
 import CarouselIndicator from '@/components/atoms/CarouselIndicator.vue';
 import CarouselItem from '@/components/molecules/CarouselItem.vue';
-import Popover from "vue3-popper"
+import ProductDetailsPopover from '../molecules/ProductDetailsPopover.vue';
 
 export default {
     name: "ProductCard",
@@ -71,7 +63,7 @@ export default {
         this.id = "id" + this.product.id
         this.hid = "#" + this.id
     },
-    components: { CarouselItem, CarouselIndicator, Popover },
+    components: { CarouselItem, CarouselIndicator, ProductDetailsPopover },
     methods: {
         navigateToProductUpdateView() {
             this.$store.commit("saveProduct", { product: this.product })

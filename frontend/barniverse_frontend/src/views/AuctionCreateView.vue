@@ -1,10 +1,8 @@
 <template>
     <div class="row justify-content-center align-items-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+        <div class="col-12 col-sm-11 col-md-9 col-lg-9 col-xl-6">
 
-            <span class="badge rounded-pill text-bg-warning">In Development</span>
-
-            <AuctionForm :trigger="trigger" :auction="auction"/>
+            <AuctionForm :trigger="trigger" :auction="auction" :product="product"/>
 
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" @click="triggerValidation">Save</button>
@@ -25,10 +23,14 @@ export default {
         auction: {
             id: undefined,
             title: "",
-            description: ""
+            description: "",
+            product: "",
         },
         trigger: false,
     }),
+    beforeMount() {
+        this.product = this.$store.state.product
+    },
     mounted() {
         window.event.on("validationCompleted", (data) => {
             this.createAuction(data)
