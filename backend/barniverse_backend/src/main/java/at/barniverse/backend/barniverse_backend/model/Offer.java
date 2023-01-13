@@ -1,7 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
-import at.barniverse.backend.barniverse_backend.validation.AfterToday;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -30,7 +29,6 @@ public class Offer implements IEntity {
     private double quantity;
 
     @NotNull(message = "Delivery date is mandatory!")
-    @AfterToday(message = "Delivery date needs to be in the future!")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date deliveryDate;
 

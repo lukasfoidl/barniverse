@@ -106,11 +106,11 @@ public class User implements IEntity {
         this.picture = picture;
     }
 
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(boolean admin) {
+    public void setIsAdmin(boolean admin) {
         isAdmin = admin;
     }
 

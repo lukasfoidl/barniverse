@@ -35,19 +35,19 @@
                         Auctions
                     </router-link>
                 </li>
-                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
+                <li v-if="isAdmin || isUser" class="nav-item">
                     <!-- my auctions I created and the placed offers for this auction -->
                     <router-link id="myAuctions" class="nav-link navItemStyle" to="/myAuctions">
                         My Auctions
                     </router-link>
                 </li>
-                <li v-if="role == roles.ROLE_USER || role==roles.ROLE_ADMIN" class="nav-item">
+                <li v-if="isAdmin || isUser" class="nav-item">
                     <!-- my offers I placed -->
                     <router-link id="myOffers" class="nav-link navItemStyle" to="/myOffers">
                         My Offers
                     </router-link>
                 </li>
-                <li v-if="role == roles.ROLE_ADMIN" class="nav-item">
+                <li v-if="isAdmin" class="nav-item">
                     <!-- my offers I placed -->
                     <router-link id="user" class="nav-link navItemStyle" to="/user">
                         User
@@ -57,13 +57,13 @@
             <ul id="userContent" class="navbar-nav nav nav-tabs flex-fill">
                 <!-- OBSERVER - logged out -->
                 <!-- register new user -->
-                <li v-if="role==''" id="userContentItem" class="nav-item ms-auto">
+                <li v-if="isObserver" id="userContentItem" class="nav-item ms-auto">
                     <router-link id="register" class="nav-link navItemStyle" to="/register">
                         Register
                     </router-link>
                 </li>
                 <!-- login -->
-                <li v-if="role==''" class="nav-item navIcon">
+                <li v-if="isObserver" class="nav-item navIcon">
                     <router-link id="login" class="nav-link navItemStyle" to="/login">
                         <i class="bi bi-box-arrow-in-right" alt="Login"></i>
                     </router-link>
@@ -71,13 +71,13 @@
 
                 <!-- USER/ADMIN - logged in -->
                 <!-- my username -->
-                <li v-if="role!=''" id="userContentItem" class="nav-item ms-auto">
-                    <router-link id="profile" class="nav-link navItemStyle" to="profile">
-                        {{this.username}}
+                <li v-if="isAdmin || isUser" id="userContentItem" class="nav-item ms-auto">
+                    <router-link id="profile" class="nav-link navItemStyle" to="/profile">
+                        {{ getUsername }}
                     </router-link>
                 </li>
                 <!-- logout -->
-                <li v-if="role!=''" class="nav-item navIcon" @click="logout">
+                <li v-if="isAdmin || isUser" class="nav-item navIcon" @click="logout">
                     <router-link id="logout" class="nav-link navItemStyle" to="/">
                         <i class="bi bi-box-arrow-right" alt="Logout"></i>
                     </router-link>
@@ -90,22 +90,6 @@
 <script>
 export default {
     name: "Navbar",
-    data: () => ({
-        role: "",
-        roles: "",
-        username: ""
-    }),
-    beforeMount() {
-        this.roles = window.roles;
-        this.reloadData();
-
-        window.event.on('reloadJWT', () => {
-            this.reloadData();
-        });
-        window.event.on('reloadUsername', () => {
-            this.reloadData();
-        });
-    },
     mounted() {
         // set correct style for changing between mobile and desktop mode
         window.$(window).on('resize', function() {
@@ -125,13 +109,23 @@ export default {
         });
     },
     methods: {
-        reloadData() {
-            this.role = window.role
-            this.username = window.username
-        },
         logout() {
             sessionStorage.removeItem("jwt-token");
             window.event.emit("reloadJWT");
+        }
+    },
+    computed: {
+        getUsername() {
+            return this.$store.state.username;
+        },
+        isAdmin() {
+            return this.$store.getters.isAdmin
+        },
+        isUser() {
+            return this.$store.getters.isUser
+        },
+        isObserver() {
+            return this.$store.getters.isObserver
         }
     },
     watch:{

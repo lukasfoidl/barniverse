@@ -1,36 +1,39 @@
 <template>
-    <div id="cardList" class="cardList centerContent">
+    <div class="centerContent taskbar">
+        <Taskbar />
+    </div>
+    <div id="cardList" class="centerContent">
         <div class="row centerContent">
-            <ProductCard v-for="product in products" :key="product.id" :product="product"/>
+            <ProductCard v-for="product in products" :key="product.id" :product="product" />
         </div>
     </div>
 </template>
 
 <script>
-import ProductCard from "../components/molecules/ProductCard.vue";
-import http from "../http"
+import ProductCard from "@/components/cards/ProductCard.vue";
+import Taskbar from "@/components/molecules/Taskbar.vue";
+import http from "@/http"
 
 export default {
     name: "ProductView",
     data: () => ({
         products: []
     }),
-    components: { ProductCard },
+    components: { ProductCard, Taskbar },
     methods: {
         async requestProducts() {
             try {
                 const response = await http.get("products")
                 this.products = response.data
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
-                const data = {
+                const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", data);
+                window.event.emit("showErrorModal", modalData);
             }
-
-        }
+        },
     },
     beforeMount() {
         this.requestProducts();
@@ -39,12 +42,11 @@ export default {
 </script>
 
 <style>
-.cardList {
-    display: flex;
-    flex-direction: row;
-}
-
 .centerContent {
     justify-content: center;
+}
+
+.taskbar {
+    display: flex;
 }
 </style>

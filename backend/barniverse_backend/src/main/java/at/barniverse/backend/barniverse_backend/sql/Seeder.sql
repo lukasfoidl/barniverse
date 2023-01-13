@@ -2,33 +2,35 @@ use barniverseDB;
 
 # seed user table
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', 'test123', '', true, '0');
+VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', 'test123', '', true, '0');
+VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (3, 'Admin', 'Admin', 'admin', 'admin@barniverse.at', 'admin123', '', true, '0');
+VALUES (3, 'Admin', 'Admin', 'admin', 'admin@barniverse.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', 'test123', '', false, '0');
+VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', 'test123', '', false, '0');
+VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', 'test123', '', false, '0');
+VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', 'testtest', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', 'test123', '', false, '1');
+VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', 'testtest', '', false, '1');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'test123', '', false, '2');
+VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'testtest', '', false, '2');
 
 # seed product table
-INSERT INTO product (id, name, description)
-VALUES (1, 'Gin', 'Eine 1 Liter Flasche bester Gin aus dem Jahr 2020');
-INSERT INTO product (id, name, description)
-VALUES (2, 'Gruener Veltliner', 'Bester Wein aus dem Burgenland (0.75 l)');
-INSERT INTO product (id, name, description)
-VALUES (3, 'Berliner Luft', '1 Flasche (1 l) Berliner Luft Pfefferminzlikör aus der Metropole Deutschlands');
-INSERT INTO product (id, name, description)
-VALUES (4, 'Goesser Bier', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
-INSERT INTO product (id, name, description)
-VALUES (5, 'Obstler', 'Schnaps der brutal runterbrennt, 0,75l, 40%, VORSICHT: nicht in hohen Mengen zu sich nehmen');
+INSERT INTO product (id, title, state, description)
+VALUES (1, 'Gin', '0', 'Eine 1 Liter Flasche bester Gin aus dem Jahr 2020');
+INSERT INTO product (id, title, state, description)
+VALUES (2, 'Gruener Veltliner', '0', 'Bester Wein aus dem Burgenland (0.75 l)');
+INSERT INTO product (id, title, state, description)
+VALUES (3, 'Berliner Luft', '0', '1 Flasche (1 l) Berliner Luft Pfefferminzlikör aus der Metropole Deutschlands');
+INSERT INTO product (id, title, state, description)
+VALUES (4, 'Goesser Bier', '0', 'Goesser Bier 0,75 l mit 3 Volumsprozent aus dem Herzen Österreichs');
+INSERT INTO product (id, title, state, description)
+VALUES (5, 'Obstler', '0', 'Schnaps der brutal runterbrennt, 0,75l, 40%, VORSICHT: nicht in hohen Mengen zu sich nehmen');
+INSERT INTO product (id, title, state, description)
+VALUES (6, 'abgelaufener Ayran', '1', 'Nicht mehr trinken, der bröckelt schon => deswegen gelöscht');
 
 # seed product_image table
 INSERT INTO product_image (id, file, product_id)

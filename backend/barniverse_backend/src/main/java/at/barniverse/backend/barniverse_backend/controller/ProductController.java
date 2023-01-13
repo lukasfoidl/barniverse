@@ -4,6 +4,7 @@ import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
@@ -25,13 +26,14 @@ public class ProductController {
      * @param productDto object sent from the client
      * @return response with corresponding status code and error message in case of failure
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping(path="/products")
     public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
         return productService.addProduct(productDto);
     }
 
     /**
-     * get all saved products from the database
+     * get all saved products from the database which do not have state deleted
      * @return response with corresponding status code and loaded product dtos or error message in case of failure
      */
     @GetMapping(path="/products")
@@ -55,6 +57,7 @@ public class ProductController {
      * @param productDto object sent from the client (with id)
      * @return response with corresponding status code and error message in case of failure
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/products")
     public ResponseEntity<Object> updateProduct(@RequestBody ProductDto productDto) {
         return productService.updateProduct(productDto);
@@ -66,8 +69,20 @@ public class ProductController {
      * @param id id of the specific product
      * @return response with corresponding status code and error message in case of failure
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping(path="/products/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable int id) {
         return productService.deleteProduct(id);
+    }
+
+    /**
+     * deletes a product with state deleted
+     * @param id id of the specific product
+     * @return response with corresponding status code and error message in case of failure
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PutMapping(path="/products/deleteWithState/{id}")
+    public ResponseEntity<Object> deleteWithState(@PathVariable int id) {
+        return productService.deleteWithState(id);
     }
 }

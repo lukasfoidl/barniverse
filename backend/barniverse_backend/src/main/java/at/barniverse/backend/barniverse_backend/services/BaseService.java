@@ -29,7 +29,7 @@ abstract public class BaseService {
      * @param dto dto which should be saved
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and added entity or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     protected <T, U> ResponseEntity<Object> addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) {
         T entity = transformer.convertToEntity(dto);
@@ -59,7 +59,7 @@ abstract public class BaseService {
     }
 
     /**
-     * get specific entity from the database
+     * get specific entity from the database as dto
      * @param repository type related repository
      * @param transformer type related transformer
      * @param id id of the specific entity
@@ -67,7 +67,24 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and loaded dto or error message in case of failure
      */
-    public <T, U> ResponseEntity<Object> getEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, int id) {
+    protected <T, U> ResponseEntity<Object> getEntityAsDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, int id) {
+        ResponseEntity<Object> response = getEntity(repository, id);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            T entity = (T) response.getBody();
+            U dto = transformer.convertToDto(entity);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        return response;
+    }
+
+    /**
+     * get specific entity from the database as entity
+     * @param repository type related repository
+     * @param id id of the specific entity
+     * @param <T> entity type
+     * @return response with corresponding status code and loaded entity or error message in case of failure
+     */
+    protected <T> ResponseEntity<Object> getEntity(CrudRepository<T, Integer> repository, int id) {
         Optional<T> entity;
         try {
             entity = repository.findById(id);
@@ -77,8 +94,7 @@ abstract public class BaseService {
         if (entity.isEmpty()) {
             return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
         }
-        U dto = transformer.convertToDto(entity.get());
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(entity.get(), HttpStatus.OK);
     }
 
     /**
@@ -89,9 +105,9 @@ abstract public class BaseService {
      * @param dto dto which should be updated
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and updated entity or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
-    public <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, IDto dto) {
+    protected <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, IDto dto) {
         Optional<IEntity> dbEntity;
         try {
             dbEntity = (Optional<IEntity>) repository.findById(dto.getId());
@@ -132,7 +148,7 @@ abstract public class BaseService {
      * @param validationService type related validationService
      * @param entity entity which should be saved
      * @param <T> entity type
-     * @return response with corresponding status code and saved entity or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     private <T> ResponseEntity<Object> validateAndSaveEntity(CrudRepository<T, Integer> repository, ValidationService<T> validationService, T entity) {
         ResponseEntity<Object> response = validationService.validateEntity(entity);
@@ -149,7 +165,7 @@ abstract public class BaseService {
      * @param childrenEntities children entities which should be validated
      * @param <T> parent entity type
      * @param <V> children entity type
-     * @return response with corresponding status code and saved parent entity or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     protected <T, V> ResponseEntity<Object> validateWithSubentitiesAndSaveEntity(
             CrudRepository<T, Integer> parentRepository,
@@ -173,18 +189,47 @@ abstract public class BaseService {
      * @param response response with corresponding status code and error message in case of failure of validation
      * @param entity entity which should be saved
      * @param <T> entity type
-     * @return response with corresponding status code and saved entity or error message in case of failure
+     * @return response with corresponding status code and error message in case of failure
      */
     private <T> ResponseEntity<Object> saveIfValid(CrudRepository<T, Integer> repository, ResponseEntity<Object> response, T entity) {
         if (response.getStatusCode() == HttpStatus.OK) {
-            try {
-                T dbEntity = repository.save(entity);
-                return new ResponseEntity<>(dbEntity, HttpStatus.OK);
-            } catch (Exception exception) {
-                return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            return save(repository, entity);
         }
         return response;
     }
 
+    /**
+     * extension method which saves an entity in the database
+     * @param repository type related repository
+     * @param entity entity which should be saved
+     * @param <T> entity type
+     * @return response with corresponding status code and error message in case of failure
+     */
+    protected <T> ResponseEntity<Object> save(CrudRepository<T, Integer> repository, T entity) {
+        try {
+            repository.save(entity);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * WARNING: Use method only if values of the saved entity are explicitly needed, otherwise use method 'save'! <br>
+     * extension method which saves an entity in the database and returns the corresponding dto
+     * @param repository type related repository
+     * @param transformer type related transformer
+     * @param entity entity which should be saved
+     * @param <T> entity type
+     * @param <U> dto type
+     * @return response with corresponding status code and saved dto or error message in case of failure
+     */
+    protected <T, U> ResponseEntity<Object> saveAndGet(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, T entity) {
+        try {
+            T dbEntity = repository.save(entity);
+            return new ResponseEntity<>(transformer.convertToDto(dbEntity), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 
+// import jQuery
 import jquery from "jquery"
 window.$ = jquery
 
@@ -11,20 +12,21 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js"
 window.bootstrap = bootstrap
 
+// import mitt for events
 import mitt from 'mitt';
 window.event = mitt();
 
-import router from "./routes";
-window.router = router
+// import store
+import store from "@/store"
 
-window.roles = {
-    ROLE_USER: "ROLE_USER",
-    ROLE_ADMIN: "ROLE_ADMIN"
-}
-window.role = "ROLE_OBSERVER"
+// import router
+import router from "@/routes";
+
+//---------- CREATE APP ----------
 
 const app = createApp(App)
 
+app.use(store)
 app.use(router);
 
 app.mount('#app')

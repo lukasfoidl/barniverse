@@ -1,8 +1,11 @@
 package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.ProductDto;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.model.Product;
 import at.barniverse.backend.barniverse_backend.model.ProductImage;
+import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
 import at.barniverse.backend.barniverse_backend.transformer.ProductImageTransformer;
 import at.barniverse.backend.barniverse_backend.transformer.ProductTransformer;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +49,7 @@ public class ProductService extends BaseService {
      * @return response with corresponding status code and error message in case of failure
      */
     public ResponseEntity<Object> addProduct(ProductDto productDto) {
+        productDto.setState(ProductState.active);
         // not with addEntity because of the subentities
         Product productEntity = productTransformer.convertToEntity(productDto);
 
@@ -63,11 +68,22 @@ public class ProductService extends BaseService {
     }
 
     /**
-     * get all saved products from the database
+     * get all saved products from the database which do not have state deleted
      * @return response with corresponding status code and loaded product dtos or error message in case of failure
      */
     public ResponseEntity<Object> getProducts() {
-        return getEntities(productRepository, productTransformer);
+        ResponseEntity<Object> response = getEntities(productRepository, productTransformer);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        List<ProductDto> productDtoList = (List<ProductDto>) response.getBody();
+        List<ProductDto> resultList = new ArrayList<>();
+        for (ProductDto productDto : productDtoList) {
+            if (productDto.getState() != ProductState.deleted) {
+                resultList.add(productDto);
+            }
+        }
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     /**
@@ -76,7 +92,7 @@ public class ProductService extends BaseService {
      * @return response with corresponding status code and loaded product dto or error message in case of failure
      */
     public ResponseEntity<Object> getProduct(int id) {
-        return getEntity(productRepository, productTransformer, id);
+        return getEntityAsDto(productRepository, productTransformer, id);
     }
 
     /**
@@ -109,6 +125,21 @@ public class ProductService extends BaseService {
      */
     public ResponseEntity<Object> deleteProduct(int id) {
         return deleteEntity(productRepository, id);
+    }
+
+    /**
+     * deletes a product with state deleted
+     * @param id id of the specific user
+     * @return response with corresponding status code and error message in case of failure
+     */
+    public ResponseEntity<Object> deleteWithState(int id) {
+        ResponseEntity<Object> response = getEntity(productRepository, id);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+        Product product = (Product) response.getBody();
+        product.setState(ProductState.deleted);
+        return save(productRepository, product);
     }
 
 }

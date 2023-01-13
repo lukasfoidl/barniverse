@@ -8,10 +8,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
+
 /**
  * controller with basic CRUD routing for auction related URLs
  */
 @RestController()
+@CrossOrigin(origins = CORS_ORIGINS)
 @RequestMapping(path = "/api")
 public class AuctionController {
 
@@ -24,6 +27,7 @@ public class AuctionController {
      * @return response with corresponding status code and error message in case of failure
      */
     @PostMapping(path="/auctions")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Object> addAuction(@RequestBody AuctionDto auctionDto) {
         return auctionService.addAuction(auctionDto);
     }

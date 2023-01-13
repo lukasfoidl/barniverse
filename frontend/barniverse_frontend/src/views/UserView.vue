@@ -1,17 +1,20 @@
 <template>
-    <div>
-
-        <UserCard v-for="user in allUser" :key="user.id" :user="user"> </UserCard>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-10 col-xl-8">
+            <div class="accordion" id="userList">
+                <UserItemWorker v-for="user in allUser" :key="user.id" :user="user" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import UserCard from "@/components/molecules/UserCard.vue"
-import http from "../http"
+import UserItemWorker from "@/components/forms/UserItemWorker.vue"
+import http from "@/http"
 
 export default {
     name: "UserView",
-    components: { UserCard },
+    components: { UserItemWorker },
     data: () => ({
         allUser: []
     }),
@@ -23,19 +26,20 @@ export default {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
-                this.allUser = response.data
+                this.allUser = response.data.sort(
+                    (a, b) => (a.lastname > b.lastname) ? 1 : (a.lastname < b.lastname) ? -1 : 0);
             } catch(error) {
-                const data = {
+                const modalData = {
                     title: "Error (" + error.response.status + ")",
                     text: error.response.data
                 }
-                window.event.emit("showModal", data);
+                window.event.emit("showErrorModal", modalData);
             }
         },
     },
     beforeMount() {
         this.requestUsers();
-    }
+    },
 }
 
 </script>

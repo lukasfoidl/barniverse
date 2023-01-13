@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * validator for LowerThanOther annotation
  */
-public class LowerThanOtherValidator implements ConstraintValidator<LowerThanOther, Object> {
+public class LowerOrEqualThanOtherValidator implements ConstraintValidator<LowerOrEqualThanOther, Object> {
 
     private String lowerField;
     private String higherField;
@@ -17,7 +17,7 @@ public class LowerThanOtherValidator implements ConstraintValidator<LowerThanOth
      * @param constraintAnnotation LowerThanOther annotation
      */
     @Override
-    public void initialize(LowerThanOther constraintAnnotation) {
+    public void initialize(LowerOrEqualThanOther constraintAnnotation) {
         this.lowerField = constraintAnnotation.lowerField();
         this.higherField = constraintAnnotation.higherField();
     }
@@ -38,6 +38,6 @@ public class LowerThanOtherValidator implements ConstraintValidator<LowerThanOth
         double lowerValue = (double) lowerObject;
         double higherValue = (double) higherObject;
 
-        return lowerValue < higherValue;
+        return lowerValue <= higherValue;
     }
 }

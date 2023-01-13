@@ -68,10 +68,10 @@
 </template>
 
 <script>
-import Address from '@/components/atoms/Address.vue';
-import BarniverseJustificationText from '@/components/atoms/BarniverseJustificationText.vue';
-import Email from '@/components/atoms/Email.vue';
-import Phone from '@/components/atoms/Phone.vue';
+import Address from '@/components/text/Address.vue';
+import BarniverseJustificationText from '@/components/text/BarniverseJustificationText.vue';
+import Email from '@/components/text/Email.vue';
+import Phone from '@/components/text/Phone.vue';
 
 export default {
     name: "ImprintView",
