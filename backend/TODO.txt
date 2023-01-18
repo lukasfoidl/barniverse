@@ -1,0 +1,24 @@
+missing implementations and features for a better security and usage
+
+## UUID
+change Id identifier to UUID (higher security), but keep id as primary key in database
+
+## Logging
+implement serverside logging
+
+## Pagination
+load data in batches to reduce data traffic (changes in frontend required)
+
+## Picture
+implement upload of pictures (profile picture as well as product pictures)
+change name after upload to random string and save it in corresponding entity table (user, productimages)
+
+## Modal
+afer permission modal closes information modal openes directly, not beautiful animation
+
+## secure backend
+remove unnecessary routes and functions, pre authorize as much as possible
+
+## Validation
+check if request comes from valid user with right permission (admin can update users, only user who owns an auction can update auction, ...)
+in the registration process, implement checks if user is real, no automated registration

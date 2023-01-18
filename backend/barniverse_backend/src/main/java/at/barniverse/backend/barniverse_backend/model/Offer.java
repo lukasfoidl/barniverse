@@ -1,16 +1,19 @@
 package at.barniverse.backend.barniverse_backend.model;
 
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * entity for an offer,
- * property definitions as well as getter and setter functions
+ * property definitions, getter and setter functions as well as extension methods
  */
 @Entity
 public class Offer implements IEntity {
@@ -29,8 +32,9 @@ public class Offer implements IEntity {
     private double quantity;
 
     @NotNull(message = "Delivery date is mandatory!")
+    @Future(message = "Delivery date needs to be in the future!")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date deliveryDate;
+    private LocalDateTime deliveryDate;
 
     @NotNull(message = "State of order is mandatory!")
     private OfferState state;
@@ -73,11 +77,11 @@ public class Offer implements IEntity {
         this.quantity = quantity;
     }
 
-    public Date getDeliveryDate() {
+    public LocalDateTime getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDateTime deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
@@ -103,5 +107,11 @@ public class Offer implements IEntity {
 
     public void setAuction(Auction auction) {
         this.auction = auction;
+    }
+
+//----extension methods----
+
+    public boolean IsRunning() {
+        return getState() == OfferState.running;
     }
 }

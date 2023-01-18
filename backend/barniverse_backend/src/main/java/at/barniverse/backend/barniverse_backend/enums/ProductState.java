@@ -11,7 +11,7 @@ public enum ProductState {
     active,
 
     /**
-     * product is deleted, record remains in the database to avoid foreign key conflicts and keeping history of auctions, offers, etc.
+     * product is deleted, record remains in the database to avoid foreign key conflicts and keeping history of auctions, offers, etc. (1)
      */
     deleted
 

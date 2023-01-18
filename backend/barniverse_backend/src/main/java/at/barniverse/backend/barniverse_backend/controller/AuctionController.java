@@ -36,7 +36,6 @@ public class AuctionController {
      * get all saved auctions from the database
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path="/auctions")
     public ResponseEntity<Object> getAuctions() {
         return auctionService.getAuctions();

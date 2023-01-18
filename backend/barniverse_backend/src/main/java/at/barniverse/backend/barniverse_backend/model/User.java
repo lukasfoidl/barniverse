@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 /**
  * entity for a user,
- * property definitions as well as getter and setter functions
+ * property definitions, getter and setter functions as well as extension methods
  */
 @Entity
 public class User implements IEntity {
@@ -120,6 +120,12 @@ public class User implements IEntity {
 
     public void setState(UserState state) {
         this.state = state;
+    }
+
+//----extension methods----
+
+    public boolean isActive() {
+        return getState() == UserState.active;
     }
 
 }

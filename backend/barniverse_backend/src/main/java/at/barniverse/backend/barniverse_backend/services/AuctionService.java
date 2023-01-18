@@ -1,6 +1,8 @@
 package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.AuctionDto;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import at.barniverse.backend.barniverse_backend.repository.AuctionRepository;
 import at.barniverse.backend.barniverse_backend.transformer.AuctionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class AuctionService extends BaseService {
      * @return response with corresponding status code and error message in case of failure
      */
     public ResponseEntity<Object> addAuction(AuctionDto auctionDto) {
+        auctionDto.setState(AuctionState.active);
         return addEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto);
     }
 

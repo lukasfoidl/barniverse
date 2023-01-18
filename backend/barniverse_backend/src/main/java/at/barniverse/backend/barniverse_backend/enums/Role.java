@@ -6,17 +6,17 @@ package at.barniverse.backend.barniverse_backend.enums;
 public enum Role {
 
     /**
-     * visitor of website, no authentication
+     * visitor of website, no authentication (0)
      */
     ROLE_VISITOR,
 
     /**
-     * registered and logged in user
+     * registered and logged in user (1)
      */
     ROLE_USER,
 
     /**
-     * admin user
+     * admin user (2)
      */
     ROLE_ADMIN
 }
