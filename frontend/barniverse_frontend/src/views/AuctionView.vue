@@ -19,7 +19,16 @@ export default {
     methods: {
         async requestAuctions() {
             try {
-                const response = await http.get("auctions")
+                var response;
+                if (this.$store.getters.isAdmin) {
+                    response = await http.get("auctions/notClosed", {
+                        headers: {
+                            'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
+                        }
+                    })
+                } else {
+                    response = await http.get("auctions")
+                }
                 this.auctions = response.data
             } catch (error) {
                 console.log(error)

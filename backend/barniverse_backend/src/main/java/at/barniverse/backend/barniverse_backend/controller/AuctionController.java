@@ -33,12 +33,33 @@ public class AuctionController {
     }
 
     /**
-     * get all saved auctions from the database
+     * get all saved auctions from the database which are not closed yet (running or before running)
+     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     */
+    @GetMapping(path="/auctions/notClosed")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<Object> getNotClosedAuctions() {
+        return auctionService.getNotClosedAuctions();
+    }
+
+    /**
+     * get all saved auctions from the database which are active and are not closed yet (running or before running)
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
     @GetMapping(path="/auctions")
-    public ResponseEntity<Object> getAuctions() {
-        return auctionService.getAuctions();
+    public ResponseEntity<Object> getNotClosedActiveAuctions() {
+        return auctionService.getNotClosedActiveAuctions();
+    }
+
+    /**
+     * get all saved auctions from the database of a specific user
+     * @param id id of the specific user
+     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     */
+    @GetMapping(path="/myAuctions/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<Object> getMyAuctions(@PathVariable int id) {
+        return auctionService.getMyAuctions(id);
     }
 
     /**
@@ -59,6 +80,7 @@ public class AuctionController {
      * @return response with corresponding status code and error message in case of failure
      */
     @PutMapping(path="/auctions")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Object> updateAuction(@RequestBody AuctionDto auctionDto) {
         return auctionService.updateAuction(auctionDto);
     }
@@ -72,6 +94,17 @@ public class AuctionController {
     @DeleteMapping(path="/auctions/{id}")
     public ResponseEntity<Object> deleteAuction(@PathVariable int id) {
         return auctionService.deleteAuction(id);
+    }
+
+    /**
+     * toggles the auction state of a specific auction (locked or active)
+     * @param id id of the specific auction
+     * @return response with corresponding status code and error message in case of failure
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PutMapping(path="/auctions/toggleState/{id}")
+    public ResponseEntity<Object> toggleState(@PathVariable int id) {
+        return auctionService.toggleState(id);
     }
 
 }

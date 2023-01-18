@@ -1,66 +1,70 @@
 <template>
     <div class="card col-xs-12 col-sm-12 col-md-10 col-lg-5">
         <div class="badgeContainer ms-auto">
-            <span v-if="isBeforeAuctionStart()" class="badge rounded-pill text-bg-success">Soon</span>
-            <span v-if="isAuctionRunning()" class="badge rounded-pill text-bg-warning">Bid now</span>
-            <span v-if="isAuctionFinished()" class="badge rounded-pill text-bg-danger">Closed</span>
+            <span v-if="isAuctionActive() && isBeforeAuctionStart()" class="badge rounded-pill text-bg-success">Soon</span>
+            <span v-if="isAuctionActive() && isAuctionRunning()" class="badge rounded-pill text-bg-warning">Bid now</span>
+            <span v-if="isAuctionActive() && isAuctionFinished()" class="badge rounded-pill text-bg-danger">Closed</span>
+            <span v-if="isAuctionLocked()" class="badge rounded-pill text-bg-dark">Locked</span>
         </div>
         <div class="row flexer">
             <div class="col-xs-12 col-sm-6">
-                <ProductDetails :product="auction.product" :extraId="auction.id" />
+                <ProductDetails :product="auctionData.product" :extraId="auctionData.id" />
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="card-body">
-                    <h4 :id="'auctionDetailsTitle' + auction.id" class="text-truncate">{{ auction.title }}</h4>
+                    <h4 :id="'auctionDetailsTitle' + auctionData.id" class="text-truncate">{{ auctionData.title }}</h4>
                     <div>
-                        <span :id="'auctionDetailsDescription' + auction.id" class="text-truncate-custom">{{ auction.description }}</span>
-                        <TitleDescriptionPopover v-if="isTruncatedTitle || isTruncatedDescription" :object="auction" />
+                        <span :id="'auctionDetailsDescription' + auctionData.id" class="text-truncate-custom">{{ auctionData.description }}</span>
+                        <TitleDescriptionPopover v-if="isTruncatedTitle || isTruncatedDescription" :object="auctionData" />
                     </div>
                     <div>
                         <span><i class="bi bi-currency-euro" alt="Price"></i>&nbsp;&nbsp;</span>
-                        <span>{{ auction.minPrice }}</span>
+                        <span>{{ auctionData.minPrice }}</span>
                         <span> - </span>
-                        <span>{{ auction.maxPrice }}</span>
+                        <span>{{ auctionData.maxPrice }}</span>
                     </div>
                     <div>
                         <span><i class="bi bi-puzzle" alt="Quantity"></i>&nbsp;&nbsp;</span>
-                        <span>{{ auction.minQuantity }}</span>
+                        <span>{{ auctionData.minQuantity }}</span>
                         <span> - </span>
-                        <span>{{ auction.maxQuantity }}</span>
+                        <span>{{ auctionData.maxQuantity }}</span>
                     </div>
                     <div>
                         <span><i class="bi bi-hourglass-split" alt="Auction end date"></i>&nbsp;&nbsp;</span>
-                        <span>{{ new Date(auction.startDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
-                        <span>{{ new Date(auction.startDate).toLocaleTimeString('de-AT') }}</span>
+                        <span>{{ new Date(auctionData.endDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
+                        <span>{{ new Date(auctionData.endDate).toLocaleTimeString('de-AT') }}</span>
                     </div>
                     <div>
                         <span><i class="bi bi-truck" alt="Start delivery date"></i>&nbsp;&nbsp;</span>
-                        <span>{{ new Date(auction.endDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
-                        <span>{{ new Date(auction.endDate).toLocaleTimeString('de-AT') }}</span>
+                        <span>{{ new Date(auctionData.startDeliveryDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
+                        <span>{{ new Date(auctionData.startDeliveryDate).toLocaleTimeString('de-AT') }}</span>
                     </div>
-                    <!-- <div>
+                    <div>
                         <span><i class="bi bi-dash" alt="End delivery date"></i>&nbsp;&nbsp;</span>
-                        <span>{{ new Date(auction.endDeliveryDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
-                        <span>{{ new Date(auction.endDeliveryDate).toLocaleTimeString('de-AT') }}</span>
-                    </div> -->
+                        <span>{{ new Date(auctionData.endDeliveryDate).toLocaleDateString('de-AT') }}</span><span>&nbsp;</span>
+                        <span>{{ new Date(auctionData.endDeliveryDate).toLocaleTimeString('de-AT') }}</span>
+                    </div>
                     <div>
                         <span><i class="bi bi-person" alt="Auction owner"></i>&nbsp;&nbsp;</span>
-                        <span>{{ auction.user.username }}</span>
+                        <span>{{ auctionData.user.username }}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div v-if="isAdmin || isUser" class="card-body bottom-area">
-            <i v-if="isBeforeAuctionStart() && isOwnAuction" class="bi bi-pencil-fill pointer spaceToOtherIcons" alt="Update auction"
-                @click="navigateToAuctionUpdateView"></i>
-            <i v-if="isOwnAuction" v-bind:class="{ 'bi-file-earmark-text-fill': (isAuctionRunning()), 'bi-file-earmark-check-fill': (isAuctionFinished()) }" class="bi pointer" alt="Show Offers"
-                @click="navigateToOfferView"></i>
-            <a v-if="(!isOwnAuction) && isAuctionRunning()" class="card-link ms-auto pointer" @click="navigateToOfferCreateView">Create Offer</a>
+            <i v-if="isAuctionActive() && isBeforeAuctionStart() && isOwnAuction" class="bi bi-pencil-fill pointer spaceToOtherIcons" alt="Update auction"
+                @click="navigateToAuctionUpdateView" />
+            <i v-if="isAuctionActive() && isOwnAuction && !isBeforeAuctionStart()" v-bind:class="{ 'bi-file-earmark-text-fill': (isAuctionRunning()), 'bi-file-earmark-check-fill': (isAuctionFinished()) }"
+                class="bi pointer spaceToOtherIcons" alt="Show Offers" @click="navigateToOfferView" />
+            <i v-if="isAdmin && !isAuctionFinished()" v-bind:class="{ 'bi-lock-fill': (isAuctionActive()), 'bi-unlock-fill': (isAuctionLocked()) }"
+                class="bi pointer" alt="Lock Auction" @click="lockAuction" />
+            <a v-if="isAuctionActive() && !isOwnAuction && isAuctionRunning()" class="card-link ms-auto pointer" @click="navigateToOfferCreateView">Create Offer</a>
         </div>
     </div>
 </template>
 
 <script>
+import http from "@/http"
 import ProductDetails from '../molecules/ProductDetails.vue';
 import TitleDescriptionPopover from '../molecules/TitleDescriptionPopover.vue';
 
@@ -68,13 +72,17 @@ export default {
     name: "AuctionCard",
     props: ["auction"],
     data: () => ({
+        auctionData: {},
         id: "",
         hid: "",
         isTruncatedTitle: false,
         isTruncatedDescription: false,
     }),
+    beforeMount() {
+        this.auctionData = this.auction
+    },
     mounted() {
-        this.id = "id" + this.auction.id + this.auction.product.id
+        this.id = "id" + this.auctionData.id + this.auctionData.product.id
         this.hid = "#" + this.id
         
         window.addEventListener("resize", this.UpdateTruncation);
@@ -86,28 +94,51 @@ export default {
     components: { TitleDescriptionPopover, ProductDetails },
     methods: {
         navigateToAuctionUpdateView() {
-            this.$store.commit("saveAuction", { auction: this.auction })
+            this.$store.commit("saveAuction", { auction: this.auctionData })
             this.$router.push("/auctions/update")
         },
-        // navigateToAuctionCreateView() {
-        //     this.$store.commit("saveProduct", { product: this.product })
-        //     this.$router.push("/auctions/create")
-        // }
+        async lockAuction() {
+            try {
+                const response = await http.put("/auctions/toggleState/" + this.auctionData.id, null, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
+                    }
+                })
+                this.auctionData.state = response.data
+                const modalData = {
+                    title: "Info (" + response.status + ")",
+                    text: "Auction state of " + this.auctionData.title + " updated successfully!"
+                }
+                window.event.emit("showErrorModal", modalData);
+            } catch(error) {
+                const modalData = {
+                    title: "Error (" + error.response.status + ")",
+                    text: error.response.data
+                }
+                window.event.emit("showErrorModal", modalData);
+            }
+        },
         UpdateTruncation() {
-            var element = window.$("#auctionDetailsTitle" + this.auction.id)[0]
+            var element = window.$("#auctionDetailsTitle" + this.auctionData.id)[0]
             this.isTruncatedTitle = element.offsetWidth < element.scrollWidth
-            element = window.$("#auctionDetailsDescription" + this.auction.id)[0]
+            element = window.$("#auctionDetailsDescription" + this.auctionData.id)[0]
             this.isTruncatedDescription = element.offsetHeight < element.scrollHeight
         },
         isBeforeAuctionStart() {
-            return new Date(this.auction.startDate) > new Date()
+            return new Date(this.auctionData.startDate) > new Date()
         },
         isAuctionFinished() {
-            return new Date(this.auction.endDate) < new Date()
+            return new Date(this.auctionData.endDate) < new Date()
         },
         isAuctionRunning() {
             return (!this.isBeforeAuctionStart()) && (!this.isAuctionFinished())
         },
+        isAuctionActive() {
+            return this.auctionData.state == "active"
+        },
+        isAuctionLocked() {
+            return this.auctionData.state == "locked"
+        }
     },
     computed: {
         isAdmin() {
@@ -117,7 +148,7 @@ export default {
             return this.$store.getters.isUser
         },
         isOwnAuction() {
-            return this.auction.user.id == this.$store.state.uuid
+            return this.auctionData.user.id == this.$store.state.uuid
         },
     }
 }
