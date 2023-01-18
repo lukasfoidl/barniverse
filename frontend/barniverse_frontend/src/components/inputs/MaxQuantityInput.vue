@@ -16,13 +16,14 @@ import { object, string } from "yup"
 
 export default {
     name: "MaxQuantityInput",
-    props: ["trigger", "maxQuantity", "objectId"],
+    props: ["trigger", "maxQuantity", "objectId", "minQuantityInputValue"],
     data: () => ({
         value: "",
         minQuantity: ""
     }),
     mounted() {
         this.value = this.maxQuantity
+        this.minQuantity = this.minQuantityInputValue
 
         window.event.on("minQuantityChanged", (data) => {
             this.minQuantity = data

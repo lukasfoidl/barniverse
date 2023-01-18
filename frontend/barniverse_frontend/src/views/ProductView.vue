@@ -2,7 +2,7 @@
     <div class="centerContent taskbar">
         <Taskbar />
     </div>
-    <div id="cardList" class="centerContent">
+    <div class="centerContent">
         <div class="row centerContent">
             <ProductCard v-for="product in products" :key="product.id" :product="product" />
         </div>

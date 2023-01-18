@@ -5,7 +5,7 @@
         <label class="form-label" for="firstname">First Name</label>
         <input type="text" class="form-control" v-model="value" :id="'firstname' + objectId" @blur="validate(false)" />
         <div class="" :id="'feedback-firstname' + objectId">
-            <p :id="'error-firstname' + objectId" class="errorMessage">{{ error }}&nbsp;</p>
+            <p :id="'error-firstname' + objectId" class="errorMessage">&nbsp;</p>
         </div>
     </div>
 
