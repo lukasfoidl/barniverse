@@ -1,5 +1,6 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.model.Auction;
 import at.barniverse.backend.barniverse_backend.model.Product;
 import at.barniverse.backend.barniverse_backend.model.ProductImage;
 import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
@@ -30,38 +31,53 @@ public class ProductValidationService extends ValidationService<Product> {
     @Override
     public List<String> validateEntitySpecificExtras(Product product) {
         List<String> errors = new ArrayList<>();
-        List<ProductImage> productImages = product.getImages();
+        boolean isPOST = product.getId() == 0;
 
-        Optional<Product> dbProduct;
         try {
-            dbProduct = productRepository.findById(product.getId());
+            Optional<Product> dbProduct = productRepository.findById(product.getId());
+            errors = validateProduct(errors, dbProduct, isPOST); // validate entity itself
+            errors = validateProductImages(errors, product, dbProduct, isPOST); // validate foreign key product images
         } catch (Exception exception) {
             return List.of(VALIDATION_ERROR);
         }
-        // if product gets created dbProduct is empty, no validation of entity specific extras required
-        // if product gets updated dbProduct already checked in ProductService
-        if (dbProduct.isEmpty()) { return Collections.emptyList(); }
 
-        List<ProductImage> dbProductImages = dbProduct.get().getImages();
+        return errors;
+    }
 
-        // check if product images are from product or new (need to be created)
-        boolean imageRelatedToProduct = false;
-        for (ProductImage productImage : productImages) {
-            if (productImage.getId() == 0) {
-                break;
+    private List<String> validateProduct(List<String> errors, Optional<Product> dbProduct, boolean isPOST) throws Exception {
+        if (!isPOST) { // PUT
+            // do not update inactive product, on POST always set to active
+            if (!dbProduct.get().isActive()) { // existence already checked before validation
+                errors.add("Product is not active!");
             }
-            for (ProductImage dbProductImage : dbProductImages) {
-                if (productImage.getId() == dbProductImage.getId()) {
-                    imageRelatedToProduct = true;
+        }
+        return errors;
+    }
+
+    private List<String> validateProductImages(List<String> errors, Product product, Optional<Product> dbProduct, boolean isPOST) throws Exception {
+        if (!isPOST) { // PUT
+            List<ProductImage> productImages = product.getImages();
+            List<ProductImage> dbProductImages = dbProduct.get().getImages(); // existence already checked before validation
+
+            // check if product images are from product or new (need to be created)
+            // on POST all images new
+            boolean imageRelatedToProduct = false;
+            for (ProductImage productImage : productImages) {
+                if (productImage.getId() == 0) {
                     break;
                 }
+                for (ProductImage dbProductImage : dbProductImages) {
+                    if (productImage.getId() == dbProductImage.getId()) {
+                        imageRelatedToProduct = true;
+                        break;
+                    }
+                }
+                if (!imageRelatedToProduct) {
+                    errors.add("Image not found!");
+                }
+                imageRelatedToProduct = false;
             }
-            if (!imageRelatedToProduct) {
-                errors.add("Image not found!");
-            }
-            imageRelatedToProduct = false;
         }
-
         return errors;
     }
 }

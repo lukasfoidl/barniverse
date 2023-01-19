@@ -16,13 +16,14 @@ import { object, date } from "yup"
 
 export default {
     name: "StartDeliveryDateInput",
-    props: ["trigger", "startDeliveryDate", "objectId"],
+    props: ["trigger", "startDeliveryDate", "objectId", "endDateInputValue"],
     data: () => ({
         value: "",
         endDate: "",
     }),
     mounted() {
         this.value = this.startDeliveryDate
+        this.endDate = this.endDateInputValue
 
         window.event.on("endDateChanged", (data) => {
             this.endDate = data

@@ -78,7 +78,8 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
      * repairs offer entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * user property gets set to user property from database, because the user cannot be changed after the creation of an offer entity, <br>
-     * auction property gets set to auction property from database, because the auction cannot be changed after the creation of an offer entity
+     * auction property gets set to auction property from database, because the auction cannot be changed after the creation of an offer entity, <br>
+     * state property gets set to state property from database, because the state of an offer can not be updated with standard offer update (PUT)
      * @param offer entity which needs to be repaired
      * @param dbOffer entity with the missing data
      * @return repaired entity
@@ -88,6 +89,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
         offer.setId(dbOffer.getId()); // set id to update existing entity
         offer.setUser(dbOffer.getUser()); // user can not be changed after creation of an offer
         offer.setAuction(dbOffer.getAuction()); // auction can not be changed after creation of an offer
+        offer.setState(dbOffer.getState()); // state can not be updated with standard offer update (PUT)
         return offer;
     }
 }

@@ -41,7 +41,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         auctionDto.setEndDeliveryDate(auction.getEndDeliveryDate());
         auctionDto.setStartDate(auction.getStartDate());
         auctionDto.setEndDate(auction.getEndDate());
-        auctionDto.setLocked(auction.isLocked());
+        auctionDto.setState(auction.getState());
         auctionDto.setUser(userTransformer.convertToDto(auction.getUser()));
         auctionDto.setProduct(productTransformer.convertToDto(auction.getProduct()));
 
@@ -73,7 +73,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         auction.setEndDeliveryDate(auctionDto.getEndDeliveryDate());
         auction.setStartDate(auctionDto.getStartDate());
         auction.setEndDate(auctionDto.getEndDate());
-        auction.setLocked(auctionDto.isLocked());
+        auction.setState(auctionDto.getState());
 
         // no cascading enabled, only id for foreign key relevant, sub entities irrelevant
         User user = new User();
@@ -92,7 +92,8 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
      * repairs auction entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * user property gets set to user property from database, because the user cannot be changed after the creation of an auction entity, <br>
-     * product property gets set to product property from database, because the product cannot be changed after the creation of an auction entity
+     * product property gets set to product property from database, because the product cannot be changed after the creation of an auction entity, <br>
+     * state property gets set to state property from database, because the state of an auction can not be updated with standard auction update (PUT)
      * @param auction entity which needs to be repaired
      * @param dbAuction entity with the missing data
      * @return repaired entity
@@ -102,6 +103,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
         auction.setId(dbAuction.getId()); // set id to update existing entity
         auction.setUser(dbAuction.getUser()); // user can not be changed after creation of an auction
         auction.setProduct(dbAuction.getProduct()); // product can not be changed after creation of an auction
+        auction.setState(dbAuction.getState()); // state can not be updated with standard auction update (PUT)
         return auction;
     }
 }

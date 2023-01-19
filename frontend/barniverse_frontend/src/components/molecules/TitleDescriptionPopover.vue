@@ -3,8 +3,8 @@
         <i class="bi bi-info-circle icon" alt="Details"></i>
         <template #content>
             <div class="popover">
-                <h5>{{ product.title }}</h5>
-                <div>{{ product.description }}</div>
+                <h5>{{ object.title }}</h5>
+                <div>{{ object.description }}</div>
             </div>
         </template>
     </Popover>
@@ -14,8 +14,8 @@
 import Popover from "vue3-popper"
 
 export default {
-    name: "ProductDetailsPopover",
-    props: ["product"],
+    name: "TitleDescriptionPopover",
+    props: ["object"],
     components: { Popover },
 }
 </script>

@@ -56,7 +56,6 @@ export default {
                     endDeliveryDate: data.endDeliveryDate,
                     startDate: data.startDate,
                     endDate: data.endDate,
-                    locked: false,
                     user: { id: this.$store.state.uuid },
                     product: { id: this.$store.state.product.id }
                 }

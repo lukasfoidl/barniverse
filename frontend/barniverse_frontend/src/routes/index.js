@@ -14,6 +14,7 @@ import ProfileView from "@/views/ProfileView"
 import ProductUpdateView from "@/views/ProductUpdateView"
 import ProductCreateView from "@/views/ProductCreateView"
 import AuctionCreateView from "@/views/AuctionCreateView"
+import AuctionUpdateView from "@/views/AuctionUpdateView"
 import ChangePasswordView from "@/views/ChangePasswordView"
 import store from "@/store"
 
@@ -37,6 +38,16 @@ const routes = [
         name: "createAuctions",
         path: "/auctions/create",
         component: AuctionCreateView,
+        beforeEnter: () => {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "updateAuction",
+        path: "/auctions/update/",
+        component: AuctionUpdateView,
         beforeEnter: () => {
             if (!store.getters.isUser && !store.getters.isAdmin) {
                 return '/PageNotFound'

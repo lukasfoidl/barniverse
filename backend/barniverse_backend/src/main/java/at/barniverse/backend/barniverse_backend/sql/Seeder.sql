@@ -49,14 +49,14 @@ INSERT INTO product_image (id, file, product_id)
 VALUES (7, 'Bier01.jpg', '4');
 
 # seed auction table
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
-VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-04-01', '2022-04-04', false, 1, 6);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
-VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2022-12-01', '2022-12-10', false, 4, 6);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
-VALUES (3, 'Locked Auction', 'locked Auction test', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', true, 3, 6);
-INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, locked, product_id, user_id)
-VALUES (4, 'Closed Auction', 'closed Auction test', 100.0, 150.0, 1000, 1500, '2023-02-01', '2023-02-10', '2022-10-01', '2022-10-10', false, 4, 6); #winner offer id = 8
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
+VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-04-01', '2022-04-04', '0', 1, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
+VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2022-12-01', '2022-12-10', '0', 4, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
+VALUES (3, 'Locked Auction', 'locked Auction test', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', '1', 3, 6);
+INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
+VALUES (4, 'Closed Auction', 'closed Auction test', 100.0, 150.0, 1000, 1500, '2023-02-01', '2023-02-10', '2022-10-01', '2022-10-10', '0', 4, 6); #winner offer id = 8
 
 # seed offer table
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)

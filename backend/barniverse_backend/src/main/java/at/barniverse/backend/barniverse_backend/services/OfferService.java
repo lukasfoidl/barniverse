@@ -1,6 +1,8 @@
 package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.OfferDto;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
+import at.barniverse.backend.barniverse_backend.enums.OfferState;
 import at.barniverse.backend.barniverse_backend.repository.OfferRepository;
 import at.barniverse.backend.barniverse_backend.transformer.OfferTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class OfferService extends BaseService {
      * @return response with corresponding status code and error message in case of failure
      */
     public ResponseEntity<Object> addOffer(OfferDto offerDto) {
+        offerDto.setState(OfferState.running);
         return addEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
