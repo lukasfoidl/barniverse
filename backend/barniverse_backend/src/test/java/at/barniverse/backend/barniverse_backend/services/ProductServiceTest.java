@@ -63,7 +63,7 @@ class ProductServiceTest {
         auctionDto.setMaxQuantity(100);
         auctionDto.setMinQuantity(100);
         auctionDto.setProduct(productDto);
-        auctionDto.setLocked(false);
+        //auctionDto.setLocked(false);
         auctionDto.setStartDate(null);
         auctionDto.setStartDeliveryDate(null);
         auctionDto.setTitle("the best Gin Auction");
@@ -96,7 +96,7 @@ class ProductServiceTest {
         auction.setMaxQuantity(100);
         auction.setMinQuantity(100);
         auction.setProduct(product);
-        auction.setLocked(false);
+        //auction.setLocked(false);
         auction.setStartDate(null);
         auction.setStartDeliveryDate(null);
         auction.setTitle("the best Gin Auction");
