@@ -74,7 +74,7 @@ abstract public class BaseService {
             U dto = transformer.convertToDto(entity);
 
             /*
-            When testing it appeared that the dto refrence was only send but not the values
+            When testing it appeared that the dto reference was only send but not the values
 
             Object Mapper to Map Object to Json Type
             ObjectMapper objectMapper = new ObjectMapper();

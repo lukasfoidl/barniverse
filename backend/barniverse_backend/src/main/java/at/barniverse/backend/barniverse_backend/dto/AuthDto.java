@@ -18,9 +18,7 @@ public class AuthDto {
         this.uuid = uuid;
     }
 
-    public AuthDto() {
-
-    }
+    public AuthDto() { }
 
 //----getter and setter----
 

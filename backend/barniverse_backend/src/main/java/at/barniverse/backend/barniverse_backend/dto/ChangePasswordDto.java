@@ -14,9 +14,7 @@ public class ChangePasswordDto {
         this.password = password;
     }
 
-    public ChangePasswordDto() {
-
-    }
+    public ChangePasswordDto() { }
 
 //----getter and setter----
 
