@@ -1,11 +1,6 @@
 <template>
     <div>
-        <label class="form-label" for="product">Product</label>
-        <div id="product">
-            <span>{{ product.title }}</span>
-            <span>&nbsp;</span>
-            <TitleDescriptionPopover :object="product" />
-        </div>
+       <ProductCard :product="auctionData.product" :isSingleView="true" />
     </div>
     <TitleInput :trigger="trigger" :title="auctionData.title" :objectId="auctionData.id" />
     <DescriptionInput :trigger="trigger" :description="auctionData.description" :objectId="auctionData.id" />
@@ -59,12 +54,12 @@ import StartDeliveryDateInput from '../inputs/StartDeliveryDateInput.vue';
 import EndDeliveryDateInput from '../inputs/EndDeliveryDateInput.vue';
 import StartDateInput from '../inputs/StartDateInput.vue';
 import EndDateInput from '../inputs/EndDateInput.vue';
-import TitleDescriptionPopover from '../molecules/TitleDescriptionPopover.vue';
+import ProductCard from '../cards/ProductCard.vue';
 
 export default {
     name: "AuctionForm",
-    components: { DescriptionInput, TitleInput, InputValidationHandler, MinPriceInput, MaxPriceInput, MinQuantityInput, MaxQuantityInput, StartDeliveryDateInput, EndDeliveryDateInput, StartDateInput, EndDateInput, TitleDescriptionPopover },
-    props: ["trigger", "auction", "product"],
+    components: { DescriptionInput, TitleInput, InputValidationHandler, MinPriceInput, MaxPriceInput, MinQuantityInput, MaxQuantityInput, StartDeliveryDateInput, EndDeliveryDateInput, StartDateInput, EndDateInput, ProductCard },
+    props: ["trigger", "auction"],
     data: () => ({
         values: [
             "title",

@@ -4,12 +4,16 @@ import at.barniverse.backend.barniverse_backend.dto.OfferDto;
 import at.barniverse.backend.barniverse_backend.services.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
 
 /**
  * controller with basic CRUD routing for offer related URLs
  */
 @RestController
+@CrossOrigin(origins = CORS_ORIGINS)
 @RequestMapping(path = "/api")
 public class OfferController {
 
@@ -22,6 +26,7 @@ public class OfferController {
      * @return response with corresponding status code and error message in case of failure
      */
     @PostMapping(path="/offers")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Object> addOffer(@RequestBody OfferDto offerDto) {
         return offerService.addOffer(offerDto);
     }

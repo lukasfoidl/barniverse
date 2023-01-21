@@ -2,7 +2,7 @@
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-sm-11 col-md-9 col-lg-9 col-xl-6">
 
-            <AuctionForm :trigger="trigger" :auction="auction" />
+            <OfferForm :trigger="trigger" :auction="auction" />
 
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" @click="triggerValidation">Save</button>
@@ -14,26 +14,21 @@
 
 <script>
 import http from "@/http"
-import AuctionForm from '@/components/forms/AuctionForm.vue';
+import OfferForm from '@/components/forms/OfferForm.vue';
 
 export default {
-    name: "AuctionCreateView",
-    components: { AuctionForm },
+    name: "OfferCreateView",
+    components: { OfferForm },
     data: () => ({
-        auction: {
-            id: undefined,
-            title: "",
-            description: "",
-            product: {},
-        },
+        auction: {},
         trigger: false,
     }),
     beforeMount() {
-        this.auction.product = this.$store.state.product
+        this.auction = this.$store.state.auction
     },
     mounted() {
         window.event.on("validationCompleted", (data) => {
-            this.createAuction(data)
+            this.createOffer(data)
         });
     },
     unmounted() {
@@ -43,33 +38,26 @@ export default {
         triggerValidation() {
             this.trigger = !this.trigger
         },
-        async createAuction(data) {
+        async createOffer(data) {
             try {
                 const requestBody = {
-                    title: data.title,
-                    description: data.description,
-                    minPrice: data.minPrice,
-                    maxPrice: data.maxPrice,
-                    minQuantity: data.minQuantity,
-                    maxQuantity: data.maxQuantity,
-                    startDeliveryDate: data.startDeliveryDate,
-                    endDeliveryDate: data.endDeliveryDate,
-                    startDate: data.startDate,
-                    endDate: data.endDate,
+                    price: data.price,
+                    quantity: data.quantity,
+                    deliveryDate: data.deliveryDate,
                     user: { id: this.$store.state.uuid },
-                    product: { id: this.$store.state.product.id }
+                    auction: { id: this.auction.id }
                 }
-                const response = await http.post("/auctions", requestBody, {
+                const response = await http.post("/offers", requestBody, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
                 })
                 const modalData = {
                     title: "Info (" + response.status + ")",
-                    text: "Auction created successfully!"
+                    text: "Offer created successfully!"
                 }
                 window.event.emit("showErrorModal", modalData);
-                this.$router.push("/myAuctions")
+                this.$router.push("/myOffers")
             } catch(error) {
                 const modalData = {
                     title: "Error (" + error.response.status + ")",
@@ -79,7 +67,7 @@ export default {
             }
         },
         cancel() {
-            this.$router.push("/products")
+            this.$router.push("/auctions")
         }
     }
 }

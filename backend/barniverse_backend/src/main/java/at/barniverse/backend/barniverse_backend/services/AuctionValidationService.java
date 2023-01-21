@@ -94,9 +94,12 @@ public class AuctionValidationService extends ValidationService<Auction> {
     /**
      * validates if auction has not ended yet (end date reached)
      * @param auction entity which should be validated
-     * @return true if validation successful, false if validation failed
+     * @return empty String if validation successful, error message if validation failed
      */
-    public boolean validateTaskToggleAuction(Auction auction) {
-        return auction.getEndDate().compareTo(LocalDateTime.now()) > 0;
+    public String validateTaskToggleAuction(Auction auction) {
+        if (auction.getEndDate().compareTo(LocalDateTime.now()) < 0) {
+            return "Auction already ended, state can not be updated!";
+        }
+        return "";
     }
 }

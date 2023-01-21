@@ -147,8 +147,9 @@ public class AuctionService extends BaseService {
 
         // validation not with standard validation because only updating state (otherwise possible startDate conflict with @Future annotation)
         // and task specific validation
-        if (!auctionValidationService.validateTaskToggleAuction(auction)) {
-            return new ResponseEntity<>("Auction already ended, state can not be updated!", HttpStatus.BAD_REQUEST);
+        String error;
+        if (!(error = auctionValidationService.validateTaskToggleAuction(auction)).isBlank()) {
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         AuctionState state = AuctionState.active;
         if (auction.getState() == AuctionState.active) {

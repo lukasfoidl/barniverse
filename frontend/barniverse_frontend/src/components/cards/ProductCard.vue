@@ -1,8 +1,8 @@
 <template>
-    <div class="card col-xs-12 col-sm-10 col-md-5 col-lg-3">
+    <div class="card" v-bind:class="{ 'col-xs-12 col-sm-10 col-md-5 col-lg-3': (!isSingleView), 'cardBottomSpacer': (isSingleView) }">
         <ProductDetails :product="product" />
 
-        <div v-if="isAdmin || isUser" class="card-body bottom-area">
+        <div v-if="(isAdmin || isUser) && !isSingleView" class="card-body bottom-area">
             <i v-if="isAdmin" class="bi bi-pencil-fill editStyle pointer" alt="Update product" @click="navigateToProductUpdateView"></i>
             <a class="card-link ms-auto pointer" @click="navigateToAuctionCreateView">Create Auction</a>
         </div>
@@ -14,7 +14,7 @@ import ProductDetails from '../molecules/ProductDetails.vue'
 
 export default {
     name: "ProductCard",
-    props: ["product"],
+    props: ["product", "isSingleView"],
     methods: {
         navigateToProductUpdateView() {
             this.$store.commit("saveProduct", { product: this.product });
@@ -60,5 +60,10 @@ export default {
 
 .pointer {
     cursor: pointer;
+}
+
+.cardBottomSpacer {
+    margin-bottom: 10px !important;
+    margin: 0px;
 }
 </style>

@@ -80,7 +80,7 @@ public class OfferValidationService extends ValidationService<Offer> {
             }
             // prevent saving offers outside auction running time frame
             if (auction.get().getStartDate().compareTo(LocalDateTime.now()) > 0 || auction.get().getEndDate().compareTo(LocalDateTime.now()) < 0) {
-                errors.add("Auction not running, no offers can be placed!");
+                errors.add("Auction is not running, no offers can be placed!");
             }
         } else {
             errors.add("Auction not found!");

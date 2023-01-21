@@ -1,5 +1,5 @@
 <template>
-    <div class="card col-xs-12 col-sm-12 col-md-10 col-lg-5">
+    <div class="card" v-bind:class="{ 'col-xs-12 col-sm-12 col-md-10 col-lg-5': (!isSingleView), 'cardBottomSpacer': (isSingleView) }">
         <div class="badgeContainer ms-auto">
             <span v-if="isAuctionActive() && isBeforeAuctionStart()" class="badge rounded-pill text-bg-success">Soon</span>
             <span v-if="isAuctionActive() && isAuctionRunning()" class="badge rounded-pill text-bg-warning">Bid now</span>
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="isAdmin || isUser" class="card-body bottom-area">
+        <div v-if="(isAdmin || isUser) && !isSingleView" class="card-body bottom-area">
             <i v-if="isAuctionActive() && isBeforeAuctionStart() && isOwnAuction" class="bi bi-pencil-fill pointer spaceToOtherIcons" alt="Update auction"
                 @click="navigateToAuctionUpdateView" />
             <i v-if="isAuctionActive() && isOwnAuction && !isBeforeAuctionStart()" v-bind:class="{ 'bi-file-earmark-text-fill': (isAuctionRunning()), 'bi-file-earmark-check-fill': (isAuctionFinished()) }"
@@ -70,7 +70,7 @@ import TitleDescriptionPopover from '../molecules/TitleDescriptionPopover.vue';
 
 export default {
     name: "AuctionCard",
-    props: ["auction"],
+    props: ["auction", "isSingleView"],
     data: () => ({
         auctionData: {},
         id: "",
@@ -96,6 +96,10 @@ export default {
         navigateToAuctionUpdateView() {
             this.$store.commit("saveAuction", { auction: this.auctionData })
             this.$router.push("/auctions/update")
+        },
+        navigateToOfferCreateView() {
+            this.$store.commit("saveAuction", { auction: this.auctionData })
+            this.$router.push("/offers/create")
         },
         async lockAuction() {
             try {
@@ -162,6 +166,7 @@ export default {
 .badge {
     width: 60px;
     position: absolute;
+    z-index: 10;
 }
 
 .card {
@@ -209,5 +214,10 @@ export default {
 
 .bi-file-earmark-check-fill {
     color: green;
+}
+
+.cardBottomSpacer {
+    margin-bottom: 10px !important;
+    margin: 0px;
 }
 </style>
