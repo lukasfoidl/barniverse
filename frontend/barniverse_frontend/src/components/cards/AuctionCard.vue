@@ -101,6 +101,10 @@ export default {
             this.$store.commit("saveAuction", { auction: this.auctionData })
             this.$router.push("/offers/create")
         },
+        navigateToOfferView() {
+            this.$store.commit("saveAuction", { auction: this.auctionData })
+            this.$router.push("/offers")
+        },
         async lockAuction() {
             try {
                 const response = await http.put("/auctions/toggleState/" + this.auctionData.id, null, {

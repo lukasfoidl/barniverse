@@ -52,7 +52,7 @@ public class OfferValidationService extends ValidationService<Offer> {
     private List<String> validateOffer(List<String> errors, Offer offer, boolean isPOST) throws Exception {
         if(!isPOST) {
             Offer dbOffer = offerRepository.findById(offer.getId()).get(); // existence already checked before validation
-            // only update running auctions, on POST always running
+            // only update running offers, on POST always running
             if (!dbOffer.IsRunning()) {
                 errors.add("Offer not running! Only running offers can be changed!");
             }

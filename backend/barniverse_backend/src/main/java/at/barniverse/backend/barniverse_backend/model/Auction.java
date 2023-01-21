@@ -27,6 +27,7 @@ public class Auction implements IEntity {
     private int id;
 
     @NotBlank(message = "Title is mandatory!")
+    @Size(max = 50, message = "Title must be shorter than 50 characters!")
     private String title;
 
     @Size(max = 500, message = "Description must be shorter than 500 characters!")

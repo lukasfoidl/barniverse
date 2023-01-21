@@ -44,7 +44,7 @@ export default {
 }
 
 const validationSchema = object().shape({
-    firstname: string().required("First name is required!"),
+    firstname: string().max(50, "Firstname must be shorter than 50 characters!").required("First name is required!"),
 })
 </script>
     

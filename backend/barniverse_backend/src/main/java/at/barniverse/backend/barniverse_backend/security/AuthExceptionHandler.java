@@ -26,4 +26,10 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAuthenticationException(Exception ex) {
         return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
     }
+
+//    @ExceptionHandler({ Exception.class })
+//    @ResponseBody
+//    public ResponseEntity<Object> returnErrorMessage(Exception ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 }

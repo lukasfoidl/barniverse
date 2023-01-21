@@ -14,7 +14,8 @@ const store = createStore({
             uuid: "",
 
             product: {},
-            auction: {}
+            auction: {},
+            offer: {}
         }
     },
     mutations: {
@@ -42,6 +43,10 @@ const store = createStore({
         // auction store for AuctionUpdateView
         saveAuction(state, data) {
             state.auction = data.auction
+        },
+        // offer store for OfferDetailsView
+        saveOffer(state, data) {
+            state.offer = data.offer
         },
     },
     getters: {

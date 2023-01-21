@@ -32,12 +32,34 @@ public class OfferController {
     }
 
     /**
-     *get all saved offers from the database
+     * get all saved offers from the database
      * @return response with corresponding status code and loaded offer dtos or error message in case of failure
      */
     @GetMapping(path="/offers")
     public ResponseEntity<Object> getOffers() {
         return offerService.getOffers();
+    }
+
+    /**
+     * get all saved offers from a specific auction
+     * @param id id of the specific auction
+     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     */
+    @GetMapping(path="/auctions/{id}/offers")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<Object> getOffersFromAuction(@PathVariable int id) {
+        return offerService.getOffersFromAuction(id);
+    }
+
+    /**
+     * get all saved offers from a specific user
+     * @param id id of the specific user
+     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     */
+    @GetMapping(path="/users/{id}/offers")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<Object> getOffersFromUser(@PathVariable int id) {
+        return offerService.getOffersFromUser(id);
     }
 
     /**
@@ -72,4 +94,14 @@ public class OfferController {
         return offerService.deleteOffer(id);
     }
 
+    /**
+     * update specific offer state to accept, <br>
+     * update offer state to rejected for all other offers of the accepted offers auction
+     * @param id id of the specific offer
+     * @return response with corresponding status code and error message in case of failure
+     */
+    @PutMapping(path="/offers/{id}/accept")
+    public ResponseEntity<Object> acceptOffer(@PathVariable int id) {
+        return offerService.acceptOffer(id);
+    }
 }

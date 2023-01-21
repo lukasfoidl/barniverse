@@ -48,7 +48,7 @@ public class ProductService extends BaseService {
      * @param productDto dto which should be saved
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> addProduct(ProductDto productDto) {
+    public ResponseEntity<Object> addProduct(ProductDto productDto) throws Exception {
         productDto.setState(ProductState.active);
         // not with addEntity because of the subentities
         Product productEntity = productTransformer.convertToEntity(productDto);

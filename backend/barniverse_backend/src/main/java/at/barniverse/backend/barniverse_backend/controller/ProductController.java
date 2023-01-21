@@ -28,7 +28,7 @@ public class ProductController {
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping(path="/products")
-    public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) throws Exception {
         return productService.addProduct(productDto);
     }
 

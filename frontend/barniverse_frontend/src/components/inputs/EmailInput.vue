@@ -44,7 +44,7 @@ export default {
 }
 
 const validationSchema = object().shape({
-    email: string().email("Email must be valid!").required("Email is required!"),
+    email: string().email("Email must be valid!").max(50, "Email must be shorter than 50 characters!").required("Email is required!"),
 })
 </script>
     
