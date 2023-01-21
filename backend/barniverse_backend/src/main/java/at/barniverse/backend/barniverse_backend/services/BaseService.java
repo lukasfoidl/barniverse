@@ -72,7 +72,21 @@ abstract public class BaseService {
         if (response.getStatusCode() == HttpStatus.OK) {
             T entity = (T) response.getBody();
             U dto = transformer.convertToDto(entity);
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+
+            /*
+            When testing it appeared that the dto refrence was only send but not the values
+
+            Object Mapper to Map Object to Json Type
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json ="";
+            try{
+                 json = objectMapper.writeValueAsString(dto);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            when dto is send  the UserDto Reference will be send will be returned in the body */
+
+            return new ResponseEntity<>( dto, HttpStatus.OK);
         }
         return response;
     }

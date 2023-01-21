@@ -58,6 +58,19 @@ public class UserService extends BaseService {
                 resultList.add(userDto);
             }
         }
+        /*
+        comment: added Code for testing
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = "";
+        try{
+            json = objectMapper.writeValueAsString(resultList);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        ends here + json in entity body instead of resultList add
+        */
+
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
