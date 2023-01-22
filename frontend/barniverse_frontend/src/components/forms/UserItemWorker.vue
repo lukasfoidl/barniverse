@@ -87,7 +87,7 @@ export default {
         },
         async deleteUser() {
             try {
-                const response = await http.put("users/deleteWithState/" + this.userData.id, null, {
+                const response = await http.put("users/" + this.userData.id + "/deleteWithState", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
@@ -138,7 +138,7 @@ export default {
         },
         async toggleState() {
             try {
-                const response = await http.put("users/toggleState/" + this.userData.id, null, {
+                const response = await http.put("users/" + this.userData.id + "/toggleState", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
@@ -159,7 +159,7 @@ export default {
         },
         async toggleAdmin() {
             try {
-                const response = await http.put("users/toggleAdmin/" + this.userData.id, null, {
+                const response = await http.put("users/" + this.userData.id + "/toggleAdmin", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }

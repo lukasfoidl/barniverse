@@ -1,12 +1,16 @@
 package at.barniverse.backend.barniverse_backend.controller;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.dto.AuctionDto;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.services.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
 
@@ -18,8 +22,7 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.COR
 @RequestMapping(path = "/api")
 public class AuctionController {
 
-    @Autowired
-    private AuctionService auctionService;
+    @Autowired private AuctionService auctionService;
 
     /**
      * add an auction to the database
@@ -28,8 +31,9 @@ public class AuctionController {
      */
     @PostMapping(path="/auctions")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<Object> addAuction(@RequestBody AuctionDto auctionDto) {
-        return auctionService.addAuction(auctionDto);
+    public ResponseEntity<Object> addAuction(@RequestBody AuctionDto auctionDto) throws BarniverseException {
+        auctionService.addAuction(auctionDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
@@ -38,8 +42,9 @@ public class AuctionController {
      */
     @GetMapping(path="/auctions/notClosed")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> getNotClosedAuctions() {
-        return auctionService.getNotClosedAuctions();
+    public ResponseEntity<Object> getNotClosedAuctions() throws BarniverseException {
+        List<AuctionDto> results = auctionService.getNotClosedAuctions();
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     /**
@@ -47,8 +52,9 @@ public class AuctionController {
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
     @GetMapping(path="/auctions")
-    public ResponseEntity<Object> getNotClosedActiveAuctions() {
-        return auctionService.getNotClosedActiveAuctions();
+    public ResponseEntity<Object> getNotClosedActiveAuctions() throws BarniverseException {
+        List<AuctionDto> results = auctionService.getNotClosedActiveAuctions();
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     /**
@@ -58,20 +64,10 @@ public class AuctionController {
      */
     @GetMapping(path="/myAuctions/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<Object> getMyAuctions(@PathVariable int id) {
-        return auctionService.getMyAuctions(id);
+    public ResponseEntity<Object> getMyAuctions(@PathVariable int id) throws BarniverseException {
+        List<AuctionDto> results = auctionService.getMyAuctions(id);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
-
-    /**
-     * get specific auction from the database
-     * @param id id of the specific auction
-     * @return response with corresponding status code and loaded auction dto or error message in case of failure
-     */
-    @GetMapping(path="/auctions/{id}")
-    public ResponseEntity<Object> getAuction(@PathVariable int id) {
-        return auctionService.getAuction(id);
-    }
-
 
     //TODO: Safety alert! Auctions can be updated only with Id.
     /**
@@ -81,19 +77,9 @@ public class AuctionController {
      */
     @PutMapping(path="/auctions")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<Object> updateAuction(@RequestBody AuctionDto auctionDto) {
-        return auctionService.updateAuction(auctionDto);
-    }
-
-    //TODO: Safety alert! Auctions can be deleted only with Id.
-    /**
-     * delete specific auction from the database
-     * @param id id of the specific auction
-     * @return response with corresponding status code and error message in case of failure
-     */
-    @DeleteMapping(path="/auctions/{id}")
-    public ResponseEntity<Object> deleteAuction(@PathVariable int id) {
-        return auctionService.deleteAuction(id);
+    public ResponseEntity<Object> updateAuction(@RequestBody AuctionDto auctionDto) throws BarniverseException {
+        auctionService.updateAuction(auctionDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
@@ -102,9 +88,10 @@ public class AuctionController {
      * @return response with corresponding status code and error message in case of failure
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @PutMapping(path="/auctions/toggleState/{id}")
-    public ResponseEntity<Object> toggleState(@PathVariable int id) {
-        return auctionService.toggleState(id);
+    @PutMapping(path="/auctions/{id}/toggleState")
+    public ResponseEntity<Object> toggleState(@PathVariable int id) throws BarniverseException {
+        AuctionState state =  auctionService.toggleState(id);
+        return new ResponseEntity<>(state, HttpStatus.OK);
     }
 
 }

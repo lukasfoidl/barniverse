@@ -60,8 +60,10 @@ public class JWTFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
                 } catch (TokenExpiredException exception) {
+                    // no BarniverseException because of Override method
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, JWT_TOKEN_EXPIRED);
                 } catch (JWTVerificationException exc) {
+                    // no BarniverseException because of Override method
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, JWT_TOKEN_INVALID);
                 }
             }

@@ -107,7 +107,7 @@ export default {
         },
         async lockAuction() {
             try {
-                const response = await http.put("/auctions/toggleState/" + this.auctionData.id, null, {
+                const response = await http.put("/auctions/" + this.auctionData.id + "/toggleState", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }

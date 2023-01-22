@@ -1,20 +1,16 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.dto.OfferDto;
-import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
-import at.barniverse.backend.barniverse_backend.model.Auction;
 import at.barniverse.backend.barniverse_backend.model.Offer;
 import at.barniverse.backend.barniverse_backend.repository.OfferRepository;
 import at.barniverse.backend.barniverse_backend.transformer.OfferTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
 
@@ -24,40 +20,18 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.DAT
 @Service
 public class OfferService extends BaseService {
 
-    @Autowired
-    private OfferRepository offerRepository;
-
-    @Autowired
-    private OfferTransformer offerTransformer;
-
-    @Autowired
-    private OfferValidationService offerValidationService;
+    @Autowired private OfferRepository offerRepository;
+    @Autowired private OfferTransformer offerTransformer;
+    @Autowired private OfferValidationService offerValidationService;
 
     /**
      * add an offer to the database
      * @param offerDto dto which should be saved
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> addOffer(OfferDto offerDto) {
+    public void addOffer(OfferDto offerDto) throws BarniverseException {
         offerDto.setState(OfferState.running);
-        return addEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
-    }
-
-    /**
-     *get all saved offers from the database
-     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
-     */
-    public ResponseEntity<Object> getOffers() {
-        return getEntities(offerRepository, offerTransformer);
-    }
-
-    /**
-     * get specific offer from the database
-     * @param id id of the specific offer
-     * @return response with corresponding status code and loaded offer dto or error message in case of failure
-     */
-    public ResponseEntity<Object> getOffer(int id) {
-        return getEntityAsDto(offerRepository, offerTransformer, id);
+        addEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
     }
 
     /**
@@ -65,18 +39,15 @@ public class OfferService extends BaseService {
      * @param id id of the specific auction
      * @return response with corresponding status code and loaded offer dtos or error message in case of failure
      */
-    public ResponseEntity<Object> getOffersFromAuction(int id) {
-        List<Offer> entities;
+    public List<OfferDto> getOffersFromAuction(int id) throws BarniverseException {
+        List<Offer> offers;
         try {
-            entities = offerRepository.findByAuction_Id(id);
+            offers = offerRepository.findAllByAuction_Id(id);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        List<OfferDto> dtos = new ArrayList<>();
-        entities.forEach(entity -> {
-            dtos.add(offerTransformer.convertToDto(entity));
-        });
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+
+        return convertToDto(offerTransformer, offers);
     }
 
     /**
@@ -84,36 +55,15 @@ public class OfferService extends BaseService {
      * @param id id of the specific user
      * @return response with corresponding status code and loaded offer dtos or error message in case of failure
      */
-    public ResponseEntity<Object> getOffersFromUser(int id) {
-        List<Offer> entities;
+    public List<OfferDto> getOffersFromUser(int id) throws BarniverseException {
+        List<Offer> offers;
         try {
-            entities = offerRepository.findByUser_Id(id);
+            offers = offerRepository.findAllByUser_Id(id);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        List<OfferDto> dtos = new ArrayList<>();
-        entities.forEach(entity -> {
-            dtos.add(offerTransformer.convertToDto(entity));
-        });
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
-    }
 
-    /**
-     * update specific offer in the database
-     * @param offerDto dto which should be updated (with id)
-     * @return response with corresponding status code and error message in case of failure
-     */
-    public ResponseEntity<Object> updateOffer(OfferDto offerDto) {
-        return updateEntity(offerRepository, offerTransformer, offerValidationService, offerDto);
-    }
-
-    /**
-     * delete specific offer from the database
-     * @param id id of the specific offer
-     * @return response with corresponding status code and error message in case of failure
-     */
-    public ResponseEntity<Object> deleteOffer(int id) {
-        return deleteEntity(offerRepository, id);
+        return convertToDto(offerTransformer, offers);
     }
 
     /**
@@ -122,16 +72,11 @@ public class OfferService extends BaseService {
      * @param id id of the specific offer
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> acceptOffer(int id) {
-        ResponseEntity<Object> response = getEntity(offerRepository, id);
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return response;
-        }
-        Offer offer = (Offer) response.getBody();
-
+    public void acceptOffer(int id) throws BarniverseException {
+        Offer offer = getEntity(offerRepository, id);
         List<Offer> offers;
         try {
-            offers = offerRepository.findByAuction_Id(offer.getAuction().getId()); // existence check in getEntity()
+            offers = offerRepository.findAllByAuction_Id(offer.getAuction().getId()); // existence check in getEntity()
             for (Offer item : offers) {
                 if (item.getId() == id) {
                     item.setState(OfferState.accepted);
@@ -141,8 +86,7 @@ public class OfferService extends BaseService {
             }
             offerRepository.saveAll(offers);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

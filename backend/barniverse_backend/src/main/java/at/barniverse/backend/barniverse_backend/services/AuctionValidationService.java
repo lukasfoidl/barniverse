@@ -1,20 +1,20 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.model.Auction;
-import at.barniverse.backend.barniverse_backend.model.Product;
-import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.AuctionRepository;
 import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
@@ -34,7 +34,7 @@ public class AuctionValidationService extends ValidationService<Auction> {
      * @return error messages, empty if validation was successful
      */
     @Override
-    public List<String> validateEntitySpecificExtras(Auction auction) {
+    public List<String> validateEntitySpecificExtras(Auction auction) throws BarniverseException {
         List<String> errors = new ArrayList<>();
         boolean isPOST = auction.getId() == 0;
 
@@ -43,49 +43,42 @@ public class AuctionValidationService extends ValidationService<Auction> {
             errors = validateUser(errors, auction, isPOST); // validate foreign key user
             errors = validateProduct(errors, auction, isPOST); // validate foreign key product
         } catch (Exception exception) {
-            return List.of(VALIDATION_ERROR);
+            throw new BarniverseException(List.of(VALIDATION_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
 
         return errors;
     }
 
-    private List<String> validateAuction(List<String> errors, Auction auction, boolean isPOST) throws Exception {
-        if (!isPOST) { // PUT
-            Auction dbAuction = auctionRepository.findById(auction.getId()).get(); // existence already checked before validation
+    private List<String> validateAuction(List<String> errors, Auction auction, boolean isPOST) {
+        if (!isPOST) { // PUT (existence already checked in getEntity())
             // do not update inactive auction, on POST always set to active
-            if (!dbAuction.isActive()) {
+            if (!auctionRepository.existsByIdAndState(auction.getId(), AuctionState.active)) {
                 errors.add("Auction is not active!");
             }
             // prevent updating auction after start date (POST case secured with @Future annotation of startDate)
-            if (dbAuction.getStartDate().compareTo(LocalDateTime.now()) <= 0) {
+            if (!auctionRepository.existsByIdAndStartDateAfter(auction.getId(), LocalDateTime.now())) {
                 errors.add("Auction already started, no changes possible!");
             }
         }
         return errors;
     }
 
-    private List<String> validateUser(List<String> errors, Auction auction, boolean isPOST) throws Exception {
-        Optional<User> user = userRepository.findById(auction.getUser().getId());
-        if (user.isPresent()) {
-            if (!user.get().isActive()) {
-                errors.add("User is not active!");
-            }
-        } else {
+    private List<String> validateUser(List<String> errors, Auction auction, boolean isPOST) {
+        if (!userRepository.existsById(auction.getUser().getId())) {
             errors.add("User not found!");
+        } else if (!userRepository.existsByIdAndState(auction.getUser().getId(), UserState.active)) {
+            errors.add("User is not active!");
         }
         return errors;
     }
 
-    private List<String> validateProduct(List<String> errors, Auction auction, boolean isPOST) throws Exception {
+    private List<String> validateProduct(List<String> errors, Auction auction, boolean isPOST) {
         if (isPOST) {
             // only POST because product cannot be updated with PUT and product state is irrelevant in case of PUT
-            Optional<Product> product = productRepository.findById(auction.getProduct().getId());
-            if (product.isPresent()) {
-                if (!product.get().isActive()) {
-                    errors.add("Product is not active!");
-                }
-            } else {
+            if (!productRepository.existsById(auction.getProduct().getId())) {
                 errors.add("Product not found!");
+            } else if (!productRepository.existsByIdAndState(auction.getProduct().getId(), ProductState.active)) {
+                errors.add("Product is not active!");
             }
         }
         return errors;
@@ -94,12 +87,10 @@ public class AuctionValidationService extends ValidationService<Auction> {
     /**
      * validates if auction has not ended yet (end date reached)
      * @param auction entity which should be validated
-     * @return empty String if validation successful, error message if validation failed
      */
-    public String validateTaskToggleAuction(Auction auction) {
+    public void validateTaskToggleAuction(Auction auction) throws BarniverseException {
         if (auction.getEndDate().compareTo(LocalDateTime.now()) < 0) {
-            return "Auction already ended, state can not be updated!";
+            throw new BarniverseException(List.of("Auction already ended, state can not be updated!"), HttpStatus.FORBIDDEN, null);
         }
-        return "";
     }
 }

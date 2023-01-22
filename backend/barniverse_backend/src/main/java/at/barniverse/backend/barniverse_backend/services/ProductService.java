@@ -1,26 +1,21 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.enums.ProductState;
-import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.model.Product;
 import at.barniverse.backend.barniverse_backend.model.ProductImage;
-import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
 import at.barniverse.backend.barniverse_backend.transformer.ProductImageTransformer;
 import at.barniverse.backend.barniverse_backend.transformer.ProductTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
-import static at.barniverse.backend.barniverse_backend.configuration.Context.INVALID_ID;
 
 /**
  * service with product related functionality
@@ -28,28 +23,20 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.INV
 @Service
 public class ProductService extends BaseService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ProductTransformer productTransformer;
-
-    @Autowired
-    private ProductValidationService productValidationService;
-
-    @Autowired
-    private ProductImageTransformer productImageTransformer;
-
-    @Autowired
-    private ProductImageValidationService productImageValidationService;
+    @Autowired private ProductRepository productRepository;
+    @Autowired private ProductTransformer productTransformer;
+    @Autowired private ProductValidationService productValidationService;
+    @Autowired private ProductImageTransformer productImageTransformer;
+    @Autowired private ProductImageValidationService productImageValidationService;
 
     /**
      * add a product to the database
      * @param productDto dto which should be saved
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> addProduct(ProductDto productDto) throws Exception {
+    public void addProduct(ProductDto productDto) throws BarniverseException {
         productDto.setState(ProductState.active);
+
         // not with addEntity because of the subentities
         Product productEntity = productTransformer.convertToEntity(productDto);
 
@@ -62,37 +49,22 @@ public class ProductService extends BaseService {
         });
         productEntity.setImages(repairedProductImages);
 
-        return validateWithSubentitiesAndSaveEntity(
-                productRepository, productValidationService, productEntity, productImageValidationService, productEntity.getImages()
-        );
+        validateWithSubEntitiesAndSaveParentEntity(productEntity);
     }
 
     /**
      * get all saved products from the database which do not have state deleted
      * @return response with corresponding status code and loaded product dtos or error message in case of failure
      */
-    public ResponseEntity<Object> getProducts() {
-        ResponseEntity<Object> response = getEntities(productRepository, productTransformer);
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return response;
+    public List<ProductDto> getProducts() throws BarniverseException {
+        List<Product> products;
+        try {
+            products = productRepository.findAllByState(ProductState.active);
+        } catch (Exception exception) {
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        List<ProductDto> productDtoList = (List<ProductDto>) response.getBody();
-        List<ProductDto> resultList = new ArrayList<>();
-        for (ProductDto productDto : productDtoList) {
-            if (productDto.getState() != ProductState.deleted) {
-                resultList.add(productDto);
-            }
-        }
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
-    }
 
-    /**
-     * get specific product from the database
-     * @param id id of the specific product
-     * @return response with corresponding status code and loaded product dto or error message in case of failure
-     */
-    public ResponseEntity<Object> getProduct(int id) {
-        return getEntityAsDto(productRepository, productTransformer, id);
+        return convertToDto(productTransformer, products);
     }
 
     /**
@@ -100,46 +72,33 @@ public class ProductService extends BaseService {
      * @param productDto dto which should be updated (with id)
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> updateProduct(ProductDto productDto) {
+    public void updateProduct(ProductDto productDto) throws BarniverseException {
         // not with updateEntity because of the subentities
-        Optional<Product> dbEntity;
-        try {
-            dbEntity = productRepository.findById(productDto.getId());
-        } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if (dbEntity.isEmpty() || dbEntity.get().getId() != productDto.getId()) {
-            return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
-        }
+        Product product = getEntity(productRepository, productDto.getId());
         Product updatedProduct = productTransformer.convertToEntity(productDto);
-        updatedProduct = productTransformer.repairEntity(updatedProduct, dbEntity.get());
-        return validateWithSubentitiesAndSaveEntity(
-                productRepository, productValidationService, updatedProduct, productImageValidationService, updatedProduct.getImages()
-        );
-    }
-
-    /**
-     * delete specific product from the database
-     * @param id id of the specific product
-     * @return response with corresponding status code and error message in case of failure
-     */
-    public ResponseEntity<Object> deleteProduct(int id) {
-        return deleteEntity(productRepository, id);
+        updatedProduct = productTransformer.repairEntity(updatedProduct, product);
+        validateWithSubEntitiesAndSaveParentEntity(updatedProduct);
     }
 
     /**
      * deletes a product with state deleted
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> deleteWithState(int id) {
-        ResponseEntity<Object> response = getEntity(productRepository, id);
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return response;
-        }
-        Product product = (Product) response.getBody();
+    public void deleteWithState(int id) throws BarniverseException {
+        Product product = getEntity(productRepository, id);
         product.setState(ProductState.deleted);
-        return save(productRepository, product);
+        save(productRepository, product);
+    }
+
+    private void validateWithSubEntitiesAndSaveParentEntity(Product product) throws BarniverseException {
+        List<String> errors = new ArrayList<>(productValidationService.validateEntityGetErrors(product));
+        for (ProductImage child : product.getImages()) {
+            errors.addAll(productImageValidationService.validateEntityGetErrors(child));
+        }
+        if (!errors.isEmpty()) {
+            throw new BarniverseException(errors, HttpStatus.BAD_REQUEST, null);
+        }
+        save(productRepository, product);
     }
 
 }

@@ -81,7 +81,7 @@ export default {
         },
         async deleteProduct() {
             try {
-                const response = await http.put("/products/deleteWithState/" + this.product.id, null, {
+                const response = await http.put("/products/" + this.product.id + "/deleteWithState", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }

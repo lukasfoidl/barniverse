@@ -1,14 +1,13 @@
 package at.barniverse.backend.barniverse_backend.services;
 
-import at.barniverse.backend.barniverse_backend.dto.IDto;
-import at.barniverse.backend.barniverse_backend.model.IEntity;
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.transformer.ITransformer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +30,10 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and error message in case of failure
      */
-    protected <T, U> ResponseEntity<Object> addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) {
+    protected <T, U> void addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) throws BarniverseException {
         T entity = transformer.convertToEntity(dto);
-        return validateAndSaveEntity(repository, validationService, entity);
+        validationService.validateEntity(entity);
+        save(repository, entity);
     }
 
     /**
@@ -44,18 +44,18 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and loaded dtos or error message in case of failure
      */
-    protected <T, U> ResponseEntity<Object> getEntities(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer) {
+    protected <T, U> List<U> getEntitiesAsDtos(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer) throws BarniverseException {
         Iterable<T> entities;
         try {
             entities = repository.findAll();
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
         List<U> dtos = new ArrayList<>();
         entities.forEach(entity -> {
             dtos.add(transformer.convertToDto(entity));
         });
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        return dtos;
     }
 
     /**
@@ -67,11 +67,9 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and loaded dto or error message in case of failure
      */
-    protected <T, U> ResponseEntity<Object> getEntityAsDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, int id) {
-        ResponseEntity<Object> response = getEntity(repository, id);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            T entity = (T) response.getBody();
-            U dto = transformer.convertToDto(entity);
+    protected <T, U> U getEntityAsDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, int id) throws BarniverseException {
+        T entity = getEntity(repository, id);
+        return transformer.convertToDto(entity);
 
             /*
             When testing it appeared that the dto reference was only send but not the values
@@ -85,10 +83,6 @@ abstract public class BaseService {
                 System.out.println(e);
             }
             when dto is send  the UserDto Reference will be send will be returned in the body */
-
-            return new ResponseEntity<>( dto, HttpStatus.OK);
-        }
-        return response;
     }
 
     /**
@@ -98,17 +92,17 @@ abstract public class BaseService {
      * @param <T> entity type
      * @return response with corresponding status code and loaded entity or error message in case of failure
      */
-    protected <T> ResponseEntity<Object> getEntity(CrudRepository<T, Integer> repository, int id) {
+    protected <T> T getEntity(CrudRepository<T, Integer> repository, int id) throws BarniverseException {
         Optional<T> entity;
         try {
             entity = repository.findById(id);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
         if (entity.isEmpty()) {
-            return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
+            throw new BarniverseException(List.of(INVALID_ID), HttpStatus.BAD_REQUEST, null);
         }
-        return new ResponseEntity<>(entity.get(), HttpStatus.OK);
+        return entity.get();
     }
 
     /**
@@ -121,19 +115,12 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and error message in case of failure
      */
-    protected <T, U> ResponseEntity<Object> updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, IDto dto) {
-        Optional<IEntity> dbEntity;
-        try {
-            dbEntity = (Optional<IEntity>) repository.findById(dto.getId());
-        } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if (dbEntity.isEmpty() || dbEntity.get().getId() != dto.getId()) {
-            return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
-        }
-        T updatedEntity = transformer.convertToEntity((U) dto);
-        updatedEntity = transformer.repairEntity(updatedEntity, (T) dbEntity.get());
-        return validateAndSaveEntity(repository, validationService, updatedEntity);
+    protected <T, U> void updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto, int id) throws BarniverseException {
+        T dbEntity = getEntity(repository, id);
+        T updatedEntity = transformer.convertToEntity(dto);
+        updatedEntity = transformer.repairEntity(updatedEntity, dbEntity);
+        validationService.validateEntity(updatedEntity);
+        save(repository, updatedEntity);
     }
 
     /**
@@ -143,73 +130,13 @@ abstract public class BaseService {
      * @param <T> entity type
      * @return response with corresponding status code and error message in case of failure
      */
-    protected <T> ResponseEntity<Object> deleteEntity(CrudRepository<T, Integer> repository, int id) {
+    protected <T> void deleteEntity(CrudRepository<T, Integer> repository, int id) throws BarniverseException {
+        getEntity(repository, id);
         try {
-            boolean exists = repository.existsById(id);
-            if (!exists) {
-                return new ResponseEntity<>(INVALID_ID, HttpStatus.BAD_REQUEST);
-            }
             repository.deleteById(id);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
-    /**
-     * extension method which validates a single entity and saves it if valid
-     * @param repository type related repository
-     * @param validationService type related validationService
-     * @param entity entity which should be saved
-     * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
-     */
-    private <T> ResponseEntity<Object> validateAndSaveEntity(CrudRepository<T, Integer> repository, ValidationService<T> validationService, T entity) {
-        ResponseEntity<Object> response = validationService.validateEntity(entity);
-        return saveIfValid(repository, response, entity);
-    }
-
-    /**
-     * extension method which validates a parent entity and all subentities and saves the parent entity if valid, <br>
-     * subentities should get saved automatically with parent
-     * @param parentRepository parent type related repository
-     * @param parentValidationService parent type related validationService
-     * @param parentEntity parent entity which should be saved
-     * @param childValidationService child type related validationService
-     * @param childrenEntities children entities which should be validated
-     * @param <T> parent entity type
-     * @param <V> children entity type
-     * @return response with corresponding status code and error message in case of failure
-     */
-    protected <T, V> ResponseEntity<Object> validateWithSubentitiesAndSaveEntity(
-            CrudRepository<T, Integer> parentRepository,
-            ValidationService<T> parentValidationService,
-            T parentEntity,
-            ValidationService<V> childValidationService,
-            List<V> childrenEntities) {
-        List<String> errors = new ArrayList<>(parentValidationService.validateEntityGetErrors(parentEntity));
-        childrenEntities.forEach(childEntity -> {
-            errors.addAll(childValidationService.validateEntityGetErrors(childEntity));
-        });
-        if (!errors.isEmpty()) {
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-        }
-        return saveIfValid(parentRepository, new ResponseEntity<>(null, HttpStatus.OK), parentEntity);
-    }
-
-    /**
-     * extension method which saves an entity in the database if valid
-     * @param repository type related repository
-     * @param response response with corresponding status code and error message in case of failure of validation
-     * @param entity entity which should be saved
-     * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
-     */
-    private <T> ResponseEntity<Object> saveIfValid(CrudRepository<T, Integer> repository, ResponseEntity<Object> response, T entity) {
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return save(repository, entity);
-        }
-        return response;
     }
 
     /**
@@ -217,14 +144,12 @@ abstract public class BaseService {
      * @param repository type related repository
      * @param entity entity which should be saved
      * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
      */
-    protected <T> ResponseEntity<Object> save(CrudRepository<T, Integer> repository, T entity) {
+    protected <T> void save(CrudRepository<T, Integer> repository, T entity) throws BarniverseException {
         try {
             repository.save(entity);
-            return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
     }
 
@@ -238,12 +163,20 @@ abstract public class BaseService {
      * @param <U> dto type
      * @return response with corresponding status code and saved dto or error message in case of failure
      */
-    protected <T, U> ResponseEntity<Object> saveAndGet(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, T entity) {
+    protected <T, U> U saveAndGetDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, T entity) throws BarniverseException {
         try {
             T dbEntity = repository.save(entity);
-            return new ResponseEntity<>(transformer.convertToDto(dbEntity), HttpStatus.OK);
+            return transformer.convertToDto(dbEntity);
         } catch (Exception exception) {
-            return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
+    }
+
+    protected <T, U> List<U> convertToDto(ITransformer<T, U> transformer, List<T> entities) {
+        List<U> dtos = new ArrayList<>(Collections.emptyList());
+        for (T entity : entities) {
+            dtos.add(transformer.convertToDto(entity));
+        }
+        return dtos;
     }
 }

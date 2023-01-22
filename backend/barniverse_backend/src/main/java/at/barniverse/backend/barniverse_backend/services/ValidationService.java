@@ -1,8 +1,8 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.*;
@@ -23,19 +23,18 @@ abstract public class ValidationService<T> {
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
      */
-    abstract public List<String> validateEntitySpecificExtras(T entity);
+    abstract public List<String> validateEntitySpecificExtras(T entity) throws BarniverseException;
 
     /**
      * validates entity
      * @param entity entity which should be validated
      * @return response with corresponding status code and error message in case of failure
      */
-    public ResponseEntity<Object> validateEntity(T entity) {
+    public void validateEntity(T entity) throws BarniverseException {
         List<String> errors = validate(entity);
         if (!errors.isEmpty()) {
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            throw new BarniverseException(errors, HttpStatus.BAD_REQUEST, null);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
@@ -43,7 +42,7 @@ abstract public class ValidationService<T> {
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
      */
-    public List<String> validateEntityGetErrors(T entity) {
+    public List<String> validateEntityGetErrors(T entity) throws BarniverseException {
         return validate(entity);
     }
 
@@ -68,7 +67,7 @@ abstract public class ValidationService<T> {
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
      */
-    private List<String> validate(T entity) {
+    private List<String> validate(T entity) throws BarniverseException {
         List<String> errors = validateAnnotations(entity);
         errors.addAll(validateEntitySpecificExtras(entity));
         return errors;

@@ -97,7 +97,7 @@ export default {
         },
         async deleteUser() {
             try {
-                const response = await http.put("users/deleteWithState/" + this.$store.state.uuid, null, {
+                const response = await http.put("users/" + this.$store.state.uuid + "/deleteWithState", null, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("jwt-token")}`
                     }
