@@ -15,7 +15,7 @@ import java.util.List;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
 /**
- * validation service which validates product specific extras
+ * validation service with product validation functionality
  */
 @Service
 public class ProductValidationService extends ValidationService<Product> {
@@ -27,6 +27,7 @@ public class ProductValidationService extends ValidationService<Product> {
      * validates product specific extras
      * @param product entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @Override
     public List<String> validateEntitySpecificExtras(Product product) throws BarniverseException {
@@ -43,7 +44,14 @@ public class ProductValidationService extends ValidationService<Product> {
         return errors;
     }
 
-    private List<String> validateProduct(List<String> errors, Product product, boolean isPOST) throws Exception {
+    /**
+     * extension method which validates product itself
+     * @param errors messages of errors which already arisen
+     * @param product product which should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
+    private List<String> validateProduct(List<String> errors, Product product, boolean isPOST) {
         if (!isPOST) { // PUT (existence already checked in getEntity())
             // do not update inactive product, on POST always set to active
             if (!productRepository.existsByIdAndState(product.getId(), ProductState.active)) {
@@ -53,7 +61,14 @@ public class ProductValidationService extends ValidationService<Product> {
         return errors;
     }
 
-    private List<String> validateProductImages(List<String> errors, Product product, boolean isPOST) throws Exception {
+    /**
+     * extension method which validates product image property of a product
+     * @param errors messages of errors which already arisen
+     * @param product product of which the product images should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
+    private List<String> validateProductImages(List<String> errors, Product product, boolean isPOST) {
         if (!isPOST) { // PUT (existence already checked in getEntity())
             List<ProductImage> productImages = product.getImages();
             List<ProductImage> dbProductImages = productRepository.findById(product.getId()).get().getImages();

@@ -1,7 +1,7 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 /**
- * defines basic functions for entities, all entity classes need to implement this interface
+ * definition of basic functions for entities
  */
 public interface IEntity {
 

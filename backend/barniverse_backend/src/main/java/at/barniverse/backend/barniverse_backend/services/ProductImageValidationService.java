@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * validation service which validates product image specific extras
+ * validation service with product image validation functionality
  */
 @Service
 public class ProductImageValidationService extends ValidationService<ProductImage> {

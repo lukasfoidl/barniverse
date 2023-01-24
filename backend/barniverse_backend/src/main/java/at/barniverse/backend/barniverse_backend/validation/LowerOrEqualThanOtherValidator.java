@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * validator for LowerThanOther annotation
+ * validator for LowerOrEqualThanOther annotation
  */
 public class LowerOrEqualThanOtherValidator implements ConstraintValidator<LowerOrEqualThanOther, Object> {
 
@@ -13,8 +13,8 @@ public class LowerOrEqualThanOtherValidator implements ConstraintValidator<Lower
     private String higherField;
 
     /**
-     * initializes properties
-     * @param constraintAnnotation LowerThanOther annotation
+     * initialize properties
+     * @param constraintAnnotation LowerOrEqualThanOther annotation
      */
     @Override
     public void initialize(LowerOrEqualThanOther constraintAnnotation) {
@@ -26,7 +26,7 @@ public class LowerOrEqualThanOtherValidator implements ConstraintValidator<Lower
      * check if annotation is valid or not
      * @param value object to read properties and get data
      * @param context ConstraintValidatorContext
-     * @return true if first value is lower than second value, otherwise false
+     * @return true if first value is lower or equal than second value, otherwise false
      */
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {

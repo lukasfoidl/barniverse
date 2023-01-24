@@ -1,7 +1,7 @@
 package at.barniverse.backend.barniverse_backend.transformer;
 
 /**
- * defines basic functions for transformers, all transformer classes need to implement this interface
+ * defines basic functions for transformers
  * @param <T> entity type
  * @param <U> dto type
  */

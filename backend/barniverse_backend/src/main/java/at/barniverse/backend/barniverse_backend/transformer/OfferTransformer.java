@@ -20,7 +20,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
     private AuctionTransformer auctionTransformer;
 
     /**
-     * transforms offer entity to offer dto, <br>
+     * transform offer entity to offer dto, <br>
      * user property of entity will be transformed to a user dto by UserTransformer, <br>
      * auction property of entity will be transformed to an auction dto by AuctionTransformer
      * @param offer entity which should be transformed
@@ -42,7 +42,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
     }
 
     /**
-     * transforms offer dto to offer entity, <br>
+     * transform offer dto to offer entity, <br>
      * id property does NOT get transformed from dto to entity, because id gets set from the database automatically, <br>
      * user property of dto will NOT be transformed to a user entity,
      * just the id gets set because cascading is not enabled and only id is necessary for the foreign key, <br>
@@ -75,7 +75,7 @@ public class OfferTransformer implements ITransformer<Offer, OfferDto> {
     }
 
     /**
-     * repairs offer entity after transformation in case of update (PUT), <br>
+     * repair offer entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * user property gets set to user property from database, because the user cannot be changed after the creation of an offer entity, <br>
      * auction property gets set to auction property from database, because the auction cannot be changed after the creation of an offer entity, <br>

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.DATABASE_ERROR;
 
+/**
+ * service with statistic related functionality
+ */
 @Service
 public class StatisticService {
 
@@ -26,6 +29,11 @@ public class StatisticService {
     @Autowired private AuctionRepository auctionRepository;
     @Autowired private OfferRepository offerRepository;
 
+    /**
+     * get statistical data
+     * @return statistics
+     * @throws BarniverseException in case of failure which includes error messages
+     */
     public List<StatisticDto> getStatistics() throws BarniverseException {
         List<StatisticDto> statistics = new ArrayList<>(Collections.emptyList());
         try {

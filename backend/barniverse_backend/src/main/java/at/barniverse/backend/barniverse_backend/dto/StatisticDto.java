@@ -1,5 +1,8 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
+/**
+ * dto for statistical data, property definitions as well as getter and setter functions
+ */
 public class StatisticDto {
 
     private long value;

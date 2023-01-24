@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * basic repository for product image entity
- * will be auto implemented by Spring into a Bean called productImageRepository
  */
 public interface ProductImageRepository extends CrudRepository<ProductImage, Integer> {
 

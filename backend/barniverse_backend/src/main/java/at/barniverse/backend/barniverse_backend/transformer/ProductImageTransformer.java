@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class ProductImageTransformer implements ITransformer<ProductImage, ProductImageDto> {
 
     /**
-     * transforms product image entity to product image dto
+     * transform product image entity to product image dto
      * @param productImage entity which should be transformed
      * @return product image dto
      */
@@ -31,7 +31,7 @@ public class ProductImageTransformer implements ITransformer<ProductImage, Produ
     }
 
     /**
-     * transforms product image dto to product image entity, <br>
+     * transform product image dto to product image entity, <br>
      * id property DOES GET transformed from dto to entity, in case of update (PUT)
      * @param productImageDto dto which should be transformed
      * @return product image entity
@@ -47,7 +47,7 @@ public class ProductImageTransformer implements ITransformer<ProductImage, Produ
     }
 
     /**
-     * repairs product image entity in case of create (POST), <br>
+     * repair product image entity in case of create (POST), <br>
      * id gets set to 0 to create new entity
      * @param productImage entity which needs to be repaired
      * @param dbProductImage entity with the missing data
