@@ -27,7 +27,7 @@ public class Context {
     /**
      * standardised error message for validation errors of entity specific extras like foreign keys, subentities, etc.
      */
-    public static final String VALIDATION_ERROR = DATABASE_ERROR + "Validation could not be finished!";
+    public static final String VALIDATION_ERROR = DATABASE_ERROR + " Validation could not be finished!";
 
     /**
      * standardised error message if access to a resource is denied
@@ -54,6 +54,9 @@ public class Context {
      */
     public static final String INVALID_LOGIN_CREDENTIALS = "Invalid login credentials!";
 
+    /**
+     * standardised error message if a user account is not active at login
+     */
     public static final String INVALID_STATE = "This account is no longer active. It has been blocked or deleted. Please contact the Barniverse service team for further information.";
 
     /**

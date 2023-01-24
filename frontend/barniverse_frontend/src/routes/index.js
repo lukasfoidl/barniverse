@@ -14,7 +14,11 @@ import ProfileView from "@/views/ProfileView"
 import ProductUpdateView from "@/views/ProductUpdateView"
 import ProductCreateView from "@/views/ProductCreateView"
 import AuctionCreateView from "@/views/AuctionCreateView"
+import AuctionUpdateView from "@/views/AuctionUpdateView"
 import ChangePasswordView from "@/views/ChangePasswordView"
+import OfferCreateView from "@/views/OfferCreateView"
+import OfferView from "@/views/OfferView"
+import OfferDetailsView from "@/views/OfferDetailsView"
 import store from "@/store"
 
 const routes = [
@@ -44,6 +48,16 @@ const routes = [
         }
     },
     {
+        name: "updateAuction",
+        path: "/auctions/update/",
+        component: AuctionUpdateView,
+        beforeEnter: () => {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
         name: "myAuctions",
         path: "/myAuctions",
         component: MyAuctionsView,
@@ -54,9 +68,39 @@ const routes = [
         }
     },
     {
+        name: "createOffers",
+        path: "/offers/create",
+        component: OfferCreateView,
+        beforeEnter: () => {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
         name: "myOffers",
         path: "/myOffers",
         component: MyOffersView,
+        beforeEnter: () => {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "offers",
+        path: "/offers",
+        component: OfferView,
+        beforeEnter: () => {
+            if (!store.getters.isUser && !store.getters.isAdmin) {
+                return '/PageNotFound'
+            }
+        }
+    },
+    {
+        name: "offerDetails",
+        path: "/offers/details",
+        component: OfferDetailsView,
         beforeEnter: () => {
             if (!store.getters.isUser && !store.getters.isAdmin) {
                 return '/PageNotFound'

@@ -12,7 +12,10 @@ const store = createStore({
             role: "ROLE_OBSERVER",
             username: "",
             uuid: "",
+
             product: {},
+            auction: {},
+            offer: {}
         }
     },
     mutations: {
@@ -36,6 +39,14 @@ const store = createStore({
         // product store for ProductUpdateView
         saveProduct(state, data) {
             state.product = data.product
+        },
+        // auction store for AuctionUpdateView
+        saveAuction(state, data) {
+            state.auction = data.auction
+        },
+        // offer store for OfferDetailsView
+        saveOffer(state, data) {
+            state.offer = data.offer
         },
     },
     getters: {

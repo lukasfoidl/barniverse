@@ -13,6 +13,7 @@ public class LoginCredentialsDto {
         this.email = email;
         this.password = password;
     }
+    public LoginCredentialsDto() { }
 
 //----getter and setter----
 

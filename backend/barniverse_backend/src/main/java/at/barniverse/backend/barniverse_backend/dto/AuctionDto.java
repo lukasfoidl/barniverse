@@ -1,5 +1,7 @@
 package at.barniverse.backend.barniverse_backend.dto;
 
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,7 +22,7 @@ public class AuctionDto implements IDto {
     private LocalDateTime endDeliveryDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private boolean locked;
+    private AuctionState state;
     private UserDto user;
     private ProductDto product;
 
@@ -116,12 +118,12 @@ public class AuctionDto implements IDto {
         this.endDate = endDate;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public AuctionState getState() {
+        return state;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
+    public void setState(AuctionState state) {
+        this.state = state;
     }
 
     public UserDto getUser() {

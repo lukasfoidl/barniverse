@@ -44,7 +44,7 @@ export default {
 }
 
 const validationSchema = object().shape({
-    username: string().min(5, "Username must be between 5 and 20 Characters long!").max(20, "Username must be between 5 and 20 Characters long!").required("Username is required!"),
+    username: string().min(5, "Username must be between 5 and 25 Characters long!").max(25, "Username must be between 5 and 25 Characters long!").required("Username is required!"),
 })
 </script>
     

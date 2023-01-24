@@ -1,6 +1,7 @@
 package at.barniverse.backend.barniverse_backend.model;
 
 import at.barniverse.backend.barniverse_backend.enums.ProductState;
+import at.barniverse.backend.barniverse_backend.enums.UserState;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.List;
 
 /**
  * entity for a product,
- * property definitions as well as getter and setter functions
+ * property definitions, getter and setter functions as well as extension methods
  */
 @Entity
 public class Product implements IEntity {
@@ -20,7 +21,8 @@ public class Product implements IEntity {
     @NotNull
     private int id;
 
-    @NotBlank(message = "Name is mandatory!")
+    @NotBlank(message = "Title is mandatory!")
+    @Size(max = 50, message = "Title must be shorter than 50 characters!")
     private String title;
 
     @Size(max = 500, message = "Description must be shorter than 500 characters!")
@@ -75,5 +77,11 @@ public class Product implements IEntity {
 
     public void setImages(List<ProductImage> images) {
         this.images = images;
+    }
+
+//----extension methods----
+
+    public boolean isActive() {
+        return getState() == ProductState.active;
     }
 }

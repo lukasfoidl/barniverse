@@ -1,15 +1,16 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
+import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import at.barniverse.backend.barniverse_backend.model.Product;
 import at.barniverse.backend.barniverse_backend.model.ProductImage;
 import at.barniverse.backend.barniverse_backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
@@ -28,40 +29,54 @@ public class ProductValidationService extends ValidationService<Product> {
      * @return error messages, empty if validation was successful
      */
     @Override
-    public List<String> validateEntitySpecificExtras(Product product) {
+    public List<String> validateEntitySpecificExtras(Product product) throws BarniverseException {
         List<String> errors = new ArrayList<>();
-        List<ProductImage> productImages = product.getImages();
+        boolean isPOST = product.getId() == 0;
 
-        Optional<Product> dbProduct;
         try {
-            dbProduct = productRepository.findById(product.getId());
+            errors = validateProduct(errors, product, isPOST); // validate entity itself
+            errors = validateProductImages(errors, product, isPOST); // validate foreign key product images
         } catch (Exception exception) {
-            return List.of(VALIDATION_ERROR);
+            throw new BarniverseException(List.of(VALIDATION_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        // if product gets created dbProduct is empty, no validation of entity specific extras required
-        // if product gets updated dbProduct already checked in ProductService
-        if (dbProduct.isEmpty()) { return Collections.emptyList(); }
 
-        List<ProductImage> dbProductImages = dbProduct.get().getImages();
+        return errors;
+    }
 
-        // check if product images are from product or new (need to be created)
-        boolean imageRelatedToProduct = false;
-        for (ProductImage productImage : productImages) {
-            if (productImage.getId() == 0) {
-                break;
+    private List<String> validateProduct(List<String> errors, Product product, boolean isPOST) throws Exception {
+        if (!isPOST) { // PUT (existence already checked in getEntity())
+            // do not update inactive product, on POST always set to active
+            if (!productRepository.existsByIdAndState(product.getId(), ProductState.active)) {
+                errors.add("Product is not active!");
             }
-            for (ProductImage dbProductImage : dbProductImages) {
-                if (productImage.getId() == dbProductImage.getId()) {
-                    imageRelatedToProduct = true;
+        }
+        return errors;
+    }
+
+    private List<String> validateProductImages(List<String> errors, Product product, boolean isPOST) throws Exception {
+        if (!isPOST) { // PUT (existence already checked in getEntity())
+            List<ProductImage> productImages = product.getImages();
+            List<ProductImage> dbProductImages = productRepository.findById(product.getId()).get().getImages();
+
+            // check if product images are from product or new (need to be created)
+            // on POST all images new
+            boolean imageRelatedToProduct = false;
+            for (ProductImage productImage : productImages) {
+                if (productImage.getId() == 0) {
                     break;
                 }
+                for (ProductImage dbProductImage : dbProductImages) {
+                    if (productImage.getId() == dbProductImage.getId()) {
+                        imageRelatedToProduct = true;
+                        break;
+                    }
+                }
+                if (!imageRelatedToProduct) {
+                    errors.add("Image not found!");
+                }
+                imageRelatedToProduct = false;
             }
-            if (!imageRelatedToProduct) {
-                errors.add("Image not found!");
-            }
-            imageRelatedToProduct = false;
         }
-
         return errors;
     }
 }

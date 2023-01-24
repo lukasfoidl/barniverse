@@ -22,6 +22,7 @@ export default {
     }),
     mounted() {
         this.value = this.startDate
+        this.startDateChanged();
     },
     methods: {
         validate(shouldSendEvent) {

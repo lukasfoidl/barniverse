@@ -1,11 +1,15 @@
 package at.barniverse.backend.barniverse_backend.controller;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.CORS_ORIGINS;
 
@@ -18,8 +22,7 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.COR
 @RequestMapping(path = "/api")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired private ProductService productService;
 
     /**
      * add a product to the database
@@ -28,8 +31,9 @@ public class ProductController {
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping(path="/products")
-    public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
-        return productService.addProduct(productDto);
+    public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) throws BarniverseException {
+        productService.addProduct(productDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
@@ -37,18 +41,9 @@ public class ProductController {
      * @return response with corresponding status code and loaded product dtos or error message in case of failure
      */
     @GetMapping(path="/products")
-    public ResponseEntity<Object> getProducts() {
-        return productService.getProducts();
-    }
-
-    /**
-     * get specific product from the database
-     * @param id id of the specific product
-     * @return response with corresponding status code and loaded product dto or error message in case of failure
-     */
-    @GetMapping(path="/products/{id}")
-    public ResponseEntity<Object> getProduct(@PathVariable int id) {
-        return productService.getProduct(id);
+    public ResponseEntity<Object> getProducts() throws BarniverseException {
+        List<ProductDto> results = productService.getProducts();
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     //TODO: Safety alert! Products can be updated only with Id.
@@ -59,20 +54,9 @@ public class ProductController {
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/products")
-    public ResponseEntity<Object> updateProduct(@RequestBody ProductDto productDto) {
-        return productService.updateProduct(productDto);
-    }
-
-    //TODO: Safety alert! Products can be deleted only with Id.
-    /**
-     * delete specific product from the database
-     * @param id id of the specific product
-     * @return response with corresponding status code and error message in case of failure
-     */
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @DeleteMapping(path="/products/{id}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable int id) {
-        return productService.deleteProduct(id);
+    public ResponseEntity<Object> updateProduct(@RequestBody ProductDto productDto) throws BarniverseException {
+        productService.updateProduct(productDto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
@@ -81,8 +65,9 @@ public class ProductController {
      * @return response with corresponding status code and error message in case of failure
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @PutMapping(path="/products/deleteWithState/{id}")
-    public ResponseEntity<Object> deleteWithState(@PathVariable int id) {
-        return productService.deleteWithState(id);
+    @PutMapping(path="/products/{id}/deleteWithState")
+    public ResponseEntity<Object> deleteWithState(@PathVariable int id) throws BarniverseException {
+        productService.deleteWithState(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

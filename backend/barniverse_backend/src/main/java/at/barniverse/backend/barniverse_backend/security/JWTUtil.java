@@ -1,23 +1,17 @@
 package at.barniverse.backend.barniverse_backend.security;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.dto.AuthDto;
-import at.barniverse.backend.barniverse_backend.enums.Role;
-import at.barniverse.backend.barniverse_backend.enums.RoleConverter;
-import at.barniverse.backend.barniverse_backend.model.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.ERROR;
 
@@ -35,12 +29,9 @@ public class JWTUtil {
      * @param authDto dto with the needed data for token generation
      * @return response with the corresponding status code and a jwt token or error message in case of failure
      */
-    public ResponseEntity<Object> getToken(AuthDto authDto) {
+    public Map<String, String> getToken(AuthDto authDto) throws BarniverseException {
         String token = generateToken(authDto);
-        if (token == null) {
-            return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.OK);
+        return Collections.singletonMap("jwt-token", token);
     }
 
     /**
@@ -48,7 +39,7 @@ public class JWTUtil {
      * @param authDto dto with the needed data for token generation
      * @return json web token
      */
-    private String generateToken(AuthDto authDto) {
+    private String generateToken(AuthDto authDto) throws BarniverseException {
         try {
             return JWT.create()
                     .withSubject("User Details")
@@ -60,8 +51,8 @@ public class JWTUtil {
                     .withExpiresAt(calculateDateInXMinutes(15))
                     .withIssuer("Barniverse")
                     .sign(Algorithm.HMAC256(secret));
-        } catch (Exception ex) {
-            return null;
+        } catch (Exception exception) {
+            throw new BarniverseException(List.of(ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
     }
 

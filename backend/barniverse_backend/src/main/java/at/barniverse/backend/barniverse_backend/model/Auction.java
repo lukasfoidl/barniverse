@@ -1,5 +1,6 @@
 package at.barniverse.backend.barniverse_backend.model;
 
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.validation.AfterSpecificDate;
 import at.barniverse.backend.barniverse_backend.validation.LowerOrEqualThanOther;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * entity for an auction,
- * property definitions as well as getter and setter functions
+ * property definitions, getter and setter functions as well as extension methods
  */
 @Entity
 @LowerOrEqualThanOther(lowerField = "minPrice", higherField = "maxPrice", message = "Max price must be higher than min price!")
@@ -26,6 +27,7 @@ public class Auction implements IEntity {
     private int id;
 
     @NotBlank(message = "Title is mandatory!")
+    @Size(max = 50, message = "Title must be shorter than 50 characters!")
     private String title;
 
     @Size(max = 500, message = "Description must be shorter than 500 characters!")
@@ -64,8 +66,8 @@ public class Auction implements IEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endDate;
 
-    @NotNull(message = "Definition if auction is locked or not is mandatory!")
-    private boolean locked;
+    @NotNull(message = "State of auction is mandatory!")
+    private AuctionState state;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_Id", referencedColumnName = "id", foreignKey=@ForeignKey(name = "FK_auction_userId"))
@@ -169,12 +171,12 @@ public class Auction implements IEntity {
         this.endDate = endDate;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public AuctionState getState() {
+        return state;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
+    public void setState(AuctionState state) {
+        this.state = state;
     }
 
     public User getUser() {
@@ -192,4 +194,11 @@ public class Auction implements IEntity {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+//----extension methods----
+
+    public boolean isActive() {
+        return getState() == AuctionState.active;
+    }
+
 }

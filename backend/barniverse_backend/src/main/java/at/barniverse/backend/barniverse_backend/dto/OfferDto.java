@@ -2,6 +2,7 @@ package at.barniverse.backend.barniverse_backend.dto;
 
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ public class OfferDto implements IDto {
     private int id;
     private double price;
     private double quantity;
-    private Date deliveryDate;
+    private LocalDateTime deliveryDate;
     private OfferState state;
     private UserDto user;
     private AuctionDto auction;
@@ -46,11 +47,11 @@ public class OfferDto implements IDto {
         this.quantity = quantity;
     }
 
-    public Date getDeliveryDate() {
+    public LocalDateTime getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDateTime deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

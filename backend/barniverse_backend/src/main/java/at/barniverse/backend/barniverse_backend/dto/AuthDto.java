@@ -18,6 +18,8 @@ public class AuthDto {
         this.uuid = uuid;
     }
 
+    public AuthDto() { }
+
 //----getter and setter----
 
     public String getEmail() {

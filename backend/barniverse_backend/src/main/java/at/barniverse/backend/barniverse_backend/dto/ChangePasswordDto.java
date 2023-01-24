@@ -14,6 +14,8 @@ public class ChangePasswordDto {
         this.password = password;
     }
 
+    public ChangePasswordDto() { }
+
 //----getter and setter----
 
     public int getId() {

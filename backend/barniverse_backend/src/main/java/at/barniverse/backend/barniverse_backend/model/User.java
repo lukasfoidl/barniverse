@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 /**
  * entity for a user,
- * property definitions as well as getter and setter functions
+ * property definitions, getter and setter functions as well as extension methods
  */
 @Entity
 public class User implements IEntity {
@@ -21,17 +21,20 @@ public class User implements IEntity {
     private int id;
 
     @NotBlank(message = "Firstname is mandatory!")
+    @Size(max = 50, message = "Firstname must be shorter than 50 characters!")
     private String firstname;
 
     @NotBlank(message = "Lastname is mandatory!")
+    @Size(max = 50, message = "Lastname must be shorter than 50 characters!")
     private String lastname;
 
     @NotBlank(message = "Username is mandatory!")
-    @Size(min = 5, max = 20, message = "Username has to be between 5 and 20 characters long!")
+    @Size(min = 5, max = 25, message = "Username has to be between 5 and 25 characters long!")
     private String username;
 
     @NotBlank(message = "Email is mandatory!")
     @Email(message = "Please provide a valid email address!")
+    @Size(max = 50, message = "Email must be shorter than 50 characters!")
     private String email;
 
     @NotBlank(message = "Password is mandatory!")
@@ -120,6 +123,12 @@ public class User implements IEntity {
 
     public void setState(UserState state) {
         this.state = state;
+    }
+
+//----extension methods----
+
+    public boolean isActive() {
+        return getState() == UserState.active;
     }
 
 }

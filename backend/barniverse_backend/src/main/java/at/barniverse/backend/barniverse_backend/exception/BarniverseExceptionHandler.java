@@ -1,4 +1,4 @@
-package at.barniverse.backend.barniverse_backend.security;
+package at.barniverse.backend.barniverse_backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.ACC
  * extension class which handles authentication exceptions
  */
 @ControllerAdvice
-public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
+public class BarniverseExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * converts AuthenticationException into a response with status 403 and error message
@@ -25,5 +25,11 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     public ResponseEntity<Object> handleAuthenticationException(Exception ex) {
         return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({ BarniverseException.class })
+    @ResponseBody
+    public ResponseEntity<Object> returnErrorMessage(BarniverseException exception) {
+        return new ResponseEntity<>(exception.getErrorMessages(), exception.getStatus());
     }
 }

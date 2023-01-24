@@ -1,12 +1,13 @@
 package at.barniverse.backend.barniverse_backend.services;
 
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import static at.barniverse.backend.barniverse_backend.configuration.Context.ERROR;
 
@@ -21,14 +22,14 @@ public class ImageService {
      * @param filename filename of the image
      * @return image
      */
-    public ResponseEntity<Object> getImage(String filename) {
+    public byte[] getImage(String filename) throws BarniverseException {
         byte[] content;
         try {
             InputStream in = getClass().getResourceAsStream("/images/" + filename);
             content = IOUtils.toByteArray(in);
         } catch (IOException exception) {
-            return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BarniverseException(List.of(ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
-        return  new ResponseEntity<>(content, HttpStatus.OK);
+        return content;
     }
 }

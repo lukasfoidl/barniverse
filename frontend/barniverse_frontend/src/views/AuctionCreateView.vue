@@ -2,7 +2,7 @@
     <div class="row justify-content-center align-items-center">
         <div class="col-12 col-sm-11 col-md-9 col-lg-9 col-xl-6">
 
-            <AuctionForm :trigger="trigger" :auction="auction" :product="product"/>
+            <AuctionForm :trigger="trigger" :auction="auction" />
 
             <div class="text-center">
                 <button class="btn btn-primary buttonSpacer" @click="triggerValidation">Save</button>
@@ -24,12 +24,12 @@ export default {
             id: undefined,
             title: "",
             description: "",
-            product: "",
+            product: {},
         },
         trigger: false,
     }),
     beforeMount() {
-        this.product = this.$store.state.product
+        this.auction.product = this.$store.state.product
     },
     mounted() {
         window.event.on("validationCompleted", (data) => {
@@ -56,7 +56,6 @@ export default {
                     endDeliveryDate: data.endDeliveryDate,
                     startDate: data.startDate,
                     endDate: data.endDate,
-                    locked: false,
                     user: { id: this.$store.state.uuid },
                     product: { id: this.$store.state.product.id }
                 }

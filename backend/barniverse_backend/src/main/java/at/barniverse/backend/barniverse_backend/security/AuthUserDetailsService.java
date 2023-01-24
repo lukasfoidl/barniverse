@@ -31,17 +31,18 @@ public class AuthUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user;
+        User user;
         try {
             user = userRepository.findByEmail(email);
         } catch (Exception exception) {
             throw new PersistenceException();
         }
-        if (user.isEmpty())
-            throw new UsernameNotFoundException("Could not find User with email = " + email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Could not find User with email: " + email);
+        }
         return new org.springframework.security.core.userdetails.User(
                 email,
-                user.get().getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(RoleConverter.getRole(user.get().getIsAdmin()).toString())));
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority(RoleConverter.getRole(user.getIsAdmin()).toString())));
     }
 }
