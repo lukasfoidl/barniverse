@@ -39,7 +39,7 @@ public class UserService extends BaseService {
     public List<UserDto> getUsers() throws BarniverseException {
         List<User> users;
         try {
-            users = userRepository.findAllByState(UserState.active);
+            users = userRepository.findAllByStateOrState(UserState.active, UserState.blocked);
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }

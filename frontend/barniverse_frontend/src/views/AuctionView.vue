@@ -63,18 +63,21 @@ export default {
         isAuctionRunning(auction) {
             return (!this.isBeforeAuctionStart(auction)) && (!this.isAuctionFinished(auction))
         },
+        isAuctionLocked(auction) {
+            return auction.state == "locked"
+        },
         filterAuctions(filter) {
             if (filter == this.filters[0]) { // Soon
-                this.displayAuctions = this.allAuctions.filter(auction => this.isBeforeAuctionStart(auction))
+                this.displayAuctions = this.allAuctions.filter(auction => this.isBeforeAuctionStart(auction) && !this.isAuctionLocked(auction))
             }
             else if (filter == this.filters[1]) { // Open
-                this.displayAuctions = this.allAuctions.filter(auction => this.isAuctionRunning(auction))
+                this.displayAuctions = this.allAuctions.filter(auction => this.isAuctionRunning(auction) && !this.isAuctionLocked(auction))
             }
             else if (filter == this.filters[2]) { // Closed
-                this.displayAuctions = this.allAuctions.filter(auction => this.isAuctionFinished(auction))
+                this.displayAuctions = this.allAuctions.filter(auction => this.isAuctionFinished(auction) && !this.isAuctionLocked(auction))
             }
             else if (filter == this.filters[3]) { // Locked
-                this.displayAuctions = this.allAuctions.filter(auction => auction.state == "locked")
+                this.displayAuctions = this.allAuctions.filter(auction => this.isAuctionLocked(auction))
             }
             else {
                 this.displayAuctions = []

@@ -31,5 +31,5 @@ public interface AuctionRepository extends CrudRepository<Auction, Integer> {
     boolean existsByIdAndStartDateAfter(int id, LocalDateTime startDate);
     boolean existsByIdAndStartDateBeforeAndEndDateAfter(int id, LocalDateTime startDate, LocalDateTime endDate);
 
-    long countAllByStartDateBeforeAndEndDateAfter(LocalDateTime startDate, LocalDateTime endDate);
+    long countAllByStartDateBeforeAndEndDateAfterAndState(LocalDateTime startDate, LocalDateTime endDate, AuctionState state);
 }

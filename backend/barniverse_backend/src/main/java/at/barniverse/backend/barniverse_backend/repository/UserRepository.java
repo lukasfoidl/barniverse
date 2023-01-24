@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findByEmail(String email);
-    List<User> findAllByState(UserState state);
+    List<User> findAllByStateOrState(UserState state1, UserState state2);
 
     boolean existsById(int id);
     boolean existsByIdAndState(int id, UserState state);

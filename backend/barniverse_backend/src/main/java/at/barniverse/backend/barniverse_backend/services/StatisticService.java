@@ -1,6 +1,7 @@
 package at.barniverse.backend.barniverse_backend.services;
 
 import at.barniverse.backend.barniverse_backend.dto.StatisticDto;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
 import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
@@ -30,7 +31,7 @@ public class StatisticService {
         try {
             statistics.add(new StatisticDto(productRepository.countAllByState(ProductState.active), "products available"));
             statistics.add(new StatisticDto(
-                    auctionRepository.countAllByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.now()),
+                    auctionRepository.countAllByStartDateBeforeAndEndDateAfterAndState(LocalDateTime.now(), LocalDateTime.now(), AuctionState.active),
                     "currently open auctions"));
             statistics.add(new StatisticDto(offerRepository.countAllByState(OfferState.accepted), "closed deals"));
         } catch (Exception exception) {
