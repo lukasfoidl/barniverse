@@ -24,9 +24,9 @@ public interface AuctionRepository extends CrudRepository<Auction, Integer> {
     @Query("update Auction a set a.state = :state where a.id = :id")
     void updateState(@Param(value = "id") int id, @Param(value = "state") AuctionState state);
 
-    List<Auction> findAllByStateAndEndDateAfter(AuctionState state, LocalDateTime endDate);
-    List<Auction> findAllByEndDateAfter(LocalDateTime endDate);
     List<Auction> findAllByUserId(int user_id);
+    List<Auction> findAll();
+    List<Auction> findAllByState(AuctionState state);
     boolean existsByIdAndState(int id, AuctionState state);
     boolean existsByIdAndStartDateAfter(int id, LocalDateTime startDate);
     boolean existsByIdAndStartDateBeforeAndEndDateAfter(int id, LocalDateTime startDate, LocalDateTime endDate);

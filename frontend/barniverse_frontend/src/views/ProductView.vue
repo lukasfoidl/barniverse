@@ -1,6 +1,6 @@
 <template>
-    <div class="justify-content-center taskbar">
-        <Taskbar class="d-flex"/>
+    <div class="justify-content-center d-flex">
+        <Taskbar />
     </div>
     <div class="justify-content-center">
         <div class="row justify-content-center">

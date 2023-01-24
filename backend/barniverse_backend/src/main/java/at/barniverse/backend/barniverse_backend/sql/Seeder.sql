@@ -2,21 +2,23 @@ use barniverseDB;
 
 # seed user table
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', 'testtest', '', true, '0');
+VALUES (1, 'Lukas', 'Foidl', 'lukasfoidl', 'wi20b044@technikum-wien.at', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', 'testtest', '', true, '0');
+VALUES (2, 'Nils', 'Petsch', 'nilspetsch', 'wi20b062@technikum-wien.at', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
 VALUES (3, 'Admin', 'Admin', 'admin', 'admin@barniverse.at', 'testtest', '', true, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', 'testtest', '', false, '0');
+VALUES (4, 'Hugo', 'Martinez', 'hugomartinez', 'hugo.martinez@mail.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', 'testtest', '', false, '0');
+VALUES (5, 'Carlos', 'Hernandez', 'carloshernandez', 'carlos.hernandez@mail.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', 'testtest', '', false, '0');
+VALUES (6, 'Susanne', 'Lader', 'susannelader', 'susanne.lader@mail.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', false, '0');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', 'testtest', '', false, '1');
+VALUES (7, 'Jasmin', 'Rotovic', 'jasminrotovic', 'jasmin.rotovic@mail.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', false, '1');
 INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
-VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', 'testtest', '', false, '2');
+VALUES (8, 'Wilhelm', 'Nordthal', 'wilhelmnordthal', 'wilhelm.nordthal@mail.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', false, '2');
+INSERT INTO user (id, firstname, lastname, username, email, password, picture, is_admin, state)
+VALUES (9, 'Admin', 'Admin', 'adminadmin', 'admin@admin.com', '$2a$10$VCK9hiTv.NKG7tXSXc4DLO5h4iJ00ZjjJQJdfZCH08WrKXxr5chwC', '', true, '0');
 
 # seed product table
 INSERT INTO product (id, title, state, description)
@@ -50,13 +52,13 @@ VALUES (7, 'Bier01.jpg', '4');
 
 # seed auction table
 INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
-VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-04-01', '2022-04-04', '0', 1, 6);
+VALUES (1, 'Gin Auction', 'Looking for good gin', 10.0, 15.0, 50, 60, '2023-05-01', '2023-06-01', '2023-01-01', '2023-03-30', '0', 1, 6);
 INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
-VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2022-12-01', '2022-12-10', '0', 4, 6);
+VALUES (2, 'Bier Auction', '0.5 bottles for my bar', 80.0, 110.0, 100, 200, '2023-01-01', '2023-01-10', '2023-01-20', '2023-02-01', '0', 4, 6);
 INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
-VALUES (3, 'Locked Auction', 'locked Auction test', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2022-01-01', '2022-01-10', '1', 3, 6);
+VALUES (3, 'Locked Auction', 'locked Auction test', 160.0, 200.0, 5000, 10000, '2023-02-01', '2023-02-10', '2023-01-10', '2023-01-28', '1', 3, 6);
 INSERT INTO auction (id, title, description, min_price, max_price, min_quantity, max_quantity, start_delivery_date, end_delivery_date, start_date, end_date, state, product_id, user_id)
-VALUES (4, 'Closed Auction', 'closed Auction test', 100.0, 150.0, 1000, 1500, '2023-02-01', '2023-02-10', '2022-10-01', '2022-10-10', '0', 4, 6); #winner offer id = 8
+VALUES (4, 'Closed Auction', 'closed Auction test', 100.0, 150.0, 1000, 1500, '2023-02-01', '2023-02-10', '2023-01-01', '2023-01-10', '0', 4, 6); #winner offer id = 8
 
 # seed offer table
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)
@@ -72,8 +74,8 @@ VALUES (5, 12.4, 53.0, '2023-08-20', 0, 5, 1); #Gin Offer outside delivery range
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)
 VALUES (6, 100.0, 180, '2023-01-05', 0, 5, 2); #Bier Offer good
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)
-VALUES (7, 175.0, 7000, '2022-02-07', 0, 4, 3); #Locked offer good
+VALUES (7, 175.0, 7000, '2023-02-07', 0, 4, 3); #Locked offer good
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)
-VALUES (8, 110.0, 1350.0, '2022-02-07', 1, 4, 4); #closed offer good (won)
+VALUES (8, 110.0, 1350.0, '2023-02-07', 1, 4, 4); #closed offer good (won)
 INSERT INTO offer (id, price, quantity, delivery_date, state, user_id, auction_id)
-VALUES (9, 140.0, 1100.0, '2022-02-07', 2, 5, 4); #closed offer bad (rejected)
+VALUES (9, 140.0, 1100.0, '2023-02-07', 2, 5, 4); #closed offer bad (rejected)

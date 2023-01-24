@@ -36,13 +36,13 @@ public class AuctionService extends BaseService {
     }
 
     /**
-     * get all saved auctions from the database which are not closed yet (running or before running)
+     * get all saved auctions from the database
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
-    public List<AuctionDto> getNotClosedAuctions() throws BarniverseException {
+    public List<AuctionDto> getAuctions() throws BarniverseException {
         List<Auction> auctions;
         try {
-            auctions = auctionRepository.findAllByEndDateAfter(LocalDateTime.now());
+            auctions = auctionRepository.findAll();
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
@@ -51,13 +51,13 @@ public class AuctionService extends BaseService {
     }
 
     /**
-     * get all saved auctions from the database which are active and are not closed yet (running or before running)
+     * get all saved auctions from the database which are not locked
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
-    public List<AuctionDto> getNotClosedActiveAuctions() throws BarniverseException {
+    public List<AuctionDto> getUnlockedAuctions() throws BarniverseException {
         List<Auction> auctions;
         try {
-            auctions = auctionRepository.findAllByStateAndEndDateAfter(AuctionState.active, LocalDateTime.now());
+            auctions = auctionRepository.findAllByState(AuctionState.active);
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }

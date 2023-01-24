@@ -37,23 +37,23 @@ public class AuctionController {
     }
 
     /**
-     * get all saved auctions from the database which are not closed yet (running or before running)
+     * get all saved auctions from the database which are not locked
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
-    @GetMapping(path="/auctions/notClosed")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> getNotClosedAuctions() throws BarniverseException {
-        List<AuctionDto> results = auctionService.getNotClosedAuctions();
+    @GetMapping(path="/auctions/unlocked")
+    public ResponseEntity<Object> getUnlockedAuctions() throws BarniverseException {
+        List<AuctionDto> results = auctionService.getUnlockedAuctions();
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     /**
-     * get all saved auctions from the database which are active and are not closed yet (running or before running)
+     * get all saved auctions from the database
      * @return response with corresponding status code and loaded auction dtos or error message in case of failure
      */
     @GetMapping(path="/auctions")
-    public ResponseEntity<Object> getNotClosedActiveAuctions() throws BarniverseException {
-        List<AuctionDto> results = auctionService.getNotClosedActiveAuctions();
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<Object> getAuctions() throws BarniverseException {
+        List<AuctionDto> results = auctionService.getAuctions();
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
