@@ -1,9 +1,9 @@
 <template>
-    <div class="centerContent taskbar">
-        <Taskbar />
+    <div class="justify-content-center taskbar">
+        <Taskbar class="d-flex"/>
     </div>
-    <div class="centerContent">
-        <div class="row centerContent">
+    <div class="justify-content-center">
+        <div class="row justify-content-center">
             <ProductCard v-for="product in products" :key="product.id" :product="product" />
         </div>
     </div>
@@ -42,11 +42,4 @@ export default {
 </script>
 
 <style>
-.centerContent {
-    justify-content: center;
-}
-
-.taskbar {
-    display: flex;
-}
 </style>

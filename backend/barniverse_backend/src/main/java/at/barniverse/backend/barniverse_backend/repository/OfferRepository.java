@@ -3,6 +3,7 @@ package at.barniverse.backend.barniverse_backend.repository;
 import at.barniverse.backend.barniverse_backend.enums.OfferState;
 import at.barniverse.backend.barniverse_backend.model.Auction;
 import at.barniverse.backend.barniverse_backend.model.Offer;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.validation.constraints.NotNull;
@@ -20,4 +21,5 @@ public interface OfferRepository extends CrudRepository<Offer, Integer> {
 
     boolean existsByIdAndState(int id, OfferState state);
 
+    long countAllByState(OfferState state);
 }
