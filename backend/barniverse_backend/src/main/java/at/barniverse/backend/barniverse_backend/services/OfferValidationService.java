@@ -19,7 +19,7 @@ import java.util.List;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
 /**
- * validation service which validates offer specific extras
+ * validation service with offer validation functionality
  */
 @Service
 public class OfferValidationService extends ValidationService<Offer> {
@@ -32,6 +32,7 @@ public class OfferValidationService extends ValidationService<Offer> {
      * validates offer specific extras
      * @param offer entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @Override
     public List<String> validateEntitySpecificExtras(Offer offer) throws BarniverseException {
@@ -49,6 +50,13 @@ public class OfferValidationService extends ValidationService<Offer> {
         return errors;
     }
 
+    /**
+     * extension method which validates offer itself
+     * @param errors messages of errors which already arisen
+     * @param offer offer which should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateOffer(List<String> errors, Offer offer, boolean isPOST) {
         if (!isPOST) { // PUT (existence already checked in getEntity())
             // only update running offers, on POST always running
@@ -59,6 +67,13 @@ public class OfferValidationService extends ValidationService<Offer> {
         return errors;
     }
 
+    /**
+     * extension method which validates user property of an offer
+     * @param errors messages of errors which already arisen
+     * @param offer offer of which the user should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateUser(List<String> errors, Offer offer, boolean isPOST) {
         if (!userRepository.existsById(offer.getUser().getId())) {
             errors.add("User not found!");
@@ -68,6 +83,13 @@ public class OfferValidationService extends ValidationService<Offer> {
         return errors;
     }
 
+    /**
+     * extension method which validates auction property of an offer
+     * @param errors messages of errors which already arisen
+     * @param offer offer of which the auction should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateAuction(List<String> errors, Offer offer, boolean isPOST) {
         if (!auctionRepository.existsById(offer.getAuction().getId())) {
             errors.add("Auction not found!");

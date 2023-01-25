@@ -32,7 +32,7 @@ public class ProductService extends BaseService {
     /**
      * add a product to the database
      * @param productDto dto which should be saved
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void addProduct(ProductDto productDto) throws BarniverseException {
         productDto.setState(ProductState.active);
@@ -54,7 +54,8 @@ public class ProductService extends BaseService {
 
     /**
      * get all saved products from the database which do not have state deleted
-     * @return response with corresponding status code and loaded product dtos or error message in case of failure
+     * @return loaded product dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<ProductDto> getProducts() throws BarniverseException {
         List<Product> products;
@@ -70,7 +71,7 @@ public class ProductService extends BaseService {
     /**
      * update specific product in the database
      * @param productDto dto which should be updated (with id)
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void updateProduct(ProductDto productDto) throws BarniverseException {
         // not with updateEntity because of the subentities
@@ -82,7 +83,8 @@ public class ProductService extends BaseService {
 
     /**
      * deletes a product with state deleted
-     * @param id id of the specific user
+     * @param id id of the specific product
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void deleteWithState(int id) throws BarniverseException {
         Product product = getEntity(productRepository, id);
@@ -90,6 +92,11 @@ public class ProductService extends BaseService {
         save(productRepository, product);
     }
 
+    /**
+     * extension method which validates a product and its subentities (product images) and saves the product
+     * @param product product which should be validated and saved
+     * @throws BarniverseException in case of failure which includes error messages
+     */
     private void validateWithSubEntitiesAndSaveParentEntity(Product product) throws BarniverseException {
         List<String> errors = new ArrayList<>(productValidationService.validateEntityGetErrors(product));
         for (ProductImage child : product.getImages()) {

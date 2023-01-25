@@ -27,8 +27,8 @@ public class AuctionService extends BaseService {
 
     /**
      * add an auction to the database
-     * @param auctionDto dto which should be saved
-     * @return response with corresponding status code and error message in case of failure
+     * @param auctionDto auction which should be saved
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void addAuction(AuctionDto auctionDto) throws BarniverseException {
         auctionDto.setState(AuctionState.active);
@@ -36,13 +36,14 @@ public class AuctionService extends BaseService {
     }
 
     /**
-     * get all saved auctions from the database which are not closed yet (running or before running)
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * get all saved auctions from the database which are not locked
+     * @return unlocked auctions
+     * @throws BarniverseException in case of failure which includes error messages
      */
-    public List<AuctionDto> getNotClosedAuctions() throws BarniverseException {
+    public List<AuctionDto> getUnlockedAuctions() throws BarniverseException {
         List<Auction> auctions;
         try {
-            auctions = auctionRepository.findAllByEndDateAfter(LocalDateTime.now());
+            auctions = auctionRepository.findAllByState(AuctionState.active);
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
@@ -51,13 +52,14 @@ public class AuctionService extends BaseService {
     }
 
     /**
-     * get all saved auctions from the database which are active and are not closed yet (running or before running)
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * get all saved auctions from the database
+     * @return auctions
+     * @throws BarniverseException in case of failure which includes error messages
      */
-    public List<AuctionDto> getNotClosedActiveAuctions() throws BarniverseException {
+    public List<AuctionDto> getAuctions() throws BarniverseException {
         List<Auction> auctions;
         try {
-            auctions = auctionRepository.findAllByStateAndEndDateAfter(AuctionState.active, LocalDateTime.now());
+            auctions = auctionRepository.findAll();
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
@@ -68,7 +70,8 @@ public class AuctionService extends BaseService {
     /**
      * get all saved auctions from the database of a specific user
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * @return auctions of a specific user
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<AuctionDto> getMyAuctions(int id) throws BarniverseException {
         List<Auction> auctions;
@@ -84,6 +87,7 @@ public class AuctionService extends BaseService {
     /**
      * update specific auction in the database
      * @param auctionDto dto which should be updated (with id)
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void updateAuction(AuctionDto auctionDto) throws BarniverseException {
         updateEntity(auctionRepository, auctionTransformer, auctionValidationService, auctionDto, auctionDto.getId());
@@ -92,7 +96,8 @@ public class AuctionService extends BaseService {
     /**
      * toggles the auction state of a specific auction (locked or active)
      * @param id id of the specific auction
-     * @return response with corresponding status code and error message in case of failure
+     * @return set state
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public AuctionState toggleState(int id) throws BarniverseException {
         Auction auction = getEntity(auctionRepository, id);

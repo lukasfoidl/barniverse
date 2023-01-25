@@ -23,6 +23,7 @@ public class ImageController {
      * get specific image from server
      * @param filename filename of the image
      * @return image
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(value = "/images/{filename}")
     public ResponseEntity<Object> getImage(@PathVariable("filename") String filename) throws BarniverseException {

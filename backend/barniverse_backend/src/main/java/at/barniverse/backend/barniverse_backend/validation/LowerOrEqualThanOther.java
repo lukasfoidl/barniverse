@@ -5,7 +5,7 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * annotation if a value is lower than another value
+ * annotation if a value is lower or equal than another value
  */
 @Constraint(validatedBy = LowerOrEqualThanOtherValidator.class)
 @Target({ ElementType.TYPE })

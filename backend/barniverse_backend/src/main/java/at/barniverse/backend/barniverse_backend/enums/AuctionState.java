@@ -11,7 +11,7 @@ public enum AuctionState {
     active,
 
     /**
-     * auction is locked, no offers can be placed (1)
+     * auction is locked (1)
      */
     locked
 }

@@ -34,12 +34,13 @@ public class UserService extends BaseService {
 
     /**
      * get all saved users from the database which do not have state deleted
-     * @return response with corresponding status code and loaded user dtos or error message in case of failure
+     * @return loaded user dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<UserDto> getUsers() throws BarniverseException {
         List<User> users;
         try {
-            users = userRepository.findAllByState(UserState.active);
+            users = userRepository.findAllByStateOrState(UserState.active, UserState.blocked);
         } catch (Exception exception) {
             throw new BarniverseException(List.of(DATABASE_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, exception);
         }
@@ -62,7 +63,8 @@ public class UserService extends BaseService {
     /**
      * get specific user from the database
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded user dto or error message in case of failure
+     * @return loaded user dto
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public UserDto getUser(int id) throws BarniverseException {
         return getEntityAsDto(userRepository, userTransformer, id);
@@ -71,7 +73,8 @@ public class UserService extends BaseService {
     /**
      * update specific user in the database
      * @param userDto dto which should be updated (with id)
-     * @return response with corresponding status code and error message in case of failure
+     * @return json web token map
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public Map<String, String> updateUser(UserDto userDto) throws BarniverseException {
         updateEntity(userRepository, userTransformer, userValidationService, userDto, userDto.getId());
@@ -84,7 +87,7 @@ public class UserService extends BaseService {
     /**
      * deletes a user with state deleted
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void deleteWithState(int id) throws BarniverseException {
         User user = getEntity(userRepository, id);
@@ -95,7 +98,7 @@ public class UserService extends BaseService {
     /**
      * changing password of specific user
      * @param changePasswordDto change password dto sent from the client
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void changePassword(ChangePasswordDto changePasswordDto) throws BarniverseException {
         User user = getEntity(userRepository, changePasswordDto.getId());
@@ -108,7 +111,7 @@ public class UserService extends BaseService {
     /**
      * toggles the admin value of a specific user (give admin rights or take admin rights)
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void toggleAdmin(int id) throws BarniverseException {
         User user = getEntity(userRepository, id);
@@ -119,7 +122,8 @@ public class UserService extends BaseService {
     /**
      * toggles the user state of a specific user (deactivate or activate)
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @return set state
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public UserState toggleState(int id) throws BarniverseException {
         User user = getEntity(userRepository, id);

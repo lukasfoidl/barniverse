@@ -27,7 +27,8 @@ public class JWTUtil {
     /**
      * generates a json web token
      * @param authDto dto with the needed data for token generation
-     * @return response with the corresponding status code and a jwt token or error message in case of failure
+     * @return json web token map
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public Map<String, String> getToken(AuthDto authDto) throws BarniverseException {
         String token = generateToken(authDto);
@@ -38,6 +39,7 @@ public class JWTUtil {
      * extension method which generates a json web token
      * @param authDto dto with the needed data for token generation
      * @return json web token
+     * @throws BarniverseException in case of failure which includes error messages
      */
     private String generateToken(AuthDto authDto) throws BarniverseException {
         try {
@@ -57,10 +59,10 @@ public class JWTUtil {
     }
 
     /**
-     * validates the jwt and extracts the included data
+     * validates the json web token and extracts the included data
      * @param token json web token
-     * @return extracted data from the jwt
-     * @throws JWTVerificationException thrown if the jwt is no valid
+     * @return extracted data from the json web token
+     * @throws JWTVerificationException thrown if the json web token is not valid
      */
     public AuthDto validateTokenAndRetrieveSubject(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))

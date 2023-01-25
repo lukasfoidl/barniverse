@@ -28,8 +28,10 @@ public class UserController {
     private UserService userService;
 
     /**
-     * get all saved users from the database which do not have state deleted
-     * @return response with corresponding status code and loaded user dtos or error message in case of failure
+     * get all saved users from the database which do not have state deleted, <br>
+     * reserved for role admin
+     * @return response with corresponding status code and loaded user dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/users")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -39,9 +41,11 @@ public class UserController {
     }
 
     /**
-     * get specific user from the database
+     * get specific user from the database, <br>
+     * reserved for role user and admin
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded user dto or error message in case of failure
+     * @return response with corresponding status code and loaded user dto
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/users/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -52,9 +56,11 @@ public class UserController {
 
     //TODO: Safety alert! Users can be updated only with Id.
     /**
-     * update specific user in the database
+     * update specific user in the database, <br>
+     * reserved for role user and admin
      * @param userDto object sent from the client (with id)
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with the corresponding status code and a json web token map
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(path="/users")
@@ -64,9 +70,11 @@ public class UserController {
     }
 
     /**
-     * deletes a user with state deleted
+     * deletes a user with state deleted, <br>
+     * reserved for role user and admin
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(path="/users/{id}/deleteWithState")
@@ -76,9 +84,11 @@ public class UserController {
     }
 
     /**
-     * changing password of specific user
+     * changing password of specific user, <br>
+     * rserved for role user and admin
      * @param changePasswordDto change password dto sent from the client
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(path="/users/changePassword")
@@ -88,9 +98,11 @@ public class UserController {
     }
 
     /**
-     * toggles the admin value of a specific user (give admin rights or take admin rights)
+     * toggles the admin value of a specific user (give admin rights or take admin rights), <br>
+     * reserved for role admin
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/users/{id}/toggleAdmin")
@@ -100,9 +112,11 @@ public class UserController {
     }
 
     /**
-     * toggles the user state of a specific user (deactivate or activate)
+     * toggles the user state of a specific user (deactivate or activate), <br>
+     * reserved for role admin
      * @param id id of the specific user
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and set state
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/users/{id}/toggleState")

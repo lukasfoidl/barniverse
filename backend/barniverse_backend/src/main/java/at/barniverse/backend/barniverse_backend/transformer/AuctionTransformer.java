@@ -20,7 +20,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
     private ProductTransformer productTransformer;
 
     /**
-     * transforms auction entity to auction dto, <br>
+     * transform auction entity to auction dto, <br>
      * user property of entity will be transformed to a user dto by UserTransformer, <br>
      * product property of entity will be transformed to a product dto by ProductTransformer
      * @param auction entity which should be transformed
@@ -49,7 +49,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
     }
 
     /**
-     * transforms auction dto to auction entity, <br>
+     * transform auction dto to auction entity, <br>
      * id property does NOT get transformed from dto to entity, because id gets set from the database automatically, <br>
      * user property of dto will NOT be transformed to a user entity,
      * just the id gets set because cascading is not enabled and only id is necessary for the foreign key, <br>
@@ -89,7 +89,7 @@ public class AuctionTransformer implements ITransformer<Auction, AuctionDto> {
     }
 
     /**
-     * repairs auction entity after transformation in case of update (PUT), <br>
+     * repair auction entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * user property gets set to user property from database, because the user cannot be changed after the creation of an auction entity, <br>
      * product property gets set to product property from database, because the product cannot be changed after the creation of an auction entity, <br>

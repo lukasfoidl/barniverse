@@ -20,7 +20,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
     private ProductImageTransformer productImageTransformer;
 
     /**
-     * transforms product entity to product dto, <br>
+     * transform product entity to product dto, <br>
      * product image property of entity will be transformed to a product image dto by ProductImageTransformer
      * @param product entity which should be transformed
      * @return product dto
@@ -39,7 +39,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
     }
 
     /**
-     * transforms product dto to product entity, <br>
+     * transform product dto to product entity, <br>
      * id property does NOT get transformed from dto to entity, because id gets set from the database automatically, <br>
      * product image property of dto will be transformed to a product image entity by ProductImageTransformer
      * @param productDto dto which should be transformed
@@ -59,7 +59,7 @@ public class ProductTransformer implements ITransformer<Product, ProductDto> {
     }
 
     /**
-     * repairs product entity after transformation in case of update (PUT), <br>
+     * repair product entity after transformation in case of update (PUT), <br>
      * id gets set to update entity, <br>
      * state property gets set to state property from database, because the state of a product can not be updated with standard user update (PUT)
      * @param product entity which needs to be repaired

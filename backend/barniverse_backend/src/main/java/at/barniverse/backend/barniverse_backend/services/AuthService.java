@@ -25,7 +25,7 @@ import java.util.Map;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.*;
 
 /**
- * service for authentication
+ * service with authentication related functionality
  */
 @Service
 public class AuthService extends BaseService {
@@ -40,8 +40,9 @@ public class AuthService extends BaseService {
     // TODO: after successful creation of user token is returned immediately, no further checks if user is real
     /**
      * register a new user (add new user to the database)
-     * @param userDto object sent from the client
-     * @return response with the corresponding status code and a jwt token or error message in case of failure
+     * @param userDto user which should be saved
+     * @return jwt token map
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public Map<String, String> register(UserDto userDto) throws BarniverseException {
         userDto.setState(UserState.active);
@@ -59,8 +60,8 @@ public class AuthService extends BaseService {
     /**
      * authenticate a user
      * @param loginCredentialsDto login credentials sent from the client
-     * @return response with the corresponding status code and a jwt token if the user gets authenticated <br>
-     * or error message in case of failure
+     * @return jwt token map
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public Map<String, String> login(LoginCredentialsDto loginCredentialsDto) throws BarniverseException {
         try {
@@ -81,7 +82,8 @@ public class AuthService extends BaseService {
     /**
      * extension method which loads a user from the database with its email
      * @param email email of the user which needs to be loaded
-     * @return user entity
+     * @return user
+     * @throws BarniverseException in case of failure which includes error messages
      */
     private User getUser(String email) throws BarniverseException {
         User user;

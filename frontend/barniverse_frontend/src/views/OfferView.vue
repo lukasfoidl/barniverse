@@ -85,8 +85,4 @@ export default {
 .centerContent {
     justify-content: center;
 }
-
-.taskbar {
-    display: flex;
-}
 </style>

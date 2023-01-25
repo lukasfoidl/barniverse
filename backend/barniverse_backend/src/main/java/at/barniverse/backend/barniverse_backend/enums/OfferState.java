@@ -6,7 +6,7 @@ package at.barniverse.backend.barniverse_backend.enums;
 public enum OfferState {
 
     /**
-     * offer is still running (0)
+     * offer is running (0)
      */
     running,
 

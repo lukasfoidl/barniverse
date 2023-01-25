@@ -27,7 +27,7 @@ public class OfferService extends BaseService {
     /**
      * add an offer to the database
      * @param offerDto dto which should be saved
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void addOffer(OfferDto offerDto) throws BarniverseException {
         offerDto.setState(OfferState.running);
@@ -37,7 +37,8 @@ public class OfferService extends BaseService {
     /**
      * get all saved offers from a specific auction
      * @param id id of the specific auction
-     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     * @return loaded offer dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<OfferDto> getOffersFromAuction(int id) throws BarniverseException {
         List<Offer> offers;
@@ -53,7 +54,8 @@ public class OfferService extends BaseService {
     /**
      * get all saved offers from a specific user
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     * @return loaded offer dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<OfferDto> getOffersFromUser(int id) throws BarniverseException {
         List<Offer> offers;
@@ -67,10 +69,10 @@ public class OfferService extends BaseService {
     }
 
     /**
-     * update specific offer state to accept, <br>
+     * update specific offer state to accepted, <br>
      * update offer state to rejected for all other offers of the accepted offers auction
      * @param id id of the specific offer
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void acceptOffer(int id) throws BarniverseException {
         Offer offer = getEntity(offerRepository, id);

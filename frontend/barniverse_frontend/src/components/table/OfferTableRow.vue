@@ -19,7 +19,9 @@
 
     <!-- MyOffersView -->
     <tr v-if="isMyOffersView">
-        <td> <i class="bi bi-file-earmark-text standardColor pointer" alt="View offer" @click="navigateToOfferDetailsView"/></td>
+        <td> 
+            <i v-if="!isAuctionLocked()" class="bi bi-file-earmark-text standardColor pointer" alt="View offer" @click="navigateToOfferDetailsView"/>
+        </td>
         <td>{{ offer.auction.title }}</td>
         <td>{{ offer.auction.product.title }}</td>
         <td :class="{'outOfRange': (!isInPriceRange())}">{{ offer.price }}</td>
@@ -29,9 +31,10 @@
             <span>{{ new Date(offer.deliveryDate).toLocaleTimeString('de-AT') }}</span>
         </td>
         <td>
-            <i v-if="isOfferRunning()" class="bi bi-stopwatch-fill runningColor" alt="Offer still running" />
-            <i v-if="isOfferRejected()" class="bi bi-x-circle-fill rejectedColor" alt="Offer still running" />
-            <i v-if="isOfferAccepted()" class="bi bi-patch-check-fill acceptedColor" alt="Offer accepted" />
+            <i v-if="!isAuctionLocked() && isOfferRunning()" class="bi bi-stopwatch-fill runningColor" alt="Offer still running" />
+            <i v-if="!isAuctionLocked() && isOfferRejected()" class="bi bi-x-circle-fill rejectedColor" alt="Offer still running" />
+            <i v-if="!isAuctionLocked() && isOfferAccepted()" class="bi bi-patch-check-fill acceptedColor" alt="Offer accepted" />
+            <i v-if="isAuctionLocked()" class="bi bi-lock-fill" alt="Auction Locked" />
         </td>
     </tr>
 </template>
@@ -63,6 +66,9 @@ export default {
                 }
                 window.event.emit("showErrorModal", modalData);
             }
+        },
+        isAuctionLocked() {
+            return this.offer.auction.state == "locked";
         },
         isAuctionFinished() {
             return new Date(this.offer.auction.endDate) < new Date()

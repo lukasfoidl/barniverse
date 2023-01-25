@@ -28,7 +28,7 @@ abstract public class BaseService {
      * @param dto dto which should be saved
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T, U> void addEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto) throws BarniverseException {
         T entity = transformer.convertToEntity(dto);
@@ -37,12 +37,13 @@ abstract public class BaseService {
     }
 
     /**
-     * get all saved entities of one type from the database
+     * get all saved entities of one type from the database as dtos
      * @param repository type related repository
      * @param transformer type related transformer
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and loaded dtos or error message in case of failure
+     * @return loaded dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T, U> List<U> getEntitiesAsDtos(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer) throws BarniverseException {
         Iterable<T> entities;
@@ -65,7 +66,8 @@ abstract public class BaseService {
      * @param id id of the specific entity
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and loaded dto or error message in case of failure
+     * @return loaded dto
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T, U> U getEntityAsDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, int id) throws BarniverseException {
         T entity = getEntity(repository, id);
@@ -90,7 +92,8 @@ abstract public class BaseService {
      * @param repository type related repository
      * @param id id of the specific entity
      * @param <T> entity type
-     * @return response with corresponding status code and loaded entity or error message in case of failure
+     * @return loaded entity
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T> T getEntity(CrudRepository<T, Integer> repository, int id) throws BarniverseException {
         Optional<T> entity;
@@ -111,9 +114,10 @@ abstract public class BaseService {
      * @param transformer type related transformer
      * @param validationService type related validationService
      * @param dto dto which should be updated
+     * @param id id of the entity which should be updated
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T, U> void updateEntity(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, ValidationService<T> validationService, U dto, int id) throws BarniverseException {
         T dbEntity = getEntity(repository, id);
@@ -128,7 +132,7 @@ abstract public class BaseService {
      * @param repository type related repository
      * @param id id of the specific entity
      * @param <T> entity type
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T> void deleteEntity(CrudRepository<T, Integer> repository, int id) throws BarniverseException {
         getEntity(repository, id);
@@ -144,6 +148,7 @@ abstract public class BaseService {
      * @param repository type related repository
      * @param entity entity which should be saved
      * @param <T> entity type
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T> void save(CrudRepository<T, Integer> repository, T entity) throws BarniverseException {
         try {
@@ -154,14 +159,15 @@ abstract public class BaseService {
     }
 
     /**
-     * WARNING: Use method only if values of the saved entity are explicitly needed, otherwise use method 'save'! <br>
-     * extension method which saves an entity in the database and returns the corresponding dto
+     * extension method which saves an entity in the database and returns the corresponding dto <br>
+     * WARNING: Use method only if values of the saved entity are explicitly needed, otherwise use method 'save'!
      * @param repository type related repository
      * @param transformer type related transformer
      * @param entity entity which should be saved
      * @param <T> entity type
      * @param <U> dto type
-     * @return response with corresponding status code and saved dto or error message in case of failure
+     * @return saved dto
+     * @throws BarniverseException in case of failure which includes error messages
      */
     protected <T, U> U saveAndGetDto(CrudRepository<T, Integer> repository, ITransformer<T, U> transformer, T entity) throws BarniverseException {
         try {
@@ -172,6 +178,14 @@ abstract public class BaseService {
         }
     }
 
+    /**
+     * extension method which converts entities of one type to the corresponding dtos
+     * @param transformer type related tranformer
+     * @param entities entities which should be transformed
+     * @param <T> entity type
+     * @param <U> dto type
+     * @return dtos
+     */
     protected <T, U> List<U> convertToDto(ITransformer<T, U> transformer, List<T> entities) {
         List<U> dtos = new ArrayList<>(Collections.emptyList());
         for (T entity : entities) {
