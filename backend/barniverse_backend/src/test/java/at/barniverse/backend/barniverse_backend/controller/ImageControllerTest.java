@@ -3,6 +3,7 @@ package at.barniverse.backend.barniverse_backend.controller;
 import at.barniverse.backend.barniverse_backend.services.ImageService;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ class ImageControllerTest {
     }
 
     @Test
+    @DisplayName("Get Image API")
     void getImage() throws  Exception {
         String filename = "Gin01.jpeg";
         byte[] content;

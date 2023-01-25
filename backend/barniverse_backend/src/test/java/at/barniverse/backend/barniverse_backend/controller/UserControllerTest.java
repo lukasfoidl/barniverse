@@ -7,6 +7,7 @@ import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,33 +51,9 @@ class UserControllerTest {
      }
 
 
-
-    /*@Test
-    void addUser() throws Exception {
-
-        UserDto user = new UserDto();
-        user.setFirstname("John");
-        user.setLastname("Doe");
-        user.setUsername("JonnyDoe123");
-        user.setEmail("jonnydoe@test.at");
-        user.setPassword("JonnyDoe123");
-        user.setState(UserState.active);
-
-
-        ObjectMapper objectmapper = new ObjectMapper();
-        String json = objectmapper.writeValueAsString(user);
-
-        ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
-
-        //Mockito.when(service.addUser(any(UserDto.class))).thenReturn(entity);
-
-        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk())
-                .andExpect(content().string(json));
-    }*/
-
     @WithMockUser(roles = "ADMIN")
     @Test
+    @DisplayName("Get Users Api")
     void getUsers() throws Exception {
 
         List<UserDto> list = new ArrayList<>();
@@ -120,6 +97,7 @@ class UserControllerTest {
     }
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Get User API")
     void getUser() throws Exception {
 
         UserDto dto = new UserDto();
@@ -149,6 +127,7 @@ class UserControllerTest {
 
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Update User API")
     void updateUser() throws Exception {
         UserDto user = new UserDto();
         user.setId(11);
@@ -174,11 +153,7 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUser() {
-    }
-
-
-    @Test
+    @DisplayName("Delete With State User API")
     void deleteWithState() throws Exception {
 
         mockMvc.perform(put("/api/users/11/deleteWithState"))
@@ -187,6 +162,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Delete with State User invalid ID API")
     void deleteWithStateInvalidId() throws Exception {
 
         mockMvc.perform(put("/api/users/11/deleteWithState"))
@@ -196,6 +172,7 @@ class UserControllerTest {
 
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Change user password API")
     void changePassword() throws Exception  {
 
         ChangePasswordDto dto = new ChangePasswordDto();
@@ -215,6 +192,7 @@ class UserControllerTest {
     }
     @WithMockUser(roles = "ADMIN")
     @Test
+    @DisplayName("Toggle Admin from User API ")
     void toggleAdmin() throws Exception {
 
           mockMvc.perform(put("/api/users/10/toggleAdmin"))
@@ -224,6 +202,7 @@ class UserControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
+    @DisplayName("Toggle State User API")
     void toggleState() throws Exception {
 
         Mockito.when(service.toggleState(11)).thenReturn(UserState.active);
@@ -235,6 +214,7 @@ class UserControllerTest {
 
     }
     @Test
+    @DisplayName("Wrong API TEST")
     void wrongApiRequest () throws Exception{
           // testing typo "user" --> working "users"
           mockMvc.perform(get("/api/user/10")).andDo(print()).andExpect(status().isNotFound()).andExpect(content().string(""));

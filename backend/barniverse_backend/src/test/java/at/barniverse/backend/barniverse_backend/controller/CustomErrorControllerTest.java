@@ -25,5 +25,5 @@ class CustomErrorControllerTest {
         mvc = MockMvcBuilders.standaloneSetup(customErrorController).build();
 
     }
-    
+
 }

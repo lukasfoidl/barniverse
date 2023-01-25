@@ -6,6 +6,7 @@ import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Register API")
     void register() throws Exception {
         UserDto user = new UserDto();
         user.setFirstname("John");
@@ -71,6 +73,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("Register without Dto API")
     void registerWithNoDto() throws Exception {
 
         //Expected to send bad Request because Dto is not provided in post Request
@@ -80,6 +83,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Login API")
     void login() throws Exception {
 
         LoginCredentialsDto dto = new LoginCredentialsDto();
@@ -101,6 +105,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("Login without Dto API")
     void loginWithNoDto() throws Exception {
 
         //Expected to send bad Request because Dto is not provided in post Request

@@ -8,6 +8,7 @@ import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.services.AuctionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -88,6 +89,7 @@ class AuctionControllerTest {
     }
 
     @Test
+    @DisplayName("Get all Auctions API")
     void getAuctions() throws Exception {
 
         ProductDto product = new ProductDto();
@@ -155,6 +157,7 @@ class AuctionControllerTest {
 
 
     @Test
+    @DisplayName("Gets unlocked Auctions API")
     void getUnlockedAuctionsTest() throws Exception {
 
         ProductDto product = new ProductDto();
@@ -198,7 +201,6 @@ class AuctionControllerTest {
         dto2.setMaxQuantity(100);
         dto2.setMinQuantity(100);
         dto2.setProduct(product);
-        //dto2.setLocked(false);
         dto2.setStartDate(null);
         dto2.setStartDeliveryDate(null);
         dto2.setTitle("the best Gin Auction");
@@ -211,19 +213,16 @@ class AuctionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(auctionDtos);
 
-
-
         Mockito.when(service.getUnlockedAuctions()).thenReturn(auctionDtos);
 
         mockMvc.perform(get("/api/auctions/unlocked"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(json));
-
-
     }
 
     @Test
+    @DisplayName("update Auction API")
     void updateAuction() throws Exception {
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -250,7 +249,6 @@ class AuctionControllerTest {
         dto.setMaxQuantity(100);
         dto.setMinQuantity(100);
         dto.setProduct(product);
-        //dto.setLocked(false);
         dto.setStartDate(null);
         dto.setStartDeliveryDate(null);
         dto.setTitle("the best Gin Auction");
@@ -261,36 +259,27 @@ class AuctionControllerTest {
 
         ResponseEntity entity = new ResponseEntity(null, HttpStatus.OK);
 
-        //Mockito.when(service.updateAuction(any(AuctionDto.class))).thenReturn(entity);
-
         mockMvc.perform(put("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
-
     }
 
     @Test
+    @DisplayName("Update Auction without DTO API ")
     void updateAuctionWithoutDto() throws Exception {
-
-
         ResponseEntity entity = new ResponseEntity(null, HttpStatus.OK);
-
         mockMvc.perform(put("/api/auctions").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
+    @DisplayName("toggle State API")
     void toggleState() throws Exception {
-
         ResponseEntity entity = new ResponseEntity(AuctionState.locked, HttpStatus.OK);
-
         Mockito.when(service.toggleState(1)).thenReturn(AuctionState.locked);
-
         mockMvc.perform(put("/api/auctions/1/toggleState"))
                 .andExpect(status().isOk());
-
     }
 }

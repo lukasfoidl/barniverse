@@ -8,6 +8,7 @@ import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import at.barniverse.backend.barniverse_backend.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,6 +48,7 @@ class ProductControllerTest {
 
 
     @Test
+    @DisplayName("add Product API")
     void addProduct() throws Exception {
 
         List<ProductImageDto> list = new ArrayList<ProductImageDto>();
@@ -76,6 +78,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("Get Products API")
     void getProducts() throws Exception {
         List<ProductImageDto> list = new ArrayList<ProductImageDto>();
 
@@ -108,38 +111,8 @@ class ProductControllerTest {
 
     }
 
-    //Gets Product by id = 1
-    /*@Test
-    void getProduct() throws Exception {
-        List<ProductImageDto> list = new ArrayList<ProductImageDto>();
-
-        ProductImageDto image = new ProductImageDto();
-        image.setFile("empty.jpeg");
-        image.setId(10);
-        list.add(image);
-
-        ProductDto productDto = new ProductDto();
-        productDto.setId(10);
-        productDto.setDescription("Tequilla der runter geht!");
-        productDto.setImages(list);
-        productDto.setTitle("Tequilla");
-        productDto.setState(ProductState.active);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(productDto);
-
-        ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
-
-        //Mockito.when(service.getProduct(10)).thenReturn(entity);
-
-        mockMvc.perform(get("/api/products/10").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(json));
-
-    }*/
-
     @Test
+    @DisplayName("Update Product API")
     void updateProduct() throws Exception {
         List<ProductImageDto> list = new ArrayList<ProductImageDto>();
 
@@ -162,6 +135,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("Delete Product API")
     void deleteProduct() throws Exception {
 
      ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
@@ -174,6 +148,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName(" Product Delete with state API")
     void deleteWithState() throws Exception {
 
         mockMvc.perform(put("/api/products/10/deleteWithState"))
@@ -182,6 +157,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("Prduct delete with wrong Id API")
     void deleteWithStateWithWrongId() throws Exception {
 
         mockMvc.perform(put("/api/products/x/deleteWithState/"))
