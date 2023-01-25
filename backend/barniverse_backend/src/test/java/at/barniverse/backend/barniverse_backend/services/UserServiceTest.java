@@ -164,7 +164,7 @@ class UserServiceTest {
 
 
         //given
-        given(userRepository.findAllByState(UserState.active)).willReturn(list);
+        given(userRepository.findAllByStateOrState(UserState.active, UserState.blocked)).willReturn(list);
         given(userTransformer.convertToDto(user1)).willReturn(userDto1);
         given(userTransformer.convertToDto(user2)).willReturn(userDto2);
         given(userTransformer.convertToDto(user3)).willReturn(userDto3);
