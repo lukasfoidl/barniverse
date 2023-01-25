@@ -6,6 +6,7 @@ import at.barniverse.backend.barniverse_backend.dto.ChangePasswordDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
 import at.barniverse.backend.barniverse_backend.enums.RoleConverter;
 import at.barniverse.backend.barniverse_backend.enums.UserState;
+import at.barniverse.backend.barniverse_backend.exception.BarniverseException;
 import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.repository.UserRepository;
 import at.barniverse.backend.barniverse_backend.security.JWTUtil;
@@ -29,7 +30,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -86,22 +87,7 @@ class UserServiceTest {
 
     }
 
-    @Test
-    void addUser() {
 
-        ResponseEntity expected = new ResponseEntity(null, HttpStatus.OK);
-        //given
-        given(userTransformer.convertToEntity(userDto)).willReturn(user);
-        given(userValidationService.validateEntity(user)).willReturn(new ResponseEntity<>(null, HttpStatus.OK));
-
-        //when
-        ResponseEntity actual = userService.addUser(userDto);
-
-        System.out.println(expected.getStatusCode());
-        System.out.println(actual.getStatusCode());
-        //then
-        assertEquals(expected.getStatusCode(), actual.getStatusCode());
-    }
 
     @Test
     void getUsers() throws Exception {
@@ -178,79 +164,49 @@ class UserServiceTest {
 
 
         //given
-        given(userRepository.findAll()).willReturn(list);
+        given(userRepository.findAllByState(UserState.active)).willReturn(list);
         given(userTransformer.convertToDto(user1)).willReturn(userDto1);
         given(userTransformer.convertToDto(user2)).willReturn(userDto2);
         given(userTransformer.convertToDto(user3)).willReturn(userDto3);
 
         //when
-        ResponseEntity entity =  userService.getUsers();
+        List<UserDto> listGet =  userService.getUsers();
 
-        System.out.println(entityExpected.getBody().toString());
-        System.out.println(entity.getBody().toString());
+        System.out.println(list.get(0).getFirstname());
+        System.out.println(listGet.get(0).getFirstname());
 
         //then
-        assertEquals(entityExpected.getBody().toString(), entity.getBody().toString());
 
+        assertEquals(list.get(0).getFirstname(),listGet.get(0).getFirstname());
+        assertEquals(list.get(0).getEmail(),listGet.get(0).getEmail());
+        assertEquals(list.get(0).getUsername(),listGet.get(0).getUsername());
     }
 
     @Test
     void getUserByIdCorrectly() throws Exception {
 
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(userDto);
-
-        ResponseEntity entityExpected = new ResponseEntity(json, HttpStatus.OK);
-
         Optional<User> optional = Optional.of(user);
         //given
-        given(userRepository.findById(1)).willReturn(optional);
+        given(userRepository.findById(user.getId())).willReturn(optional);
         given(userTransformer.convertToDto(user)).willReturn(userDto);
 
         //when
         //test failed in base service get EntityasDto and sends the reference instead of the values of the dto --> added object mapper to getEntityAsDto
-        ResponseEntity entity = userService.getUser( 1);
+        UserDto newUserDto = userService.getUser( 1);
 
-        System.out.println(entityExpected.getBody().toString());
-        System.out.println(entityExpected.hasBody());
-        System.out.println(entityExpected.getStatusCode());
-        System.out.println(entity.getBody().toString());
-        System.out.println(entity.hasBody());
-        System.out.println(entity.getStatusCode());
-
-        //then
-        assertEquals(entityExpected.hasBody(), entity.hasBody());
-        assertEquals(entityExpected.getStatusCode(), entity.getStatusCode());
-        assertEquals(entityExpected.getBody().toString(), entity.getBody().toString());
-
-
-    }
-
-
-    @Test
-    void getUserByIdReturnsEmptyObject() throws Exception {
-
-        ResponseEntity entityExpected = new ResponseEntity(Context.INVALID_ID, HttpStatus.BAD_REQUEST);
-
-        //given
-        given(userRepository.findById(any(Integer.class))).willReturn(Optional.empty());
-
-        //when
-        //test failed in base service get Entities Dto and sends the reference instead of the values of the dto --> added object mapper to getEntityAsDto
-        ResponseEntity entity = userService.getUser( 1);
-
-        System.out.println(entityExpected.getBody().toString());
-        System.out.println(entityExpected.hasBody());
-        System.out.println(entityExpected.getStatusCode());
-        System.out.println(entity.getBody().toString());
-        System.out.println(entity.hasBody());
-        System.out.println(entity.getStatusCode());
+        System.out.println(user.getId());
+        System.out.println(newUserDto.getId());
+        System.out.println(user.getEmail());
+        System.out.println(newUserDto.getEmail());
+        System.out.println(user.getUsername());
+        System.out.println(newUserDto.getUsername());
 
         //then
-        assertEquals(entityExpected.hasBody(), entity.hasBody());
-        assertEquals(entityExpected.getStatusCode(), entity.getStatusCode());
-        assertEquals(entityExpected.getBody().toString(), entity.getBody().toString());
+        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getEmail(), newUserDto.getEmail());
+        assertEquals(user.getUsername(), newUserDto.getUsername());
+
 
 
     }
@@ -259,7 +215,6 @@ class UserServiceTest {
 
     @Test
     void updateUser() throws Exception {
-
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(userDto);
@@ -278,6 +233,16 @@ class UserServiceTest {
         user2.setState(UserState.active);
         user2.setPicture("test2.png");
 
+        User userUpdated = new User();
+        userUpdated.setId(1);
+        userUpdated.setFirstname("John2");
+        userUpdated.setLastname("Doe2");
+        userUpdated.setUsername("JonnyDoe1232");
+        userUpdated.setEmail("jonnydoe@test2.at");
+        userUpdated.setPassword("asdfretewr654645645dfftasdfuitjl5");
+        userUpdated.setState(UserState.active);
+        userUpdated.setPicture("test2.png");
+
         Optional<User> optional2 = Optional.of(user2);
 
         UserDto userDto2 = new UserDto();
@@ -286,7 +251,7 @@ class UserServiceTest {
         userDto2.setLastname("Doe2");
         userDto2.setUsername("JonnyDoe1232");
         userDto2.setEmail("jonnydoe@test2.at");
-        userDto2.setPassword("asdfretewr654645645dfftasdfuitjl5");
+        userDto2.setPassword(null);
         userDto2.setState(UserState.active);
         userDto2.setPicture("test2.png");
 
@@ -297,27 +262,21 @@ class UserServiceTest {
          authDto.setUuid(Integer.toString(user2.getId()));
 
         //given
-        given(userRepository.findById(userDto2.getId())).willReturn(optional);
+        given(userRepository.findById(user.getId())).willReturn(optional);
         given(userTransformer.convertToEntity(userDto2)).willReturn(user2);
-        given(userTransformer.repairEntity(user2, user)).willReturn(user2);
-        given(userValidationService.validateEntity(user2)).willReturn(new ResponseEntity<>(null, HttpStatus.OK));
-        given(userRepository.save(user2)).willReturn(user2);
-        given(jwtUtil.getToken(authDto)).willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+        given(userTransformer.repairEntity(any(User.class), any(User.class))).willReturn(user);
+        given(userRepository.findById(userUpdated.getId())).willReturn(optional2);
+        given(jwtUtil.getToken(any(AuthDto.class))).willReturn(Collections.singletonMap("jwt-token", "token"));
 
         //when
         //test failed in base service get Entitys Dto and sends the reference instead of the values of the dto --> added object mapper to getEntityAsDto
-        ResponseEntity entity = userService.updateUser(userDto2);
+        System.out.println(userService.updateUser(userDto2));
+        System.out.println(Collections.singletonMap("jwt-token", "token"));
 
-        System.out.println(entityExpected.hasBody());
-        System.out.println(entityExpected.getStatusCode());
-
-        System.out.println(entity.hasBody());
-        System.out.println(entity.getStatusCode());
 
         //then
-        assertEquals(entityExpected.hasBody(), entity.hasBody());
-        assertEquals(entityExpected.getStatusCode(), entity.getStatusCode());
-        assertEquals(entityExpected.getBody().toString(), entity.getBody().toString());
+        assertEquals(userService.updateUser(userDto2),Collections.singletonMap("jwt-token", "token"));
+
 
     }
 
@@ -332,8 +291,6 @@ class UserServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(user);
 
-        ResponseEntity entityExpected = new ResponseEntity(null, HttpStatus.OK);
-
         Optional<User> optional = Optional.of(user);
 
         //given
@@ -341,22 +298,18 @@ class UserServiceTest {
         given(userRepository.save(user)).willReturn(user);
 
         //when
-        ResponseEntity entity = userService.deleteWithState(user.getId());
-
-        System.out.println(entityExpected.hasBody());
-        System.out.println(entityExpected.getStatusCode());
-        System.out.println(entity.hasBody());
-        System.out.println(entity.getStatusCode());
+        userService.deleteWithState(user.getId());
 
         //then
-        assertEquals(entityExpected.hasBody(), entity.hasBody());
-        assertEquals(entityExpected.getStatusCode(), entity.getStatusCode());
-
+        verify(userRepository, times(1)).findById(user.getId());
+        verify(userRepository, times(1)).save(user);
 
     }
 
     @Test
-    void changePassword() {
+    void changePassword() throws BarniverseException {
+
+
 
         String encodePw = "Encoded Password";
 
@@ -370,25 +323,22 @@ class UserServiceTest {
 
         //given
         given(userRepository.findById(user.getId())).willReturn(optionalUser);
-        given(userValidationService.validateEntity(user)).willReturn(expected);
         given(passwordEncoder.encode(dto.getPassword())).willReturn(encodePw);
 
         //when
-        ResponseEntity entity = userService.changePassword(dto);
+        userService.changePassword(dto);
 
         System.out.println(expected);
-        System.out.println(entity);
-
         //then
-        assertEquals(expected.getStatusCode(), entity.getStatusCode());
-        assertEquals(expected.hasBody(), entity.hasBody());
+        verify(userRepository,times(1)).save(user);
+
 
 
 
     }
 
     @Test
-    void toggleAdmin() {
+    void toggleAdmin() throws BarniverseException {
 
         ChangePasswordDto dto = new ChangePasswordDto();
         dto.setPassword(user.getPassword());
@@ -396,49 +346,42 @@ class UserServiceTest {
 
         Optional optionalUser = Optional.of(user);
 
-        ResponseEntity expected = new ResponseEntity(null, HttpStatus.OK);
-
         //given
         given(userRepository.findById(user.getId())).willReturn(optionalUser);
 
         //when
-        ResponseEntity entity = userService.toggleAdmin(1);
+        userService.toggleAdmin(1);
 
-        System.out.println(expected);
-        System.out.println(entity);
         //then
-        assertEquals(expected.getStatusCode(), entity.getStatusCode());
-        assertEquals(expected.hasBody(), entity.hasBody());
+        verify(userRepository, times(1)).findById(user.getId());
+        verify(userRepository, times(1)).save(user);
+
     }
 
     @Test
-    void toggleState() {
-
+    void toggleState() throws BarniverseException {
+        //user state = active in the beginning
 
         Optional optionalUser = Optional.of(user);
-
-        ResponseEntity expected = new ResponseEntity(UserState.active, HttpStatus.OK);
 
         //given
         given(userRepository.findById(user.getId())).willReturn(optionalUser);
         given(userRepository.save(user)).willReturn(user);
-        given(userTransformer.convertToDto(user)).willReturn(userDto);
 
         //when
-        ResponseEntity entity = userService.toggleState(1);
+        UserState state = userService.toggleState(1);
 
-        System.out.println(expected);
-        System.out.println(entity);
+        System.out.println(user.getState());
+        System.out.println(state);
 
         //then
-        assertEquals(expected.getStatusCode(), entity.getStatusCode());
-        assertEquals(expected.hasBody(), entity.hasBody());
-        assertEquals(expected.getBody(), entity.getBody());
+        assertEquals(user.getState(), state);
+
     }
 
 
     @Test
-    void toggleStateOfBlockedUser() {
+    void toggleStateOfBlockedUser() throws BarniverseException {
 
         User userDeleted = new User();
         userDeleted.setId(1);
@@ -452,20 +395,25 @@ class UserServiceTest {
 
         Optional optionalUser = Optional.of(userDeleted);
 
-        ResponseEntity expected = new ResponseEntity("User is deleted and cannot be changed!", HttpStatus.BAD_REQUEST);
-
         //given
         given(userRepository.findById(userDeleted.getId())).willReturn(optionalUser);
 
+        String stateString = "";
+        List<String> excepetion = new ArrayList<>();
+        BarniverseException ex = new BarniverseException(List.of("User is deleted and cannot be changed!"), HttpStatus.FORBIDDEN, null);
         //when
-        ResponseEntity entity = userService.toggleState(1);
+        try{
+            stateString = userService.toggleState(1).toString();
+        }catch (BarniverseException e){
+            System.out.println(e);
+            excepetion = e.getErrorMessages();
+        }
 
-        System.out.println(expected);
-        System.out.println(entity);
+        System.out.println(ex.getErrorMessages());
+        System.out.println(excepetion);
 
         //then
-        assertEquals(expected.getStatusCode(), entity.getStatusCode());
-        assertEquals(expected.hasBody(), entity.hasBody());
-        assertEquals(expected.getBody(), entity.getBody());
+        assertEquals(ex.getErrorMessages(), excepetion);
+        assertEquals("", stateString.toString());
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
+import java.util.Collections;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,9 +55,11 @@ class AuthControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(user);
 
+        var token = Collections.singletonMap("jwt-token", "token");
+
         ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
 
-        Mockito.when(service.register(any(UserDto.class))).thenReturn(entity);
+        Mockito.when(service.register(any(UserDto.class))).thenReturn(token);
 
         mockMvc.perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
@@ -85,9 +89,10 @@ class AuthControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(dto);
 
-        ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
 
-        Mockito.when(service.login(any(LoginCredentialsDto.class))).thenReturn(entity);
+         var token = Collections.singletonMap("jwt-token", "token");
+
+        Mockito.when(service.login(any(LoginCredentialsDto.class))).thenReturn(token);
 
         mockMvc.perform(post("/api/login").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());

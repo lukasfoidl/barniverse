@@ -50,7 +50,7 @@ class ImageControllerTest {
 
         ResponseEntity entity = new ResponseEntity(content, HttpStatus.OK);
 
-        Mockito.when(service.getImage(filename)).thenReturn(entity);
+        Mockito.when(service.getImage(filename)).thenReturn(content);
 
         mockMvc.perform(get("/api/images/Gin01.jpeg"))
                 .andDo(print())
