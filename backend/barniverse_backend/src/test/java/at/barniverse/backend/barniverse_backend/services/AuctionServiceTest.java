@@ -16,11 +16,10 @@ import at.barniverse.backend.barniverse_backend.transformer.AuctionTransformer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -212,6 +211,7 @@ class AuctionServiceTest {
     void toggleState() throws BarniverseException {
 
         given(auctionRepository.findById(12)).willReturn(Optional.of(auction));
+
         AuctionState state =auctionService.toggleState(12);
 
         verify(auctionValidationService, times(1)).validateTaskToggleAuction(auction);

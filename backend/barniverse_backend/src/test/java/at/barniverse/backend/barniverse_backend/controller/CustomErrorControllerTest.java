@@ -25,12 +25,5 @@ class CustomErrorControllerTest {
         mvc = MockMvcBuilders.standaloneSetup(customErrorController).build();
 
     }
-
-
-
-    @Test
-    void handleError() throws Exception {
-
-
-    }
+    
 }
