@@ -88,7 +88,7 @@ class AuctionControllerTest {
     }
 
     @Test
-    void getAuctions() throws Exception {
+    void getNotClosedActiveAuctions() throws Exception {
 
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -115,7 +115,7 @@ class AuctionControllerTest {
         dto.setMaxQuantity(100);
         dto.setMinQuantity(100);
         dto.setProduct(product);
-        dto.setState(AuctionState.active);
+        //dto.setLocked(false);
         dto.setStartDate(null);
         dto.setStartDeliveryDate(null);
         dto.setTitle("the best Gin Auction");
@@ -131,7 +131,7 @@ class AuctionControllerTest {
         dto2.setMaxQuantity(100);
         dto2.setMinQuantity(100);
         dto2.setProduct(product);
-        dto2.setState(AuctionState.active);
+        //dto2.setLocked(false);
         dto2.setStartDate(null);
         dto2.setStartDeliveryDate(null);
         dto2.setTitle("the best Gin Auction");
@@ -145,7 +145,9 @@ class AuctionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(auctionDtos);
 
-        Mockito.when(service.getAuctions()).thenReturn(auctionDtos);
+        ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
+
+        Mockito.when(service.getNotClosedActiveAuctions()).thenReturn(auctionDtos);
 
         mockMvc.perform(get("/api/auctions").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -155,7 +157,7 @@ class AuctionControllerTest {
 
 
     @Test
-    void getUnlockedAuctionsTest() throws Exception {
+    void getNotClosedAuctions() throws Exception {
 
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -213,9 +215,9 @@ class AuctionControllerTest {
 
 
 
-        Mockito.when(service.getUnlockedAuctions()).thenReturn(auctionDtos);
+        Mockito.when(service.getNotClosedAuctions()).thenReturn(auctionDtos);
 
-        mockMvc.perform(get("/api/auctions/unlocked"))
+        mockMvc.perform(get("/api/auctions/notClosed"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(json));
