@@ -88,7 +88,7 @@ class AuctionControllerTest {
     }
 
     @Test
-    void getNotClosedActiveAuctions() throws Exception {
+    void getUnlockedAuctions() throws Exception {
 
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -147,9 +147,9 @@ class AuctionControllerTest {
 
         ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
 
-        Mockito.when(service.getNotClosedActiveAuctions()).thenReturn(auctionDtos);
+        Mockito.when(service.getUnlockedAuctions()).thenReturn(auctionDtos);
 
-        mockMvc.perform(get("/api/auctions").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/auctions/unlocked").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(json));
@@ -157,7 +157,7 @@ class AuctionControllerTest {
 
 
     @Test
-    void getNotClosedAuctions() throws Exception {
+    void getAuctions() throws Exception {
 
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -215,9 +215,9 @@ class AuctionControllerTest {
 
 
 
-        Mockito.when(service.getNotClosedAuctions()).thenReturn(auctionDtos);
+        Mockito.when(service.getAuctions()).thenReturn(auctionDtos);
 
-        mockMvc.perform(get("/api/auctions/notClosed"))
+        mockMvc.perform(get("/api/auctions"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(json));

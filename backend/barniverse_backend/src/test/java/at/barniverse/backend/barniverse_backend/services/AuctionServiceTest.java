@@ -155,10 +155,10 @@ class AuctionServiceTest {
 
     @Test
     void getNotClosedAuctions() throws BarniverseException {
-        given(auctionRepository.findAllByEndDateAfter(any(LocalDateTime.class))).willReturn(list);
+        given(auctionRepository.findAll()).willReturn(list);
         given(auctionTransformer.convertToDto(auction)).willReturn(auctionDto);
 
-        List<AuctionDto> newList = auctionService.getNotClosedAuctions();
+        List<AuctionDto> newList = auctionService.getAuctions();
 
         System.out.println(list.get(0).getDescription());
         System.out.println(newList.get(0).getDescription());
@@ -168,11 +168,11 @@ class AuctionServiceTest {
 
 
     @Test
-    void getNotClosedActiveAuctions() throws BarniverseException {
-        given(auctionRepository.findAllByStateAndEndDateAfter(any(AuctionState.class), any(LocalDateTime.class))).willReturn(list);
+    void getUnlockedAuctions() throws BarniverseException {
+        given(auctionRepository.findAllByState(AuctionState.active)).willReturn(list);
         given(auctionTransformer.convertToDto(auction)).willReturn(auctionDto);
 
-        List<AuctionDto> newList = auctionService.getNotClosedActiveAuctions();
+        List<AuctionDto> newList = auctionService.getUnlockedAuctions();
 
         System.out.println(list.get(0).getDescription());
         System.out.println(newList.get(0).getDescription());
