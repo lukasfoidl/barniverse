@@ -6,6 +6,7 @@ import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,6 +43,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Register API")
     void register() throws Exception {
         UserDto user = new UserDto();
         user.setFirstname("John");
@@ -53,9 +57,11 @@ class AuthControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(user);
 
+        var token = Collections.singletonMap("jwt-token", "token");
+
         ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
 
-        Mockito.when(service.register(any(UserDto.class))).thenReturn(entity);
+        Mockito.when(service.register(any(UserDto.class))).thenReturn(token);
 
         mockMvc.perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
@@ -67,6 +73,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("Register without Dto API")
     void registerWithNoDto() throws Exception {
 
         //Expected to send bad Request because Dto is not provided in post Request
@@ -76,6 +83,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Login API")
     void login() throws Exception {
 
         LoginCredentialsDto dto = new LoginCredentialsDto();
@@ -85,9 +93,10 @@ class AuthControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(dto);
 
-        ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
 
-        Mockito.when(service.login(any(LoginCredentialsDto.class))).thenReturn(entity);
+         var token = Collections.singletonMap("jwt-token", "token");
+
+        Mockito.when(service.login(any(LoginCredentialsDto.class))).thenReturn(token);
 
         mockMvc.perform(post("/api/login").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
@@ -96,6 +105,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("Login without Dto API")
     void loginWithNoDto() throws Exception {
 
         //Expected to send bad Request because Dto is not provided in post Request

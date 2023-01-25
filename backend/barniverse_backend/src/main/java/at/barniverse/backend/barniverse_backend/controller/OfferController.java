@@ -24,9 +24,11 @@ public class OfferController {
     @Autowired private OfferService offerService;
 
     /**
-     * add an offer to the database
+     * add an offer to the database, <br>
+     * reserved for role user and admin
      * @param offerDto object sent from the client
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PostMapping(path="/offers")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -36,9 +38,11 @@ public class OfferController {
     }
 
     /**
-     * get all saved offers from a specific auction
+     * get all saved offers from a specific auction, <br>
+     * reserved for role user and admin
      * @param id id of the specific auction
-     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     * @return response with corresponding status code and loaded offer dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/auctions/{id}/offers")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -48,9 +52,11 @@ public class OfferController {
     }
 
     /**
-     * get all saved offers from a specific user
+     * get all saved offers from a specific user, <br>
+     * reserved for role user and admin
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded offer dtos or error message in case of failure
+     * @return response with corresponding status code and loaded offer dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/users/{id}/offers")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -60,10 +66,12 @@ public class OfferController {
     }
 
     /**
-     * update specific offer state to accept, <br>
-     * update offer state to rejected for all other offers of the accepted offers auction
+     * update specific offer state to accepted, <br>
+     * update offer state to rejected for all other offers of the accepted offers auction, <br>
+     * reserved for role user and admin
      * @param id id of the specific offer
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PutMapping(path="/offers/{id}/accept")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")

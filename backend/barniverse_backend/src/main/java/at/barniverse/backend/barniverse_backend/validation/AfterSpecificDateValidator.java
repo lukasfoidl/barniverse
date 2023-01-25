@@ -16,7 +16,7 @@ public class AfterSpecificDateValidator implements ConstraintValidator<AfterSpec
     private String endDate;
 
     /**
-     * initializes properties
+     * initialize properties
      * @param constraintAnnotation AfterSpecificDate annotation
      */
     @Override

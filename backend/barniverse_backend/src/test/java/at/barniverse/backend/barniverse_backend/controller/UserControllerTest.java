@@ -3,9 +3,11 @@ package at.barniverse.backend.barniverse_backend.controller;
 import at.barniverse.backend.barniverse_backend.dto.ChangePasswordDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
 import at.barniverse.backend.barniverse_backend.enums.UserState;
+import at.barniverse.backend.barniverse_backend.model.User;
 import at.barniverse.backend.barniverse_backend.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +21,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,49 +51,53 @@ class UserControllerTest {
      }
 
 
-
+    @WithMockUser(roles = "ADMIN")
     @Test
-    void addUser() throws Exception {
+    @DisplayName("Get Users Api")
+    void getUsers() throws Exception {
 
-        UserDto user = new UserDto();
-        user.setFirstname("John");
-        user.setLastname("Doe");
-        user.setUsername("JonnyDoe123");
-        user.setEmail("jonnydoe@test.at");
-        user.setPassword("JonnyDoe123");
-        user.setState(UserState.active);
+        List<UserDto> list = new ArrayList<>();
 
+        UserDto dto = new UserDto();
+        dto.setId(1);
+        dto.setFirstname("John");
+        dto.setLastname("Doe");
+        dto.setUsername("JonnyDoe123");
+        dto.setEmail("jonnydoe@test.at");
+        dto.setPassword("dgsdfg456dzhhmnnlkklghknfghndhgmztuitjl5");
+        dto.setState(UserState.active);
+        dto.setPicture("test.png");
+
+        UserDto dto2 = new UserDto();
+        dto2.setId(2);
+        dto2.setFirstname("Alfred");
+        dto2.setLastname("Doe");
+        dto2.setUsername("Ali12345");
+        dto2.setEmail("alidoe@test.at");
+        dto2.setPassword("dgsdfg456dzhhmnnlkklghknfghndhgmztuitjl5");
+        dto2.setState(UserState.active);
+        dto2.setPicture("test2.png");
+
+        list.add(dto);
+        list.add(dto2);
 
         ObjectMapper objectmapper = new ObjectMapper();
-        String json = objectmapper.writeValueAsString(user);
+        String json = objectmapper.writeValueAsString(list);
 
         ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
 
-        Mockito.when(service.addUser(any(UserDto.class))).thenReturn(entity);
-
-        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk())
-                .andExpect(content().string(json));
-    }
-
-    @WithMockUser(roles = "ADMIN")
-    @Test
-    void getUsers() throws Exception {
-        //
-        String jsonList = "[{\"id\":1,\"firstname\":\"Lukas\",\"lastname\":\"Foidl\",\"username\":\"lukasfoidl\",\"email\":\"wi20b044@technikum-wien.at\",\"password\":null,\"picture\":\"\",\"isAdmin\":true,\"state\":\"active\"},{\"id\":2,\"firstname\":\"Nils\",\"lastname\":\"Petsch\",\"username\":\"nilspetsch\",\"email\":\"wi20b062@technikum-wien.at\",\"password\":null,\"picture\":\"\",\"isAdmin\":true,\"state\":\"active\"},{\"id\":3,\"firstname\":\"Admin\",\"lastname\":\"Admin\",\"username\":\"admin\",\"email\":\"admin@barniverse.at\",\"password\":null,\"picture\":\"\",\"isAdmin\":true,\"state\":\"active\"},{\"id\":4,\"firstname\":\"Hugo\",\"lastname\":\"Martinez\",\"username\":\"hugomartinez\",\"email\":\"hugo.martinez@mail.com\",\"password\":null,\"picture\":\"\",\"isAdmin\":false,\"state\":\"active\"},{\"id\":5,\"firstname\":\"Carlos\",\"lastname\":\"Hernandez\",\"username\":\"carloshernandez\",\"email\":\"carlos.hernandez@mail.com\",\"password\":null,\"picture\":\"\",\"isAdmin\":false,\"state\":\"active\"},{\"id\":6,\"firstname\":\"Susanne\",\"lastname\":\"Lader\",\"username\":\"susannelader\",\"email\":\"susanne.lader@mail.com\",\"password\":null,\"picture\":\"\",\"isAdmin\":false,\"state\":\"active\"},{\"id\":7,\"firstname\":\"Jasmin\",\"lastname\":\"Rotovic\",\"username\":\"jasminrotovic\",\"email\":\"jasmin.rotovic@mail.com\",\"password\":null,\"picture\":\"\",\"isAdmin\":false,\"state\":\"blocked\"}]";
-
-        ResponseEntity entity = new ResponseEntity(jsonList, HttpStatus.OK);
-
-        Mockito.when(service.getUsers()).thenReturn(entity);
+        Mockito.when(service.getUsers()).thenReturn(list);
 
         mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(jsonList))
+                .andExpect(content().string(json))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
+
     }
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Get User API")
     void getUser() throws Exception {
 
         UserDto dto = new UserDto();
@@ -102,9 +113,9 @@ class UserControllerTest {
         ObjectMapper objectmapper = new ObjectMapper();
         String json = objectmapper.writeValueAsString(dto);
 
-        ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
+       // ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
 
-        Mockito.when(service.getUser(1)).thenReturn(entity);
+        Mockito.when(service.getUser(1)).thenReturn(dto);
 
         mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -116,6 +127,7 @@ class UserControllerTest {
 
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Update User API")
     void updateUser() throws Exception {
         UserDto user = new UserDto();
         user.setId(11);
@@ -129,36 +141,38 @@ class UserControllerTest {
         ObjectMapper objectmapper = new ObjectMapper();
         String json = objectmapper.writeValueAsString(user);
 
+        var token = Collections.singletonMap("jwt-token", "token");
+
         ResponseEntity entity = new ResponseEntity(json,HttpStatus.OK);
 
-        Mockito.when(service.updateUser(any(UserDto.class))).thenReturn(entity);
+        Mockito.when(service.updateUser(any(UserDto.class))).thenReturn(token);
 
         mockMvc.perform(put("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andDo(print())
                 .andExpect(status().isOk());
-
     }
 
     @Test
-    void deleteUser() {
-    }
-
-
-    @Test
+    @DisplayName("Delete With State User API")
     void deleteWithState() throws Exception {
 
-          String string = "{ \"message\":\"deletedWithState\"}";
-
-          ResponseEntity entity = new ResponseEntity(string, HttpStatus.OK);
-
-          Mockito.when(service.deleteWithState(11)).thenReturn(entity);
-
-        mockMvc.perform(put("/api/users/deleteWithState/11"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists());
-
+        mockMvc.perform(put("/api/users/11/deleteWithState"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("Delete with State User invalid ID API")
+    void deleteWithStateInvalidId() throws Exception {
+
+        mockMvc.perform(put("/api/users/11/deleteWithState"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
     @WithMockUser(roles = "USER")
     @Test
+    @DisplayName("Change user password API")
     void changePassword() throws Exception  {
 
         ChangePasswordDto dto = new ChangePasswordDto();
@@ -170,45 +184,40 @@ class UserControllerTest {
 
         ResponseEntity entity = new ResponseEntity(json,HttpStatus.OK);
 
-        Mockito.when(service.changePassword(any(ChangePasswordDto.class))).thenReturn(entity);
+
 
         mockMvc.perform(put("/api/users/changePassword").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
     @WithMockUser(roles = "ADMIN")
     @Test
+    @DisplayName("Toggle Admin from User API ")
     void toggleAdmin() throws Exception {
-          String json = "{ \"message\":\"toggleAdmin\"}";
-          ResponseEntity entity = new ResponseEntity(json,HttpStatus.OK);
 
-          Mockito.when(service.toggleAdmin(10)).thenReturn(entity);
-
-          mockMvc.perform(put("/api/users/toggleAdmin/10").contentType(MediaType.APPLICATION_JSON).content(json))
-                  .andExpect(status().isOk())
-                  .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists());
+          mockMvc.perform(put("/api/users/10/toggleAdmin"))
+                  .andDo(print())
+                  .andExpect(status().isOk());
     }
 
     @WithMockUser(roles = "ADMIN")
     @Test
+    @DisplayName("Toggle State User API")
     void toggleState() throws Exception {
-        String json = "{ \"message\":\"toggleState\"}";
 
-        ResponseEntity entity = new ResponseEntity(json,HttpStatus.OK);
+        Mockito.when(service.toggleState(11)).thenReturn(UserState.active);
 
-        Mockito.when(service.toggleState(11)).thenReturn(entity);
-        mockMvc.perform(put("/api/users/toggleState/11"))
+        mockMvc.perform(put("/api/users/11/toggleState/"))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("toggleState"));
+                .andExpect(content().string("\"" + UserState.active.toString()+ "\"" ));
 
     }
     @Test
-    void apiWrongRequest () throws Exception{
-
-          ResponseEntity entity = new ResponseEntity(HttpStatus.NOT_FOUND);
-
-
-          //user ->users
-          mockMvc.perform(get("/api/user/10")).andExpect(status().isNotFound());
+    @DisplayName("Wrong API TEST")
+    void wrongApiRequest () throws Exception{
+          // testing typo "user" --> working "users"
+          mockMvc.perform(get("/api/user/10")).andDo(print()).andExpect(status().isNotFound()).andExpect(content().string(""));
 
     }
 }

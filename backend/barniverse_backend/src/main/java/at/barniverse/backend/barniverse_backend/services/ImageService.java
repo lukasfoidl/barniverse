@@ -12,7 +12,7 @@ import java.util.List;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.ERROR;
 
 /**
- * service to handle image files on server
+ * service with image related functionality
  */
 @Service
 public class ImageService {
@@ -21,6 +21,7 @@ public class ImageService {
      * get specific image from server
      * @param filename filename of the image
      * @return image
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public byte[] getImage(String filename) throws BarniverseException {
         byte[] content;

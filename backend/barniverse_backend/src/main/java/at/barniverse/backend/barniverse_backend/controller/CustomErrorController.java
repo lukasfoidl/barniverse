@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * controller which handles error messages
+ * controller which handles specific error messages thrown in the security configuration
  */
 @RestController
 public class CustomErrorController implements ErrorController {
@@ -18,7 +18,7 @@ public class CustomErrorController implements ErrorController {
     private static final String PATH = "/error";
 
     /**
-     * converts HttpServletRequests in responses the client can work with
+     * convert HttpServletRequests in responses the client can work with
      * @param request error request with status code and message which needs to be converted
      * @param response not used
      * @return error message with corresponding status code

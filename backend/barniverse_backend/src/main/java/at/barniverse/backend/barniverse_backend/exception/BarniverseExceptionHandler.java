@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import static at.barniverse.backend.barniverse_backend.configuration.Context.ACCESS_DENIED;
 
 /**
- * extension class which handles authentication exceptions
+ * extension class which handles exceptions
  */
 @ControllerAdvice
 public class BarniverseExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,6 +27,11 @@ public class BarniverseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * converts BarniverseException into a response with received status code and received error message
+     * @param exception exception which has been thrown
+     * @return response with corresponding status code and error message
+     */
     @ExceptionHandler({ BarniverseException.class })
     @ResponseBody
     public ResponseEntity<Object> returnErrorMessage(BarniverseException exception) {

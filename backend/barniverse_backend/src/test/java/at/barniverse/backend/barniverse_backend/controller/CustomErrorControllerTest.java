@@ -26,11 +26,4 @@ class CustomErrorControllerTest {
 
     }
 
-
-
-    @Test
-    void handleError() throws Exception {
-
-
-    }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 import static at.barniverse.backend.barniverse_backend.configuration.Context.VALIDATION_ERROR;
 
 /**
- * validation service which validates auction specific extras
+ * validation service with auction validation functionality
  */
 @Service
 public class AuctionValidationService extends ValidationService<Auction> {
@@ -32,6 +32,7 @@ public class AuctionValidationService extends ValidationService<Auction> {
      * validates auction specific extras
      * @param auction entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @Override
     public List<String> validateEntitySpecificExtras(Auction auction) throws BarniverseException {
@@ -49,6 +50,13 @@ public class AuctionValidationService extends ValidationService<Auction> {
         return errors;
     }
 
+    /**
+     * extension method which validates auction itself
+     * @param errors messages of errors which already arisen
+     * @param auction auction which should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateAuction(List<String> errors, Auction auction, boolean isPOST) {
         if (!isPOST) { // PUT (existence already checked in getEntity())
             // do not update inactive auction, on POST always set to active
@@ -63,6 +71,13 @@ public class AuctionValidationService extends ValidationService<Auction> {
         return errors;
     }
 
+    /**
+     * extension method which validates user property of an auction
+     * @param errors messages of errors which already arisen
+     * @param auction auction of which the user should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateUser(List<String> errors, Auction auction, boolean isPOST) {
         if (!userRepository.existsById(auction.getUser().getId())) {
             errors.add("User not found!");
@@ -72,6 +87,13 @@ public class AuctionValidationService extends ValidationService<Auction> {
         return errors;
     }
 
+    /**
+     * extension method which validates product property of an auction
+     * @param errors messages of errors which already arisen
+     * @param auction auction of which the product should be validated
+     * @param isPOST true if validation happens in context of a POST request, otherwise false
+     * @return messages of already arisen errors as well as new error messages
+     */
     private List<String> validateProduct(List<String> errors, Auction auction, boolean isPOST) {
         if (isPOST) {
             // only POST because product cannot be updated with PUT and product state is irrelevant in case of PUT
@@ -87,6 +109,7 @@ public class AuctionValidationService extends ValidationService<Auction> {
     /**
      * validates if auction has not ended yet (end date reached)
      * @param auction entity which should be validated
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void validateTaskToggleAuction(Auction auction) throws BarniverseException {
         if (auction.getEndDate().compareTo(LocalDateTime.now()) < 0) {

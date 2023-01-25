@@ -15,7 +15,7 @@ import static at.barniverse.backend.barniverse_backend.configuration.Context.COR
 
 /**
  * controller with basic CRUD routing for product related URLs,
- * also handles product images in product context (no extra controller for product images necessary)
+ * also handles product images in product context
  */
 @RestController
 @CrossOrigin(origins = CORS_ORIGINS)
@@ -25,9 +25,11 @@ public class ProductController {
     @Autowired private ProductService productService;
 
     /**
-     * add a product to the database
+     * add a product to the database, <br>
+     * reserved for role admin
      * @param productDto object sent from the client
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping(path="/products")
@@ -38,7 +40,8 @@ public class ProductController {
 
     /**
      * get all saved products from the database which do not have state deleted
-     * @return response with corresponding status code and loaded product dtos or error message in case of failure
+     * @return response with corresponding status code and loaded product dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/products")
     public ResponseEntity<Object> getProducts() throws BarniverseException {
@@ -48,9 +51,11 @@ public class ProductController {
 
     //TODO: Safety alert! Products can be updated only with Id.
     /**
-     * update specific product in the database
+     * update specific product in the database, <br>
+     * reserved for role admin
      * @param productDto object sent from the client (with id)
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/products")
@@ -60,9 +65,11 @@ public class ProductController {
     }
 
     /**
-     * deletes a product with state deleted
+     * deletes a product with state deleted, <br>
+     * reserved for role admin
      * @param id id of the specific product
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/products/{id}/deleteWithState")

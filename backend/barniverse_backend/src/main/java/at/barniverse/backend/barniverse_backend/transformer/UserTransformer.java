@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class UserTransformer implements ITransformer<User, UserDto> {
 
     /**
-     * transforms user entity to user dto, <br>
+     * transform user entity to user dto, <br>
      * password property does NOT get transformed from entity to dto, because password should not be sent to the client
      * @param user entity, which should be transformed
      * @return user dto
@@ -34,7 +34,7 @@ public class UserTransformer implements ITransformer<User, UserDto> {
     }
 
     /**
-     * transforms user dto to user entity, <br>
+     * transform user dto to user entity, <br>
      * id property does NOT get transformed from dto to entity, because id gets set from the database automatically
      * @param userDto dto which should be transformed
      * @return user entity

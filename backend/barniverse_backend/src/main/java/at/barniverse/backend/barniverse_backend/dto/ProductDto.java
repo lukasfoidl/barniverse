@@ -5,7 +5,7 @@ import at.barniverse.backend.barniverse_backend.enums.ProductState;
 import java.util.List;
 
 /**
- * dto for offer entity,
+ * dto for product entity,
  * property definitions as well as getter and setter functions
  */
 public class ProductDto implements IDto {

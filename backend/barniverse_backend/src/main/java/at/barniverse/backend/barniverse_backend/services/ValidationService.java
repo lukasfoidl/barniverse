@@ -22,13 +22,14 @@ abstract public class ValidationService<T> {
      * extension method which validates entity specific extras (foreign keys, subentities, etc.)
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     abstract public List<String> validateEntitySpecificExtras(T entity) throws BarniverseException;
 
     /**
-     * validates entity
+     * validate entity
      * @param entity entity which should be validated
-     * @return response with corresponding status code and error message in case of failure
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public void validateEntity(T entity) throws BarniverseException {
         List<String> errors = validate(entity);
@@ -38,9 +39,10 @@ abstract public class ValidationService<T> {
     }
 
     /**
-     * validates entity
+     * validate entity
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     public List<String> validateEntityGetErrors(T entity) throws BarniverseException {
         return validate(entity);
@@ -66,6 +68,7 @@ abstract public class ValidationService<T> {
      * extension method which validates an entity
      * @param entity entity which should be validated
      * @return error messages, empty if validation was successful
+     * @throws BarniverseException in case of failure which includes error messages
      */
     private List<String> validate(T entity) throws BarniverseException {
         List<String> errors = validateAnnotations(entity);

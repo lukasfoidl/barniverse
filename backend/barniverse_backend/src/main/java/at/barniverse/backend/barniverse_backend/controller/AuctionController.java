@@ -25,9 +25,11 @@ public class AuctionController {
     @Autowired private AuctionService auctionService;
 
     /**
-     * add an auction to the database
+     * add an auction to the database, <br>
+     * reserved for role user and admin
      * @param auctionDto object sent from the client
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PostMapping(path="/auctions")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -38,7 +40,8 @@ public class AuctionController {
 
     /**
      * get all saved auctions from the database which are not locked
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * @return response with corresponding status code and loaded auction dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/auctions/unlocked")
     public ResponseEntity<Object> getUnlockedAuctions() throws BarniverseException {
@@ -47,8 +50,10 @@ public class AuctionController {
     }
 
     /**
-     * get all saved auctions from the database
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * get all saved auctions from the database, <br>
+     * reserved for role admin
+     * @return response with corresponding status code and loaded auction dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/auctions")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -58,9 +63,11 @@ public class AuctionController {
     }
 
     /**
-     * get all saved auctions from the database of a specific user
+     * get all saved auctions from the database of a specific user, <br>
+     * reserved for role user and admin
      * @param id id of the specific user
-     * @return response with corresponding status code and loaded auction dtos or error message in case of failure
+     * @return response with corresponding status code and loaded auction dtos
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @GetMapping(path="/myAuctions/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -71,9 +78,11 @@ public class AuctionController {
 
     //TODO: Safety alert! Auctions can be updated only with Id.
     /**
-     * update specific auction in the database
+     * update specific auction in the database, <br>
+     * reserved for role user and admin
      * @param auctionDto object sent from the client (with id)
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PutMapping(path="/auctions")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -83,9 +92,11 @@ public class AuctionController {
     }
 
     /**
-     * toggles the auction state of a specific auction (locked or active)
+     * toggle the auction state of a specific auction (locked or active), <br>
+     * reserved for role admin
      * @param id id of the specific auction
-     * @return response with corresponding status code and error message in case of failure
+     * @return response with corresponding status code and set state
+     * @throws BarniverseException in case of failure which includes error messages
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(path="/auctions/{id}/toggleState")

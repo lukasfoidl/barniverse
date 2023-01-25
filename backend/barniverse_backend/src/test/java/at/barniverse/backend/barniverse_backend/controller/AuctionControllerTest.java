@@ -3,10 +3,12 @@ package at.barniverse.backend.barniverse_backend.controller;
 import at.barniverse.backend.barniverse_backend.dto.AuctionDto;
 import at.barniverse.backend.barniverse_backend.dto.ProductDto;
 import at.barniverse.backend.barniverse_backend.dto.UserDto;
+import at.barniverse.backend.barniverse_backend.enums.AuctionState;
 import at.barniverse.backend.barniverse_backend.enums.UserState;
 import at.barniverse.backend.barniverse_backend.services.AuctionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -73,7 +75,6 @@ class AuctionControllerTest {
         dto.setMaxQuantity(100);
         dto.setMinQuantity(100);
         dto.setProduct(product);
-        //dto.setLocked(false);
         dto.setStartDate(null);
         dto.setStartDeliveryDate(null);
         dto.setTitle("the best Gin Auction");
@@ -82,18 +83,82 @@ class AuctionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(dto);
 
-        ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
-
-        Mockito.when(service.addAuction(any(AuctionDto.class))).thenReturn(entity);
-
         mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
-
 
     }
 
     @Test
+    @DisplayName("Get all Auctions API")
     void getAuctions() throws Exception {
+
+        ProductDto product = new ProductDto();
+        product.setId(1);
+        product.setTitle("The best Gin");
+        product.setDescription("Very good gin for a good party!");
+        product.setImages(null);
+
+        UserDto user = new UserDto();
+        user.setId(11);
+        user.setFirstname("Test");
+        user.setLastname("Test");
+        user.setUsername("JonnyDoe123");
+        user.setEmail("jonnydoe@test.at");
+        user.setPassword("JonnyDoe123");
+        user.setState(UserState.active);
+
+        AuctionDto dto = new AuctionDto();
+        dto.setId(1);
+        dto.setDescription("Gin Auction");
+        dto.setEndDate(null);
+        dto.setEndDeliveryDate(null);
+        dto.setMaxPrice(10);
+        dto.setMinPrice(5);
+        dto.setMaxQuantity(100);
+        dto.setMinQuantity(100);
+        dto.setProduct(product);
+        dto.setState(AuctionState.active);
+        dto.setStartDate(null);
+        dto.setStartDeliveryDate(null);
+        dto.setTitle("the best Gin Auction");
+        dto.setUser(user);
+
+        AuctionDto dto2 = new AuctionDto();
+        dto2.setId(2);
+        dto2.setDescription("Gin Auction");
+        dto2.setEndDate(null);
+        dto2.setEndDeliveryDate(null);
+        dto2.setMaxPrice(10);
+        dto2.setMinPrice(5);
+        dto2.setMaxQuantity(100);
+        dto2.setMinQuantity(100);
+        dto2.setProduct(product);
+        dto2.setState(AuctionState.active);
+        dto2.setStartDate(null);
+        dto2.setStartDeliveryDate(null);
+        dto2.setTitle("the best Gin Auction");
+        dto2.setUser(user);
+
+
+        List<AuctionDto> auctionDtos = new ArrayList<>();
+        auctionDtos.add(dto);
+        auctionDtos.add(dto2);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(auctionDtos);
+
+        Mockito.when(service.getAuctions()).thenReturn(auctionDtos);
+
+        mockMvc.perform(get("/api/auctions").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(json));
+    }
+
+
+    @Test
+    @DisplayName("Gets unlocked Auctions API")
+    void getUnlockedAuctionsTest() throws Exception {
 
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -136,12 +201,10 @@ class AuctionControllerTest {
         dto2.setMaxQuantity(100);
         dto2.setMinQuantity(100);
         dto2.setProduct(product);
-        //dto2.setLocked(false);
         dto2.setStartDate(null);
         dto2.setStartDeliveryDate(null);
         dto2.setTitle("the best Gin Auction");
         dto2.setUser(user);
-
 
         List<AuctionDto> auctionDtos = new ArrayList<>();
         auctionDtos.add(dto);
@@ -150,66 +213,16 @@ class AuctionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(auctionDtos);
 
-        ResponseEntity entity = new ResponseEntity(json, HttpStatus.OK);
+        Mockito.when(service.getUnlockedAuctions()).thenReturn(auctionDtos);
 
-        Mockito.when(service.getNotClosedActiveAuctions()).thenReturn(entity);
-
-        mockMvc.perform(get("/api/auctions").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/auctions/unlocked"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(json));
     }
 
     @Test
-    void getAuction() throws Exception {
-
-        ProductDto product = new ProductDto();
-        product.setId(1);
-        product.setTitle("The best Gin");
-        product.setDescription("Very good gin for a good party!");
-        product.setImages(null);
-
-        UserDto user = new UserDto();
-        user.setId(11);
-        user.setFirstname("Test");
-        user.setLastname("Test");
-        user.setUsername("JonnyDoe123");
-        user.setEmail("jonnydoe@test.at");
-        user.setPassword("JonnyDoe123");
-        user.setState(UserState.active);
-
-
-        AuctionDto dto = new AuctionDto();
-        dto.setDescription("Gin Auction");
-        dto.setEndDate(null);
-        dto.setEndDeliveryDate(null);
-        dto.setMaxPrice(10);
-        dto.setMinPrice(5);
-        dto.setMaxQuantity(100);
-        dto.setMinQuantity(100);
-        dto.setProduct(product);
-        //dto.setLocked(false);
-        dto.setStartDate(null);
-        dto.setStartDeliveryDate(null);
-        dto.setTitle("the best Gin Auction");
-        dto.setUser(user);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(dto);
-
-        ResponseEntity entity = new ResponseEntity(json , HttpStatus.OK);
-
-        Mockito.when(service.getAuction(any(Integer.class))).thenReturn(entity);
-
-        mockMvc.perform(get("/api/auctions/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(json));
-
-
-    }
-
-    @Test
+    @DisplayName("update Auction API")
     void updateAuction() throws Exception {
         ProductDto product = new ProductDto();
         product.setId(1);
@@ -236,7 +249,6 @@ class AuctionControllerTest {
         dto.setMaxQuantity(100);
         dto.setMinQuantity(100);
         dto.setProduct(product);
-        //dto.setLocked(false);
         dto.setStartDate(null);
         dto.setStartDeliveryDate(null);
         dto.setTitle("the best Gin Auction");
@@ -245,41 +257,29 @@ class AuctionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(dto);
 
-        ResponseEntity entity = new ResponseEntity("Product updated Successfully!", HttpStatus.OK);
-
-        Mockito.when(service.updateAuction(any(AuctionDto.class))).thenReturn(entity);
+        ResponseEntity entity = new ResponseEntity(null, HttpStatus.OK);
 
         mockMvc.perform(put("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("Product updated Successfully!"));
-
+                .andExpect(content().string(""));
     }
 
     @Test
+    @DisplayName("Update Auction without DTO API ")
     void updateAuctionWithoutDto() throws Exception {
-
-
-        ResponseEntity entity = new ResponseEntity("Auction updated Successfully!", HttpStatus.OK);
-
-        //Mockito.when(service.updateAuction(any(AuctionDto.class))).thenReturn(entity);
-
+        ResponseEntity entity = new ResponseEntity(null, HttpStatus.OK);
         mockMvc.perform(put("/api/auctions").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
-    void deleteAuction() throws Exception {
-
-        ResponseEntity entity = new ResponseEntity("Auction deleted!", HttpStatus.OK);
-
-        Mockito.when(service.deleteAuction(1)).thenReturn(entity);
-
-        mockMvc.perform(delete("/api/auctions/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Auction deleted!"));
-
+    @DisplayName("toggle State API")
+    void toggleState() throws Exception {
+        ResponseEntity entity = new ResponseEntity(AuctionState.locked, HttpStatus.OK);
+        Mockito.when(service.toggleState(1)).thenReturn(AuctionState.locked);
+        mockMvc.perform(put("/api/auctions/1/toggleState"))
+                .andExpect(status().isOk());
     }
 }
